@@ -1,3 +1,5 @@
 ﻿  DirectXCommon.cpp
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(462,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(566,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  main.cpp
+  コードを生成中...
+  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

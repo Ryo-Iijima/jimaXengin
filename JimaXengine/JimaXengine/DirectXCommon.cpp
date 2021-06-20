@@ -72,6 +72,25 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	);
 #pragma endregion
 
+#pragma region インデックスバッファの生成
+	ID3D12Resource* idxBuff = nullptr;
+
+	// バッファのサイズ以外の設定を使いまわす
+	resdesc.Width = sizeof(indices);
+
+	result = _dev->CreateCommittedResource
+	(
+		&heapplop,
+		D3D12_HEAP_FLAG_NONE,
+		&resdesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&idxBuff)
+	);
+
+
+#pragma endregion
+
 #pragma region 頂点情報のコピー
 	// 頂点情報のマップ
 	DirectX::XMFLOAT3* vertMap = nullptr;
@@ -82,13 +101,28 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	vertBuff->Unmap(0, nullptr);
 #pragma endregion
 
+#pragma region インデックス情報のコピー
+	unsigned short* mappedIdx = nullptr;
+	idxBuff->Map(0, nullptr, (void**)&mappedIdx);
+	std::copy(std::begin(indices), std::end(indices), mappedIdx);
+	idxBuff->Unmap(0, nullptr);
+
+#pragma endregion 
+
 #pragma region 頂点バッファビューの作成
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();	// バッファの仮想アドレス
 	vbView.SizeInBytes = sizeof(vertices);		// 全バイト数
 	vbView.StrideInBytes = sizeof(vertices[0]);	// 1頂点のバイト数
 #pragma endregion
+
+#pragma region インデックスバッファビューの作成
+
+	ibView.BufferLocation = idxBuff->GetGPUVirtualAddress();
+	ibView.Format = DXGI_FORMAT_R16_UINT;
+	ibView.SizeInBytes = sizeof(indices);
+	
+#pragma endregion 
 
 #pragma region シェーダーの読み込みと生成
 	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
@@ -202,13 +236,60 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	gPipline.SampleDesc.Quality = 0;	// 最低クオリティ
 
 	// グラフィックパイプラインステートオブジェクトの生成
-	ID3D12PipelineState* _piplineState = nullptr;
 	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
 
 #pragma endregion 
 
 #pragma region	ルートシグネチャ
+	// D3D12_ROOT_SIGNAAATURE_DESCの設定
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+	
+	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
+	// バイナリコードの作成
+	ID3D10Blob* rootSigBlob = nullptr;
+
+	result = D3D12SerializeRootSignature
+	(
+		&rootSignatureDesc,				// ルートシグネチャ設定
+		D3D_ROOT_SIGNATURE_VERSION_1_0,	// ルートシグネチャバージョン
+		&rootSigBlob,
+		&errorBlob
+	);
+
+	// ルートシグネチャオブジェクトの作成
+	result = _dev->CreateRootSignature
+	(
+		0,
+		rootSigBlob->GetBufferPointer(),
+		rootSigBlob->GetBufferSize(),
+		IID_PPV_ARGS(&rootsignature)
+	);
+
+	rootSigBlob->Release();
+
+	// パイプラインステートの生成
+	gPipline.pRootSignature = rootsignature;
+
+	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
+#pragma endregion
+
+#pragma region ビューポートとシザー矩形
+
+	// ビューポートの設定
+	viewport.Width = WinApp::WINDOW_WIDTH;
+	viewport.Height = WinApp::WINDOW_HEIGHT;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MaxDepth = 1.0f;
+	viewport.MinDepth = 0.0f;
+
+	// シザー矩形の設定
+	// 切り抜き座標
+	scissorrect.top = 0;
+	scissorrect.left = 0;
+	scissorrect.right = scissorrect.left + WinApp::WINDOW_WIDTH;
+	scissorrect.bottom = scissorrect.top + WinApp::WINDOW_HEIGHT;
 
 #pragma endregion
 }
@@ -286,6 +367,24 @@ void DirectXCommon::ClearRenderTarget()
 	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);	// 画面クリア
+
+
+	_cmdList->SetPipelineState(_piplineState);	// パイプラインステートのセット
+
+	_cmdList->RSSetViewports(1, &viewport);
+
+	_cmdList->RSSetScissorRects(1, &scissorrect);
+
+	_cmdList->SetGraphicsRootSignature(rootsignature);		// ルートシグネチャの設定コマンド
+
+	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
+
+	_cmdList->IASetVertexBuffers(0, 1, &vbView);	// 頂点バッファの設定コマンド
+
+	_cmdList->IASetIndexBuffer(&ibView);	// インデックスバッファの設定コマンド
+
+	_cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);	// 描画コマンド
+
 }
 
 bool DirectXCommon::InitializeDXGIDevice()

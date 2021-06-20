@@ -48,12 +48,26 @@ private:	// メンバ変数
 	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
 
 	// 三角形の頂点座標
-	DirectX::XMFLOAT3 vertices[3]=
+	DirectX::XMFLOAT3 vertices[4] =
 	{
-		{-1.0f,-1.0f,0.0f},
-		{-1.0f, 1.0f,0.0f},
-		{ 1.0f,-1.0f,0.0f},
-	};	
+		{-0.4f,-0.7f,0.0f},
+		{-0.4f, 0.7f,0.0f},
+		{ 0.4f,-0.7f,0.0f},
+		{ 0.4f, 0.7f,0.0f},
+	};
+
+	unsigned short indices[6] =
+	{
+		0,1,2,
+		2,1,3,
+	};
+
+	ID3D12RootSignature* rootsignature;
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	ID3D12PipelineState* _piplineState = nullptr;
+	D3D12_VIEWPORT viewport = {};
+	D3D12_RECT scissorrect = {};
 
 
 public:		// メンバ関数
