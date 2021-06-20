@@ -39,6 +39,178 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		assert(0);
 	}
 
+#pragma region  頂点バッファの生成
+	// ヒープ設定
+	D3D12_HEAP_PROPERTIES heapplop = {};
+	heapplop.Type = D3D12_HEAP_TYPE_UPLOAD;
+	heapplop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapplop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+
+	// リソース設定
+	D3D12_RESOURCE_DESC resdesc = {};
+
+	resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resdesc.Width = sizeof(vertices);	// 頂点情報のサイズ
+	resdesc.Height = 1;
+	resdesc.DepthOrArraySize = 1;
+	resdesc.MipLevels = 1;
+	resdesc.Format = DXGI_FORMAT_UNKNOWN;
+	resdesc.SampleDesc.Count = 1;
+	resdesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+	resdesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	ID3D12Resource* vertBuff = nullptr;
+
+	result = _dev->CreateCommittedResource
+	(
+		&heapplop,
+		D3D12_HEAP_FLAG_NONE,
+		&resdesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertBuff)
+	);
+#pragma endregion
+
+#pragma region 頂点情報のコピー
+	// 頂点情報のマップ
+	DirectX::XMFLOAT3* vertMap = nullptr;
+
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	std::copy(std::begin(vertices), std::end(vertices), vertMap);
+
+	vertBuff->Unmap(0, nullptr);
+#pragma endregion
+
+#pragma region 頂点バッファビューの作成
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();	// バッファの仮想アドレス
+	vbView.SizeInBytes = sizeof(vertices);		// 全バイト数
+	vbView.StrideInBytes = sizeof(vertices[0]);	// 1頂点のバイト数
+#pragma endregion
+
+#pragma region シェーダーの読み込みと生成
+	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
+	ID3DBlob* psBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+
+	result = D3DCompileFromFile
+	(
+		L"BasicVS.hlsl",
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"VSmain",
+		"vs_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&vsBlob,
+		&errorBlob
+	);
+	if (FAILED(result))
+	{
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), errstr.begin());
+
+		errstr += "\n";
+
+		// エラー内容をウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
+
+	result = D3DCompileFromFile
+	(
+		L"BasicPS.hlsl",
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"PSmain",
+		"ps_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&psBlob,
+		&errorBlob
+	);
+	if (FAILED(result))
+	{
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(), errorBlob->GetBufferSize(), errstr.begin());
+
+		errstr += "\n";
+
+		// エラー内容をウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
+
+#pragma endregion
+
+#pragma region 頂点レイアウト
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+	{
+		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+	};
+#pragma endregion 
+
+
+#pragma region グラフィックパイプラインステートの作成
+	// シェーダーのセット
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gPipline = {};
+
+	gPipline.pRootSignature = nullptr;
+
+	gPipline.VS.pShaderBytecode = vsBlob->GetBufferPointer();
+	gPipline.VS.BytecodeLength = vsBlob->GetBufferSize();
+	gPipline.PS.pShaderBytecode = psBlob->GetBufferPointer();
+	gPipline.PS.BytecodeLength = psBlob->GetBufferSize();
+
+	// サンプルマスクとラスタライザ―ステートの設定
+	gPipline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	// まだアンチエイリアスを使わないのでfalse
+	gPipline.RasterizerState.MultisampleEnable = false;
+	gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;	// カリングしない
+	gPipline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;	// 中身を塗りつぶす
+	gPipline.RasterizerState.DepthClipEnable = true;			// 深度方向のクリッピング
+
+	// ブレンドステートの設定
+	gPipline.BlendState.AlphaToCoverageEnable = false;
+	gPipline.BlendState.IndependentBlendEnable = false;
+
+	D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc = {};
+	renderTargetBlendDesc.BlendEnable = false;
+	renderTargetBlendDesc.LogicOpEnable = false;
+	renderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	gPipline.BlendState.RenderTarget[0] = renderTargetBlendDesc;
+
+	// 入力レイアウトの設定
+	gPipline.InputLayout.pInputElementDescs = inputLayout;		// レイアウト先頭アドレス
+	gPipline.InputLayout.NumElements = _countof(inputLayout);	// レイアウト配列の要素数
+	gPipline.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;		// カット無し
+	gPipline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;	// 三角形で構成
+
+	// レンダーターゲットの設定
+	gPipline.NumRenderTargets = 1;		// 今は1つのみ
+	gPipline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;	// 0~1に正規化されたRGBA
+
+	// アンチエイリアシングのためのサンプル数設定
+	gPipline.SampleDesc.Count = 1;	// サンプリングは1ピクセル1回
+	gPipline.SampleDesc.Quality = 0;	// 最低クオリティ
+
+	// グラフィックパイプラインステートオブジェクトの生成
+	ID3D12PipelineState* _piplineState = nullptr;
+	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
+
+#pragma endregion 
+
+#pragma region	ルートシグネチャ
+
+
+#pragma endregion
 }
 
 void DirectXCommon::Finalize()

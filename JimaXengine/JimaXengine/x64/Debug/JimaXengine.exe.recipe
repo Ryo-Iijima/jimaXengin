@@ -2,10 +2,17 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\ryo\Desktop\魔導書リスタート\JimaXengine\x64\Debug\JimaXengine.exe</FullPath>
+      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicVS.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

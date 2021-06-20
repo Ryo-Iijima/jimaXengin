@@ -11,6 +11,10 @@
 
 #include "WinApp.h"
 
+#include <DirectXMath.h>
+#include <d3dcompiler.h>
+#pragma comment(lib,"d3dcompiler.lib")
+
 /// <summary>
 /// DirectX汎用処理のクラス
 /// （とりあえず資料とかやった部分をここに移していく）
@@ -20,7 +24,6 @@ class DirectXCommon
 {
 private:	// エイリアス
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
 
 private:	// メンバ変数
 	// ウィンドウズアプリケーション管理
@@ -42,6 +45,15 @@ private:	// メンバ変数
 	ID3D12Fence* _fence;
 	UINT16 _fenceVal = 0;
 
+	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
+
+	// 三角形の頂点座標
+	DirectX::XMFLOAT3 vertices[3]=
+	{
+		{-1.0f,-1.0f,0.0f},
+		{-1.0f, 1.0f,0.0f},
+		{ 1.0f,-1.0f,0.0f},
+	};	
 
 
 public:		// メンバ関数
