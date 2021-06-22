@@ -41,10 +41,10 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 #pragma region  頂点バッファの生成
 	// ヒープ設定
-	D3D12_HEAP_PROPERTIES heapplop = {};
-	heapplop.Type = D3D12_HEAP_TYPE_UPLOAD;
-	heapplop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	heapplop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	D3D12_HEAP_PROPERTIES heapprop = {};
+	heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;
+	heapprop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapprop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
 
 	// リソース設定
 	D3D12_RESOURCE_DESC resdesc = {};
@@ -63,32 +63,13 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 	result = _dev->CreateCommittedResource
 	(
-		&heapplop,
+		&heapprop,
 		D3D12_HEAP_FLAG_NONE,
 		&resdesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&vertBuff)
 	);
-#pragma endregion
-
-#pragma region インデックスバッファの生成
-	ID3D12Resource* idxBuff = nullptr;
-
-	// バッファのサイズ以外の設定を使いまわす
-	resdesc.Width = sizeof(indices);
-
-	result = _dev->CreateCommittedResource
-	(
-		&heapplop,
-		D3D12_HEAP_FLAG_NONE,
-		&resdesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&idxBuff)
-	);
-
-
 #pragma endregion
 
 #pragma region 頂点情報のコピー
@@ -101,6 +82,32 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	vertBuff->Unmap(0, nullptr);
 #pragma endregion
 
+#pragma region 頂点バッファビューの作成
+
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();	// バッファの仮想アドレス
+	vbView.SizeInBytes = sizeof(vertices);		// 全バイト数
+	vbView.StrideInBytes = sizeof(vertices[0]);	// 1頂点のバイト数
+#pragma endregion
+
+#pragma region インデックスバッファの生成
+	ID3D12Resource* idxBuff = nullptr;
+
+	// バッファのサイズ以外の設定を使いまわす
+	resdesc.Width = sizeof(indices);
+
+	result = _dev->CreateCommittedResource
+	(
+		&heapprop,
+		D3D12_HEAP_FLAG_NONE,
+		&resdesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&idxBuff)
+	);
+
+
+#pragma endregion
+
 #pragma region インデックス情報のコピー
 	unsigned short* mappedIdx = nullptr;
 	idxBuff->Map(0, nullptr, (void**)&mappedIdx);
@@ -109,13 +116,6 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 #pragma endregion 
 
-#pragma region 頂点バッファビューの作成
-
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();	// バッファの仮想アドレス
-	vbView.SizeInBytes = sizeof(vertices);		// 全バイト数
-	vbView.StrideInBytes = sizeof(vertices[0]);	// 1頂点のバイト数
-#pragma endregion
-
 #pragma region インデックスバッファビューの作成
 
 	ibView.BufferLocation = idxBuff->GetGPUVirtualAddress();
@@ -123,6 +123,85 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	ibView.SizeInBytes = sizeof(indices);
 	
 #pragma endregion 
+
+#pragma region テクスチャバッファの作成
+
+	// ランダムテクスチャの初期化
+	const int texWidth = 256;	// 横方向ピクセル数
+	const int texDataCount = texWidth * texWidth;	// 配列の要素数
+	DirectX::XMFLOAT4* textureData = new DirectX::XMFLOAT4[texDataCount];	// テクスチャデータ配列
+
+	for (int i = 0; i < texDataCount; i++)
+	{
+		textureData[i].x = rand() % 256;
+		textureData[i].y = rand() % 256;
+		textureData[i].z = rand() % 256;
+		textureData[i].w = 255;
+	}
+
+	// ヒープ設定
+
+	heapprop.Type = D3D12_HEAP_TYPE_CUSTOM;
+	heapprop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;	// ライトバック
+	heapprop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;	// 転送はCPUから直接行う
+	heapprop.CreationNodeMask = 0;	// 単一アダプターのため0
+	heapprop.VisibleNodeMask = 0;
+
+	// リソース設定
+	D3D12_RESOURCE_DESC resDesc = {};
+
+	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	resDesc.Width = texWidth;	// 幅
+	resDesc.Height = texWidth;	// 高さ
+	resDesc.DepthOrArraySize = 1;	// 2D配列じゃないので1
+	resDesc.SampleDesc.Count = 1;	// アンチエイリアシングしない
+	resDesc.SampleDesc.Quality = 0;	// 最低クオリティ
+	resdesc.MipLevels = 1;	// ミップマップしないので1
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;	// 2Dテクスチャ用
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
+	resDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
+
+	// リソースの生成
+	ID3D12Resource* texbuff = nullptr;
+
+	result = _dev->CreateCommittedResource
+	(
+		&heapprop,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,		// テクスチャ用指定
+		nullptr,
+		IID_PPV_ARGS(&texbuff)
+	);
+
+	// データ転送
+	result = texbuff->WriteToSubresource
+	(
+		0,
+		nullptr,		// 全領域にコピー
+		textureData,	// 元データアドレス
+		sizeof(DirectX::XMFLOAT4) * texWidth,		// 1ラインサイズ
+		sizeof(DirectX::XMFLOAT4) * texDataCount	// 全サイズ
+	);
+
+	delete[] textureData;	// 転送が済んだので元データ解放
+
+#pragma endregion
+
+#pragma region テクスチャ用シェーダーリソースビュー
+	// デスクリプタヒープの作成
+	ID3D12DescriptorHeap* texDescHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+
+	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descHeapDesc.NodeMask = 0;
+	descHeapDesc.NumDescriptors = 1;
+	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	
+	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&texDescHeap));
+
+
+#pragma endregion
 
 #pragma region シェーダーの読み込みと生成
 	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
