@@ -25,6 +25,14 @@ class DirectXCommon
 private:	// エイリアス
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+private:	// 構造体
+	// 頂点データ構造体
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT2 uv;
+	};
+
 private:	// メンバ変数
 	// ウィンドウズアプリケーション管理
 	WinApp* winApp;
@@ -48,12 +56,12 @@ private:	// メンバ変数
 	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
 
 	// 三角形の頂点座標
-	DirectX::XMFLOAT3 vertices[4] =
+	Vertex vertices[4] =
 	{
-		{-0.4f,-0.7f,0.0f},
-		{-0.4f, 0.7f,0.0f},
-		{ 0.4f,-0.7f,0.0f},
-		{ 0.4f, 0.7f,0.0f},
+		{{-0.4f,-0.7f,0.0f},{0.0f,1.0f}},
+		{{-0.4f, 0.7f,0.0f},{0.0f,0.0f}},
+		{{ 0.4f,-0.7f,0.0f},{1.0f,1.0f}},
+		{{ 0.4f, 0.7f,0.0f},{1.0f,0.0f}},
 	};
 
 	unsigned short indices[6] =

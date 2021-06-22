@@ -93,7 +93,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 #pragma region 頂点情報のコピー
 	// 頂点情報のマップ
-	DirectX::XMFLOAT3* vertMap = nullptr;
+	Vertex* vertMap = nullptr;
 
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	std::copy(std::begin(vertices), std::end(vertices), vertMap);
@@ -186,7 +186,10 @@ void DirectXCommon::Initialize(WinApp* winApp)
 #pragma region 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
+		// 座標
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+		// uv
+		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
 	};
 #pragma endregion 
 

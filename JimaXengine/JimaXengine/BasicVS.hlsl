@@ -1,4 +1,10 @@
-float4 VSmain( float4 pos : POSITION ) : SV_POSITION
+#include "BasicShader.hlsli"
+
+Output VSmain(float4 pos : POSITION, float2 uv : TEXCOORD)
 {
-	return pos;
+	Output output;
+	output.svpos = pos;
+	output.uv = uv;
+
+	return output;
 }

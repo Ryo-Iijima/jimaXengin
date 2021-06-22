@@ -16,6 +16,9 @@
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{0f2739e7-0e35-46b1-b48e-b84138f13802}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Basic">
+      <UniqueIdentifier>{2d713744-e68c-49eb-a7d5-d8c39d90851b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,11 +40,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicVS.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>シェーダーファイル</Filter>
+      <Filter>シェーダーファイル\Basic</Filter>
     </FxCompile>
+    <FxCompile Include="BasicVS.hlsl">
+      <Filter>シェーダーファイル\Basic</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BasicShader.hlsli">
+      <Filter>シェーダーファイル\Basic</Filter>
+    </None>
   </ItemGroup>
 </Project>
