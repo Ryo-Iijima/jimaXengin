@@ -137,41 +137,43 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		//textureData[i].y = rand() % 256;
 		//textureData[i].z = rand() % 256;
 		//textureData[i].w = 255;
-		textureData[i].x = 1;
+		textureData[i].x = 0;
 		textureData[i].y = 1;
-		textureData[i].z = 0;
-		textureData[i].w = 0;
+		textureData[i].z = 1;
+		textureData[i].w = 1;
 	}
 
 	// ヒープ設定
-	heapprop.Type = D3D12_HEAP_TYPE_CUSTOM;
-	heapprop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;	// ライトバック
-	heapprop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;	// 転送はCPUから直接行う
-	heapprop.CreationNodeMask = 0;	// 単一アダプターのため0
-	heapprop.VisibleNodeMask = 0;
+	D3D12_HEAP_PROPERTIES texHeapProp = {};
+
+	texHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	texHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;	// ライトバック
+	texHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;	// 転送はCPUから直接行う
+	//texHeapProp.CreationNodeMask = 0;	// 単一アダプターのため0
+	//texHeapProp.VisibleNodeMask = 0;
 
 	// リソース設定
-	D3D12_RESOURCE_DESC resDesc = {};
+	D3D12_RESOURCE_DESC texResDesc = {};
 
-	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	resDesc.Width = texWidth;	// 幅
-	resDesc.Height = texWidth;	// 高さ
-	resDesc.DepthOrArraySize = 1;	// 2D配列じゃないので1
-	resDesc.SampleDesc.Count = 1;	// アンチエイリアシングしない
-	resDesc.SampleDesc.Quality = 0;	// 最低クオリティ
-	resDesc.MipLevels = 1;	// ミップマップしないので1
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;	// 2Dテクスチャ用
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
-	resDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
+	texResDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	texResDesc.Width = texWidth;	// 幅
+	texResDesc.Height = texWidth;	// 高さ
+	texResDesc.DepthOrArraySize = 1;	// 2D配列じゃないので1
+	texResDesc.SampleDesc.Count = 1;	// アンチエイリアシングしない
+	//texResDesc.SampleDesc.Quality = 0;	// 最低クオリティ
+	texResDesc.MipLevels = 1;	// ミップマップしないので1
+	texResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;	// 2Dテクスチャ用
+	//texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
+	//texResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
 
 	// リソースの生成
 	ID3D12Resource* texbuff = nullptr;
 
 	result = _dev->CreateCommittedResource
 	(
-		&heapprop,
+		&texHeapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
+		&texResDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,		// テクスチャ用指定
 		nullptr,
 		IID_PPV_ARGS(&texbuff)
@@ -196,7 +198,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	// シェーダーから見えるように
-	descHeapDesc.NodeMask = 0;	// マスク0
+	//descHeapDesc.NodeMask = 0;	// マスク0
 	descHeapDesc.NumDescriptors = 1;	// ビュー1つ
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
 	
@@ -205,7 +207,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	// シェーダーリソースビューを作る
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// RGBA(0.0f~0.1fに正規化)
+	srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;	// RGBA
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;	// ミップマップは使わないので1

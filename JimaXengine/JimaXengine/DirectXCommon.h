@@ -33,7 +33,6 @@ private:	// 構造体
 		DirectX::XMFLOAT2 uv;
 	};
 
-
 private:	// メンバ変数
 	// ウィンドウズアプリケーション管理
 	WinApp* winApp;
