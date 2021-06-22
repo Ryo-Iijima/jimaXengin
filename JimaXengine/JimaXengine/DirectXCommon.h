@@ -74,6 +74,8 @@ private:	// ÉÅÉìÉoïœêî
 	ID3D12RootSignature* rootsignature;
 	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	ID3D12DescriptorHeap* texDescHeap = nullptr;
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	ID3D12PipelineState* _piplineState = nullptr;
 	D3D12_VIEWPORT viewport = {};
 	D3D12_RECT scissorrect = {};

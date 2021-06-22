@@ -133,14 +133,17 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 	for (int i = 0; i < texDataCount; i++)
 	{
-		textureData[i].x = rand() % 256;
-		textureData[i].y = rand() % 256;
-		textureData[i].z = rand() % 256;
-		textureData[i].w = 255;
+		//textureData[i].x = rand() % 256;
+		//textureData[i].y = rand() % 256;
+		//textureData[i].z = rand() % 256;
+		//textureData[i].w = 255;
+		textureData[i].x = 1;
+		textureData[i].y = 1;
+		textureData[i].z = 0;
+		textureData[i].w = 0;
 	}
 
 	// ヒープ設定
-
 	heapprop.Type = D3D12_HEAP_TYPE_CUSTOM;
 	heapprop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;	// ライトバック
 	heapprop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;	// 転送はCPUから直接行う
@@ -156,7 +159,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	resDesc.DepthOrArraySize = 1;	// 2D配列じゃないので1
 	resDesc.SampleDesc.Count = 1;	// アンチエイリアシングしない
 	resDesc.SampleDesc.Quality = 0;	// 最低クオリティ
-	resdesc.MipLevels = 1;	// ミップマップしないので1
+	resDesc.MipLevels = 1;	// ミップマップしないので1
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;	// 2Dテクスチャ用
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
 	resDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
@@ -190,15 +193,30 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 #pragma region テクスチャ用シェーダーリソースビュー
 	// デスクリプタヒープの作成
-	ID3D12DescriptorHeap* texDescHeap = nullptr;
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 
-	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descHeapDesc.NodeMask = 0;
-	descHeapDesc.NumDescriptors = 1;
-	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	// シェーダーから見えるように
+	descHeapDesc.NodeMask = 0;	// マスク0
+	descHeapDesc.NumDescriptors = 1;	// ビュー1つ
+	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
 	
 	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&texDescHeap));
+
+	// シェーダーリソースビューを作る
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// RGBA(0.0f~0.1fに正規化)
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
+	srvDesc.Texture2D.MipLevels = 1;	// ミップマップは使わないので1
+
+	// シェーダーリソースビューの生成
+	_dev->CreateShaderResourceView
+	(
+		texbuff,	// ビューと関連付けるバッファ
+		&srvDesc,	// テクスチャ設定情報
+		texDescHeap->GetCPUDescriptorHandleForHeapStart()	// ヒープのどこに割り当てるか
+	);
 
 
 #pragma endregion
@@ -322,11 +340,47 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 #pragma endregion 
 
+#pragma region ルートパラメーターの作成
+	// デスクリプターレンジの設定
+	D3D12_DESCRIPTOR_RANGE descTblRange = {};
+
+	descTblRange.NumDescriptors = 1;	// テクスチャ1つ
+	descTblRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;	// 種別はテクスチャ
+	descTblRange.BaseShaderRegister = 0;	// 0番スロットから
+	descTblRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	D3D12_ROOT_PARAMETER rootparam = {};
+
+	rootparam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootparam.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	// ピクセルシェーダーから見える
+	rootparam.DescriptorTable.pDescriptorRanges = &descTblRange;	// デスクリプタレンジのアドレス
+	rootparam.DescriptorTable.NumDescriptorRanges = 1;	// デスクリプタレンジ数
+
+#pragma endregion
+
+#pragma region サンプラーの設定
+	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
+
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 横方向の繰り返し
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 縦方向の繰り返し
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 奥行方向の繰り返し
+	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;	// ボーダーは黒
+	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;	// 線形補間
+	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;	// ミップマップ最大値
+	samplerDesc.MinLOD = 0.0f;				// ミップマップ最小値
+	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	// ピクセルシェーダーから見える
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;	// サンプリングしない
+
+#pragma endregion
+
 #pragma region	ルートシグネチャ
 	// D3D12_ROOT_SIGNAAATURE_DESCの設定
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	rootSignatureDesc.pParameters = &rootparam;	// ルートパラメーターの先頭アドレス
+	rootSignatureDesc.NumParameters = 1;	// ルートパラメーターの数
+	rootSignatureDesc.pStaticSamplers = &samplerDesc;
+	rootSignatureDesc.NumStaticSamplers = 1;
 
 	// バイナリコードの作成
 	ID3D10Blob* rootSigBlob = nullptr;
@@ -457,7 +511,11 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->RSSetScissorRects(1, &scissorrect);
 
-	_cmdList->SetGraphicsRootSignature(rootsignature);		// ルートシグネチャの設定コマンド
+	_cmdList->SetGraphicsRootSignature(rootsignature);		// ルートシグネチャの設定
+
+	_cmdList->SetDescriptorHeaps(1, &texDescHeap);	// ディスクリプターヒープの指定
+
+	_cmdList->SetGraphicsRootDescriptorTable(0, texDescHeap->GetGPUDescriptorHandleForHeapStart());	// ルートパラメーターとディスクリプターヒープの関連付け
 
 	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
 
