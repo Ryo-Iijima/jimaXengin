@@ -1,6 +1,7 @@
 #include "DirectXCommon.h"
 #include <string>
 #include <cassert>
+#include <DirectXTexWIC.cpp>
 
 DirectXCommon::~DirectXCommon()
 {
@@ -126,22 +127,19 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 #pragma region テクスチャバッファの作成
 
-	// ランダムテクスチャの初期化
-	const int texWidth = 256;	// 横方向ピクセル数
-	const int texDataCount = texWidth * texWidth;	// 配列の要素数
-	DirectX::XMFLOAT4* textureData = new DirectX::XMFLOAT4[texDataCount];	// テクスチャデータ配列
+	//WICテクスチャのロード
+	DirectX::TexMetadata metadata = {};
+	DirectX::ScratchImage scrachImg = {};
 
-	for (int i = 0; i < texDataCount; i++)
-	{
-		//textureData[i].x = rand() % 256;
-		//textureData[i].y = rand() % 256;
-		//textureData[i].z = rand() % 256;
-		//textureData[i].w = 255;
-		textureData[i].x = 0;
-		textureData[i].y = 1;
-		textureData[i].z = 1;
-		textureData[i].w = 1;
-	}
+	result = LoadFromWICFile
+	(
+		L"Resources/colorGrid.png",
+		WIC_FLAGS_NONE,
+		&metadata,
+		scrachImg
+	);
+
+	auto img = scrachImg.GetImage(0, 0, 0);	// 生データ抽出
 
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES texHeapProp = {};
@@ -149,22 +147,22 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	texHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
 	texHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;	// ライトバック
 	texHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;	// 転送はCPUから直接行う
-	//texHeapProp.CreationNodeMask = 0;	// 単一アダプターのため0
-	//texHeapProp.VisibleNodeMask = 0;
+	texHeapProp.CreationNodeMask = 0;	// 単一アダプターのため0
+	texHeapProp.VisibleNodeMask = 0;
 
 	// リソース設定
 	D3D12_RESOURCE_DESC texResDesc = {};
 
-	texResDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	texResDesc.Width = texWidth;	// 幅
-	texResDesc.Height = texWidth;	// 高さ
-	texResDesc.DepthOrArraySize = 1;	// 2D配列じゃないので1
+	texResDesc.Format = metadata.format;
+	texResDesc.Width = metadata.width;		// 幅
+	texResDesc.Height = metadata.height;	// 高さ
+	texResDesc.DepthOrArraySize = metadata.arraySize;	// 2D配列じゃないので1
 	texResDesc.SampleDesc.Count = 1;	// アンチエイリアシングしない
-	//texResDesc.SampleDesc.Quality = 0;	// 最低クオリティ
-	texResDesc.MipLevels = 1;	// ミップマップしないので1
-	texResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;	// 2Dテクスチャ用
-	//texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
-	//texResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
+	texResDesc.SampleDesc.Quality = 0;	// 最低クオリティ
+	texResDesc.MipLevels = metadata.mipLevels;	// ミップマップしないので1
+	texResDesc.Dimension = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);	// 2Dテクスチャ用
+	texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
+	texResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
 
 	// リソースの生成
 	ID3D12Resource* texbuff = nullptr;
@@ -184,12 +182,12 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	(
 		0,
 		nullptr,		// 全領域にコピー
-		textureData,	// 元データアドレス
-		sizeof(DirectX::XMFLOAT4) * texWidth,		// 1ラインサイズ
-		sizeof(DirectX::XMFLOAT4) * texDataCount	// 全サイズ
+		img->pixels,	// 元データアドレス
+		img->rowPitch,	// 1ラインサイズ
+		img->slicePitch	// 全サイズ
 	);
 
-	delete[] textureData;	// 転送が済んだので元データ解放
+	//delete[] textureData;	// 転送が済んだので元データ解放
 
 #pragma endregion
 
@@ -198,7 +196,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	// シェーダーから見えるように
-	//descHeapDesc.NodeMask = 0;	// マスク0
+	descHeapDesc.NodeMask = 0;	// マスク0
 	descHeapDesc.NumDescriptors = 1;	// ビュー1つ
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
 	
@@ -207,7 +205,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	// シェーダーリソースビューを作る
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
-	srvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;	// RGBA
+	srvDesc.Format = metadata.format;	// RGBA
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;	// ミップマップは使わないので1
@@ -684,9 +682,9 @@ bool DirectXCommon::CreateFinalRenderTargets()
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;		// レンダーターゲットビュー
-	//heapDesc.NodeMask = 0;
+	heapDesc.NodeMask = 0;
 	heapDesc.NumDescriptors = 2;						// 裏表で2枚
-	//heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;	// 特に指定なし
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;	// 特に指定なし
 
 	rtvHeaps = nullptr;
 	result = _dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeaps));
@@ -704,6 +702,11 @@ bool DirectXCommon::CreateFinalRenderTargets()
 		return result;
 	}
 
+	// ガンマ補正用の設定(SRGB)
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	// ガンマ補正あり
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
 	_backBuffers.resize(swcDesc.BufferCount);
 	for (int i = 0; i < swcDesc.BufferCount; i++)
 	{
@@ -715,7 +718,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 
 		D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeaps->GetCPUDescriptorHandleForHeapStart();	// デスクリプタヒープのハンドルを取得
 		handle.ptr += i * _dev->GetDescriptorHandleIncrementSize(heapDesc.Type);	// 裏表のアドレスのずれ
-		_dev->CreateRenderTargetView(_backBuffers[i], nullptr, handle);			// RTVの生成
+		_dev->CreateRenderTargetView(_backBuffers[i], &rtvDesc, handle);			// RTVの生成
 	}
 
 	return true;

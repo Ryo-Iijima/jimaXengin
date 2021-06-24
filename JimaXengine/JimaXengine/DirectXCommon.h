@@ -15,6 +15,9 @@
 #include <d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 
+#include <DirectXTex.h>
+#pragma comment (lib,"DirectXTex.lib")
+
 /// <summary>
 /// DirectX汎用処理のクラス
 /// （とりあえず資料とかやった部分をここに移していく）

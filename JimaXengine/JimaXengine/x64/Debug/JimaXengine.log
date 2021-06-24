@@ -1,3 +1,7 @@
 ﻿  DirectXCommon.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(708,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(158,37): warning C4267: '=': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(159,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(162,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(188,2): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(711,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
