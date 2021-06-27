@@ -92,6 +92,7 @@ private:	// メンバ変数
 	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
 	ID3DBlob* psBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
+	D3D12_DESCRIPTOR_RANGE descTblRange = {};
 	D3D12_ROOT_PARAMETER rootparam = {};
 	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
 

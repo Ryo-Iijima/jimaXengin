@@ -756,6 +756,8 @@ bool DirectXCommon::CreateGPipelineStateObject()
 
 	CreatRootSignature();
 
+	gPipline.pRootSignature = rootsignature;
+
 	// グラフィックパイプラインステートオブジェクトの生成
 	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
 
@@ -770,7 +772,6 @@ bool DirectXCommon::CreateGPipelineStateObject()
 void DirectXCommon::SetUpRootParameter()
 {
 	// デスクリプターレンジの設定
-	D3D12_DESCRIPTOR_RANGE descTblRange = {};
 
 	descTblRange.NumDescriptors = 1;	// テクスチャ1つ
 	descTblRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;	// 種別はテクスチャ
@@ -839,9 +840,9 @@ bool DirectXCommon::CreatRootSignature()
 
 	rootSigBlob->Release();
 
-	//// パイプラインステートの生成
 	//gPipline.pRootSignature = rootsignature;
 
+	//// パイプラインステートの生成
 	//result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
 	//if (FAILED(result)) {
 	//	assert(0);

@@ -4,6 +4,4 @@ C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(557,
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(558,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(561,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(590,2): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-  main.cpp
-  コードを生成中...
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
