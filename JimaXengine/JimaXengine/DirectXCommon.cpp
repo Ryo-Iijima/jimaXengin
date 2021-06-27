@@ -81,6 +81,46 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		assert(0);
 	}
 
+#pragma region 定数バッファ
+	XMMATRIX matrix = XMMatrixIdentity();
+
+	// ヒープ設定
+	D3D12_HEAP_PROPERTIES cbHeapProp = {};
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	// 転送用
+
+	// リソース設定
+	D3D12_RESOURCE_DESC cbResDesc = {};
+	cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResDesc.Width = (sizeof(matrix) + 0xff) & ~0xff;
+	cbResDesc.Height = 1;
+	cbResDesc.DepthOrArraySize = 1;
+	cbResDesc.MipLevels = 1;
+	cbResDesc.SampleDesc.Count = 1;
+	cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// 定数バッファ作成
+	result = _dev->CreateCommittedResource
+	(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&cbResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuff)
+	);
+	if (FAILED(result)) {
+		assert(0);
+	}
+
+#pragma endregion 
+
+#pragma region 定数バッファのマップ
+	XMMATRIX* mapMatrix;
+	result = constBuff->Map(0, nullptr, (void**)&mapMatrix);
+	*mapMatrix = matrix;	// memcpyの代わりに代入演算子も使えるぞという例
+
+#pragma endregion
+
 	// テクスチャ用シェーダーリソースビューの作成
 	if (!CreateTextureShaderResourceView())
 	{
@@ -189,9 +229,15 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->SetGraphicsRootSignature(rootsignature);		// ルートシグネチャの設定
 
-	_cmdList->SetDescriptorHeaps(1, &texDescHeap);	// ディスクリプターヒープの指定
+	_cmdList->SetDescriptorHeaps(1, &basicDescHeap);	// ディスクリプターヒープの指定
 
-	_cmdList->SetGraphicsRootDescriptorTable(0, texDescHeap->GetGPUDescriptorHandleForHeapStart());	// ルートパラメーターとディスクリプターヒープの関連付け
+	auto heapHandle = basicDescHeap->GetGPUDescriptorHandleForHeapStart();
+
+	_cmdList->SetGraphicsRootDescriptorTable(0, heapHandle);	// ルートパラメーターとディスクリプターヒープの関連付け
+
+	//heapHandle.ptr += _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);	// アドレスずらす
+
+	//_cmdList->SetGraphicsRootDescriptorTable(1, heapHandle);
 
 	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
 
@@ -600,16 +646,15 @@ bool DirectXCommon::GenerateTextureBuffer()
 
 bool DirectXCommon::CreateTextureShaderResourceView()
 {
-#pragma region テクスチャ用シェーダーリソースビュー
 	// デスクリプタヒープの作成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	// シェーダーから見えるように
 	descHeapDesc.NodeMask = 0;	// マスク0
-	descHeapDesc.NumDescriptors = 1;	// ビュー1つ
+	descHeapDesc.NumDescriptors = 2;	// SRVとCBV
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
 
-	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&texDescHeap));
+	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&basicDescHeap));
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -623,12 +668,33 @@ bool DirectXCommon::CreateTextureShaderResourceView()
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;	// ミップマップは使わないので1
 
+	// ディスクリプタの先頭ハンドルを先に取得しておく
+	auto basicHeapHandle = basicDescHeap->GetCPUDescriptorHandleForHeapStart();
+
 	// シェーダーリソースビューの生成
 	_dev->CreateShaderResourceView
 	(
-		texbuff,	// ビューと関連付けるバッファ
-		&srvDesc,	// テクスチャ設定情報
-		texDescHeap->GetCPUDescriptorHandleForHeapStart()	// ヒープのどこに割り当てるか
+		texbuff,		// ビューと関連付けるバッファ
+		&srvDesc,		// テクスチャ設定情報
+		basicHeapHandle	// ヒープのどこに割り当てるか
+	);
+
+	///////////////////////////////////////////////////////////
+	// 後で分けるけどとりあえずここで定数バッファビュー生成
+	///////////////////////////////////////////////////////////
+
+	basicHeapHandle.ptr += _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);	// ビューの大きさ分だけ後ろにずらす
+
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+
+	cbvDesc.BufferLocation = constBuff->GetGPUVirtualAddress();
+	cbvDesc.SizeInBytes = constBuff->GetDesc().Width;
+
+	// 定数バッファビューの生成
+	_dev->CreateConstantBufferView
+	(
+		&cbvDesc,
+		basicHeapHandle
 	);
 
 	return true;
@@ -773,21 +839,27 @@ void DirectXCommon::SetUpRootParameter()
 {
 	// デスクリプターレンジの設定
 
-	descTblRange.NumDescriptors = 1;	// テクスチャ1つ
-	descTblRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;	// 種別はテクスチャ
-	descTblRange.BaseShaderRegister = 0;	// 0番スロットから
-	descTblRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	// テクスチャ用
+	descTblRange[0].NumDescriptors = 1;								// テクスチャ1つ
+	descTblRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;	// 種別はテクスチャ
+	descTblRange[0].BaseShaderRegister = 0;							// 0番スロットから
+	descTblRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	// 定数用
+	descTblRange[1].NumDescriptors = 1;								// 定数1つ
+	descTblRange[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;	// 種別はテクスチャ
+	descTblRange[1].BaseShaderRegister = 0;							// 0番スロットから
+	descTblRange[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
+	// テクスチャ・定数共用
 	rootparam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootparam.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	// ピクセルシェーダーから見える
-	rootparam.DescriptorTable.pDescriptorRanges = &descTblRange;	// デスクリプタレンジのアドレス
-	rootparam.DescriptorTable.NumDescriptorRanges = 1;	// デスクリプタレンジ数
+	rootparam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;			// ピクセルシェーダーから見える
+	rootparam.DescriptorTable.pDescriptorRanges = descTblRange;			// デスクリプタレンジのアドレス
+	rootparam.DescriptorTable.NumDescriptorRanges = 2;					// デスクリプタレンジ数
 }
 
 void DirectXCommon::SetUpSampler()
 {
-
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 横方向の繰り返し
 	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 縦方向の繰り返し
 	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 奥行方向の繰り返し
@@ -805,8 +877,8 @@ bool DirectXCommon::CreatRootSignature()
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = &rootparam;	// ルートパラメーターの先頭アドレス
-	rootSignatureDesc.NumParameters = 1;	// ルートパラメーターの数
+	rootSignatureDesc.pParameters = &rootparam;				// ルートパラメーターの先頭アドレス
+	rootSignatureDesc.NumParameters = 1;					// ルートパラメーターの数
 	rootSignatureDesc.pStaticSamplers = &samplerDesc;
 	rootSignatureDesc.NumStaticSamplers = 1;
 
@@ -839,16 +911,6 @@ bool DirectXCommon::CreatRootSignature()
 	}
 
 	rootSigBlob->Release();
-
-	//gPipline.pRootSignature = rootsignature;
-
-	//// パイプラインステートの生成
-	//result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
-	//if (FAILED(result)) {
-	//	assert(0);
-	//	return result;
-	//}
-
 
 	return true;
 }

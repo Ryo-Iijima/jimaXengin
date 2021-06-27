@@ -78,11 +78,8 @@ private:	// メンバ変数
 	ID3D12RootSignature* rootsignature;
 	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
-	ID3D12DescriptorHeap* texDescHeap = nullptr;
+	ID3D12DescriptorHeap* basicDescHeap = nullptr;
 	ID3D12PipelineState* _piplineState = nullptr;
-	D3D12_VIEWPORT viewport = {};
-	D3D12_RECT scissorrect = {};
-
 	ID3D12Resource* vertBuff = nullptr;
 	D3D12_RESOURCE_DESC resdesc = {};
 	D3D12_HEAP_PROPERTIES heapprop = {};
@@ -92,10 +89,12 @@ private:	// メンバ変数
 	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
 	ID3DBlob* psBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
-	D3D12_DESCRIPTOR_RANGE descTblRange = {};
+	D3D12_DESCRIPTOR_RANGE descTblRange[2] = {};
 	D3D12_ROOT_PARAMETER rootparam = {};
 	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
-
+	D3D12_VIEWPORT viewport = {};
+	D3D12_RECT scissorrect = {};
+	ID3D12Resource* constBuff = nullptr;
 
 public:		// メンバ関数
 
