@@ -18,6 +18,8 @@
 #include <DirectXTex.h>
 #pragma comment (lib,"DirectXTex.lib")
 
+#include <d3dx12.h>
+
 /// <summary>
 /// DirectX汎用処理のクラス
 /// （とりあえず資料とかやった部分をここに移していく）
@@ -77,24 +79,51 @@ private:	// メンバ変数
 	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	ID3D12DescriptorHeap* texDescHeap = nullptr;
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	ID3D12PipelineState* _piplineState = nullptr;
 	D3D12_VIEWPORT viewport = {};
 	D3D12_RECT scissorrect = {};
+
+	ID3D12Resource* vertBuff = nullptr;
+	D3D12_RESOURCE_DESC resdesc = {};
+	D3D12_HEAP_PROPERTIES heapprop = {};
+	ID3D12Resource* idxBuff = nullptr;
+	DirectX::TexMetadata metadata = {};
+	ID3D12Resource* texbuff = nullptr;
+	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
+	ID3DBlob* psBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+	D3D12_ROOT_PARAMETER rootparam = {};
+	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
 
 
 public:		// メンバ関数
 
 	~DirectXCommon();
 
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="win"></param>
 	void Initialize(WinApp* win);
 
+	/// <summary>
+	/// 後処理
+	/// </summary>
 	void Finalize();
 
+	/// <summary>
+	/// 描画前準備
+	/// </summary>
 	void PreDraw();
 
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
 	void PostDraw();
 
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void ClearRenderTarget();
 
 	// getter
@@ -132,4 +161,89 @@ private:	// メンバ関数
 	/// <returns>成否</returns>
 	bool CreateFence();
 
+
+	/// <summary>
+	/// 頂点バッファの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateVertexBuffer();
+
+	/// <summary>
+	/// 頂点情報のマップ
+	/// </summary>
+	/// <returns>成否</returns>
+	bool MapVertexBuffer();
+
+	/// <summary>
+	/// 頂点バッファビューの作成
+	/// </summary>
+	void CreateVertexBufferView();
+
+	/// <summary>
+	/// インデックスバッファの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateIndexBuffer();
+
+	/// <summary>
+	/// インデックス情報のマップ
+	/// </summary>
+	/// <returns>成否</returns>
+	bool MapIndexBuffer();
+
+	/// <summary>
+	/// インデックスバッファビューの作成
+	/// </summary>
+	void CreateIndexBufferView();
+
+	/// <summary>
+	/// テクスチャバッファの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateTextureBuffer();
+
+	/// <summary>
+	/// テクスチャ用シェーダーリソースビューの作成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool CreateTextureShaderResourceView();
+
+	/// <summary>
+	/// シェーダーの読み込みと生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool LoadShader();
+
+	/// <summary>
+	/// グラフィックパイプラインステートオブジェクトの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool CreateGPipelineStateObject();
+
+	/// <summary>
+	/// ルートパラメーターの設定
+	/// </summary>
+	void SetUpRootParameter();
+
+	/// <summary>
+	/// サンプラーの設定
+	/// </summary>
+	/// <returns>成否</returns>
+	void SetUpSampler();
+
+	/// <summary>
+	/// ルートシグネチャの作成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool CreatRootSignature();
+
+	/// <summary>
+	/// ビューポートの設定
+	/// </summary>
+	void SetUpViewport();
+
+	/// <summary>
+	/// シザー矩形の設定
+	/// </summary>
+	void SetUpScissorrect();
 };
