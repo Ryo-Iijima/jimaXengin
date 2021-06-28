@@ -4,6 +4,7 @@
 
 #include "WinApp.h"
 #include "DirectXCommon.h"
+#include "Application.h"
 
 //// @drief コンソール画面にフォーマット付き文字列を表示
 //// @param format フォーマット（%dとか%fとかの）
@@ -28,44 +29,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//DebugOutputFormatStrings("Show window test.");
 	//getchar();
 
-	// 汎用機能
-	WinApp* winApp = nullptr;
-	DirectXCommon* dxCommon = nullptr;
+	auto& app = Application::Instance();
 
-	// ゲームウィンドウの作成
-	winApp = new WinApp();
-	winApp->CreateGameWindow();
+	app.Initialize();
 
-	// DirectX初期化処理
-	dxCommon = new DirectXCommon();
-	dxCommon->Initialize(winApp);
+	app.Run();
 
-
-	///////////////////////////////
-	// メインループ
-	///////////////////////////////
-	while (true)
-	{
-		// メッセージ処理
-		if (winApp->ProcessMessage())
-		{
-			break;
-		}
-
-		// 描画前処理
-		dxCommon->PreDraw();
-
-		// 描画後処理
-		dxCommon->PostDraw();
-
-#pragma endregion
-	}
-	// 各種解放処理
-	delete dxCommon;
-
-	// ゲームウィンドウの破棄
-	winApp->DestroyGameWindow();
-	delete winApp;
+	app.Finalize();
 
 	return 0;
 }
