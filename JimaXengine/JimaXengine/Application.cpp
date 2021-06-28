@@ -42,6 +42,5 @@ void Application::Run()
 
 		// •`‰æŒãˆ—
 		dxCommon->PostDraw();
-
 	}
 }

@@ -55,24 +55,68 @@ private:	// メンバ変数
 	UINT bbIdx;
 	D3D12_RESOURCE_BARRIER barrierDesc = {};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvH;
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
 	ID3D12Fence* _fence;
 	UINT16 _fenceVal = 0;
 
 	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
 
-	// 三角形の頂点座標
-	Vertex vertices[4] =
+	// 頂点座標
+	Vertex vertices[24] =
 	{
-		{{-1.0f,-1.0f,0.0f},{0.0f,1.0f}},
-		{{-1.0f, 1.0f,0.0f},{0.0f,0.0f}},
-		{{1.0f,-1.0f,0.0f},{1.0f,1.0f}},
-		{{1.0f, 1.0f,0.0f},{1.0f,0.0f}},
+		// 前
+		{{-1.0f,-1.0f,-1.0f},{0.0f,1.0f}},
+		{{-1.0f, 1.0f,-1.0f},{0.0f,0.0f}},
+		{{ 1.0f,-1.0f,-1.0f},{1.0f,1.0f}},
+		{{ 1.0f, 1.0f,-1.0f},{1.0f,0.0f}},
+		// 後
+		{{-1.0f,-1.0f, 1.0f},{0.0f,1.0f}},
+		{{-1.0f, 1.0f, 1.0f},{0.0f,0.0f}},
+		{{ 1.0f,-1.0f, 1.0f},{1.0f,1.0f}},
+		{{ 1.0f, 1.0f, 1.0f},{1.0f,0.0f}},
+		// 左
+		{{-1.0f,-1.0f,-1.0f},{0.0f,1.0f}},
+		{{-1.0f,-1.0f, 1.0f},{0.0f,0.0f}},
+		{{-1.0f, 1.0f,-1.0f},{1.0f,1.0f}},
+		{{-1.0f, 1.0f, 1.0f},{1.0f,0.0f}},
+		// 左
+		{{ 1.0f,-1.0f,-1.0f},{0.0f,1.0f}},
+		{{ 1.0f,-1.0f, 1.0f},{0.0f,0.0f}},
+		{{ 1.0f, 1.0f,-1.0f},{1.0f,1.0f}},
+		{{ 1.0f, 1.0f, 1.0f},{1.0f,0.0f}},
+		// 下
+		{{-1.0f, 1.0f,-1.0f},{0.0f,1.0f}},
+		{{-1.0f, 1.0f, 1.0f},{0.0f,0.0f}},
+		{{ 1.0f, 1.0f,-1.0f},{1.0f,1.0f}},
+		{{ 1.0f, 1.0f, 1.0f},{1.0f,0.0f}},
+		// 下
+		{{-1.0f,-1.0f,-1.0f},{0.0f,1.0f}},
+		{{-1.0f,-1.0f, 1.0f},{0.0f,0.0f}},
+		{{ 1.0f,-1.0f,-1.0f},{1.0f,1.0f}},
+		{{ 1.0f,-1.0f, 1.0f},{1.0f,0.0f}},
 	};
 
-	unsigned short indices[6] =
+	// インデックス情報
+	unsigned short indices[36] =
 	{
+		// 前
 		0,1,2,
-		2,1,3,
+		1,2,3,
+		// 前
+		4,5,6,
+		5,6,7,
+		// 前
+		8,9,10,
+		9,10,11,
+		// 前
+		12,13,14,
+		14,15,16,
+		// 前
+		17,18,19,
+		18,19,20,
+		// 前
+		21,22,23,
+		22,23,24,
 	};
 
 	ID3D12RootSignature* rootsignature;
@@ -95,6 +139,7 @@ private:	// メンバ変数
 	D3D12_VIEWPORT viewport = {};
 	D3D12_RECT scissorrect = {};
 	ID3D12Resource* constBuff = nullptr;
+	ID3D12DescriptorHeap* dsvHeap = nullptr;
 
 public:		// メンバ関数
 
@@ -203,7 +248,13 @@ private:	// メンバ関数
 	bool GenerateTextureBuffer();
 
 	/// <summary>
-	/// テクスチャ用シェーダーリソースビューの作成
+	/// 定数バッファの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateConstBufferView();
+
+	/// <summary>
+	/// シェーダーリソースビューの作成
 	/// </summary>
 	/// <returns>成否</returns>
 	bool CreateTextureShaderResourceView();

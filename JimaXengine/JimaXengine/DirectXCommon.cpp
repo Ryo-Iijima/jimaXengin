@@ -81,68 +81,75 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		assert(0);
 	}
 
-#pragma region 定数バッファ
-	XMMATRIX matrix = XMMatrixIdentity();
+	// 定数バッファの生成
+	if (!GenerateConstBufferView())
+	{
+		assert(0);
+	}
 
-	matrix.r[0].m128_f32[0] = 2.0f / WinApp::WINDOW_WIDTH;
-	matrix.r[1].m128_f32[1] = -2.0f / WinApp::WINDOW_HEIGHT;
-	matrix.r[3].m128_f32[0] = -1.0f;
-	matrix.r[3].m128_f32[1] = 1.0f;
-
-	matrix = XMMatrixRotationY(XM_PIDIV4);	// ワールド
-
-	XMFLOAT3 eye(0, 0, -5);
-	XMFLOAT3 target(0, 0, 0);
-	XMFLOAT3 up(0, 1, 0);
-
-	matrix *= XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));	// ビュー
-
-	matrix *= XMMatrixPerspectiveFovLH
-	(
-		XM_PIDIV2,	// 画角
-		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
-		1.0f,		// 近いほう
-		10.0f		// 遠いほう
-	);
-
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES cbHeapProp = {};
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	// 転送用
-
-	// リソース設定
-	D3D12_RESOURCE_DESC cbResDesc = {};
-	cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResDesc.Width = (sizeof(matrix) + 0xff) & ~0xff;
-	cbResDesc.Height = 1;
-	cbResDesc.DepthOrArraySize = 1;
-	cbResDesc.MipLevels = 1;
-	cbResDesc.SampleDesc.Count = 1;
-	cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-	// 定数バッファ作成
+#pragma region 深度バッファ
+	// リソース作成
+	D3D12_RESOURCE_DESC depthResDesc = {};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = WinApp::WINDOW_WIDTH;		// レンダーターゲットのサイズ
+	depthResDesc.Height = WinApp::WINDOW_HEIGHT;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値フォーマット
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp = {};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue = {};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	// リソース生成
+	ID3D12Resource* depthBuffer = nullptr;
 	result = _dev->CreateCommittedResource
 	(
-		&cbHeapProp,
+		&depthHeapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&cbResDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBuff)
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// 深度値書き込み用
+		&depthClearValue,
+		IID_PPV_ARGS(&depthBuffer)
 	);
 	if (FAILED(result)) {
 		assert(0);
 	}
 
-#pragma endregion 
-
-#pragma region 定数バッファのマップ
-	XMMATRIX* mapMatrix;
-	result = constBuff->Map(0, nullptr, (void**)&mapMatrix);
-	*mapMatrix = matrix;	// memcpyの代わりに代入演算子も使えるぞという例
-
 #pragma endregion
 
-	// テクスチャ用シェーダーリソースビューの作成
+#pragma region 深度バッファビュー
+	// 深度ビュー用デスクリプターヒープ作成
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	if (FAILED(result)) {
+		assert(0);
+	}
+
+	// 深度ビュー生成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値に32ビット使う
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;	// 特になし
+
+	_dev->CreateDepthStencilView
+	(
+		depthBuffer,
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart()
+	);
+
+
+
+#pragma endregion
+	// シェーダーリソースビューの作成
 	if (!CreateTextureShaderResourceView())
 	{
 		assert(0);
@@ -191,7 +198,9 @@ void DirectXCommon::PreDraw()
 #pragma region 画面クリアコマンド
 	rtvH = rtvHeaps->GetCPUDescriptorHandleForHeapStart();
 	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	_cmdList->OMSetRenderTargets(1, &rtvH, true, nullptr);
+
+	dsvH = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	_cmdList->OMSetRenderTargets(1, &rtvH, true, &dsvH);
 
 	ClearRenderTarget();
 
@@ -241,6 +250,7 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);	// 画面クリア
 
+	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);	// 深度クリア
 
 	_cmdList->SetPipelineState(_piplineState);	// パイプラインステートのセット
 
@@ -262,7 +272,7 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->IASetIndexBuffer(&ibView);	// インデックスバッファの設定コマンド
 
-	_cmdList->DrawIndexedInstanced(6, 1, 0, 0, 0);	// 描画コマンド
+	_cmdList->DrawIndexedInstanced(24, 1, 0, 0, 0);	// 描画コマンド
 
 }
 
@@ -661,6 +671,72 @@ bool DirectXCommon::GenerateTextureBuffer()
 	return true;
 }
 
+bool DirectXCommon::GenerateConstBufferView()
+{
+	XMMATRIX matrix = XMMatrixIdentity();
+
+	matrix.r[0].m128_f32[0] = 2.0f / WinApp::WINDOW_WIDTH;
+	matrix.r[1].m128_f32[1] = -2.0f / WinApp::WINDOW_HEIGHT;
+	matrix.r[3].m128_f32[0] = -1.0f;
+	matrix.r[3].m128_f32[1] = 1.0f;
+
+	matrix = XMMatrixRotationY(XM_PIDIV4);	// ワールド
+
+	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 target(0, 0, 0);
+	XMFLOAT3 up(0, 1, 0);
+
+	matrix *= XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));	// ビュー
+
+	matrix *= XMMatrixPerspectiveFovLH
+	(
+		XM_PIDIV2,	// 画角
+		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
+		1.0f,		// 近いほう
+		10.0f		// 遠いほう
+	);
+
+	// ヒープ設定
+	D3D12_HEAP_PROPERTIES cbHeapProp = {};
+	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	// 転送用
+
+	// リソース設定
+	D3D12_RESOURCE_DESC cbResDesc = {};
+	cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	cbResDesc.Width = (sizeof(matrix) + 0xff) & ~0xff;
+	cbResDesc.Height = 1;
+	cbResDesc.DepthOrArraySize = 1;
+	cbResDesc.MipLevels = 1;
+	cbResDesc.SampleDesc.Count = 1;
+	cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// 定数バッファ作成
+	result = _dev->CreateCommittedResource
+	(
+		&cbHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&cbResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuff)
+	);
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+
+	// マップ
+	XMMATRIX* mapMatrix;
+	result = constBuff->Map(0, nullptr, (void**)&mapMatrix);
+	*mapMatrix = matrix;	// memcpyの代わりに代入演算子も使えるぞという例
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+
+	return true;
+}
+
 bool DirectXCommon::CreateTextureShaderResourceView()
 {
 	// デスクリプタヒープの作成
@@ -806,6 +882,11 @@ bool DirectXCommon::CreateGPipelineStateObject()
 	gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;	// カリングしない
 	gPipline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;	// 中身を塗りつぶす
 	gPipline.RasterizerState.DepthClipEnable = true;			// 深度方向のクリッピング
+
+	// 深度
+	gPipline.DepthStencilState.DepthEnable = true;	// 深度バッファ有効
+	gPipline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;	// 書き込む
+	gPipline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;	// 小さいほうをs採用
 
 	// ブレンドステートの設定
 	gPipline.BlendState.AlphaToCoverageEnable = false;

@@ -9,7 +9,6 @@ private:	// 変数
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 
-
 private:
 	// コンストラクタをprivateにして
 	// コピーと代入を禁止する
