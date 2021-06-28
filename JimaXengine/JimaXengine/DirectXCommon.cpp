@@ -84,6 +84,27 @@ void DirectXCommon::Initialize(WinApp* winApp)
 #pragma region 定数バッファ
 	XMMATRIX matrix = XMMatrixIdentity();
 
+	matrix.r[0].m128_f32[0] = 2.0f / WinApp::WINDOW_WIDTH;
+	matrix.r[1].m128_f32[1] = -2.0f / WinApp::WINDOW_HEIGHT;
+	matrix.r[3].m128_f32[0] = -1.0f;
+	matrix.r[3].m128_f32[1] = 1.0f;
+
+	matrix = XMMatrixRotationY(XM_PIDIV4);	// ワールド
+
+	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 target(0, 0, 0);
+	XMFLOAT3 up(0, 1, 0);
+
+	matrix *= XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));	// ビュー
+
+	matrix *= XMMatrixPerspectiveFovLH
+	(
+		XM_PIDIV2,	// 画角
+		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
+		1.0f,		// 近いほう
+		10.0f		// 遠いほう
+	);
+
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp = {};
 	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	// 転送用
@@ -234,10 +255,6 @@ void DirectXCommon::ClearRenderTarget()
 	auto heapHandle = basicDescHeap->GetGPUDescriptorHandleForHeapStart();
 
 	_cmdList->SetGraphicsRootDescriptorTable(0, heapHandle);	// ルートパラメーターとディスクリプターヒープの関連付け
-
-	//heapHandle.ptr += _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);	// アドレスずらす
-
-	//_cmdList->SetGraphicsRootDescriptorTable(1, heapHandle);
 
 	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
 
