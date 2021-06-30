@@ -6,7 +6,7 @@
 #include "DirectXCommon.h"
 #include "Application.h"
 
-#include "fbxsdk.h"
+#include "lib/fbx_sdk/include/fbxsdk.h"
 
 //// @drief コンソール画面にフォーマット付き文字列を表示
 //// @param format フォーマット（%dとか%fとかの）
@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//DebugOutputFormatStrings("Show window test.");
 	//getchar();
 
-	FbxManager* fbxmanager = FbxManager::Create();
+	FbxManager* fbxManager = FbxManager::Create();
 
 	auto& app = Application::Instance();
 
