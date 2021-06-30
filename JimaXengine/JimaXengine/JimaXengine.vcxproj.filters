@@ -19,36 +19,54 @@
     <Filter Include="シェーダーファイル\Basic">
       <UniqueIdentifier>{2d713744-e68c-49eb-a7d5-d8c39d90851b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\base">
+      <UniqueIdentifier>{0f41e774-beff-44d6-8140-a5cd8377dfca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3DObject">
+      <UniqueIdentifier>{5b50282c-3385-487a-9d61-10fa512448c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\base">
+      <UniqueIdentifier>{d95e8d0e-56da-45ff-8326-17da4b79ab64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3DObject">
+      <UniqueIdentifier>{780b877e-b862-4a7f-988a-51decd625dd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Application.cpp">
+      <Filter>ソース ファイル\base</Filter>
     </ClCompile>
     <ClCompile Include="DirectXCommon.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\base</Filter>
     </ClCompile>
     <ClCompile Include="WinApp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\base</Filter>
     </ClCompile>
     <ClCompile Include="FbxLoader.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\3DObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>ソース ファイル\3DObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
     <ClInclude Include="DirectXCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
     <ClInclude Include="WinApp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
     <ClInclude Include="FbxLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\3DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>ヘッダー ファイル\3DObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,5 @@
+// DirectXの処理をとりあえずまとめてるクラス
+
 #pragma once
 
 #include <Windows.h>
@@ -21,10 +23,6 @@
 #include <d3dx12.h>
 using namespace DirectX;
 
-/// <summary>
-/// DirectX汎用処理のクラス
-/// （とりあえず資料とかやった部分をここに移していく）
-/// </summary>
 
 class DirectXCommon
 {

@@ -1,3 +1,6 @@
+// mainから機能を避けてきた
+// シングルトンのクラス
+
 #pragma once
 #include "WinApp.h"
 #include "DirectXCommon.h"
@@ -9,7 +12,7 @@ private:	// 変数
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 
-private:
+private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして
 	// コピーと代入を禁止する
 	Application() = default;
@@ -17,7 +20,7 @@ private:
 	Application(const Application&) = delete;
 	void operator=(const Application&) = delete;
 
-public:
+public:		// 関数
 	/// <summary>
 	/// Applicationのシングルトンインスタンスを得る
 	/// </summary>

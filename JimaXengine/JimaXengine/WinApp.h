@@ -1,9 +1,7 @@
+// WindowApp関連のクラス
+
 #pragma once
 #include <Windows.h>
-
-/// <summary>
-/// ウィンドウズアプリ関連のクラス
-/// </summary>
 
 class WinApp
 {
