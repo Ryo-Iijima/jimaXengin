@@ -1,6 +1,7 @@
 #include "Application.h"
+#include "FbxLoader.h"
 
-Application& Application::Instance()
+Application& Application::GetInstance()
 {
 	static Application instance;
 	return instance;
@@ -15,11 +16,18 @@ void Application::Initialize()
 	// DirectX初期化処理
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
+
+	FbxLoader::GetInstance().Initialize(dxCommon->GetDevice());
+	// 試し
+	FbxLoader::GetInstance().LoadModelFromFile("cube");
+
 }
 
 void Application::Finalize()
 {
 	// 各種解放処理
+	FbxLoader::GetInstance().Finalize();
+
 	delete dxCommon;
 
 	// ゲームウィンドウの破棄

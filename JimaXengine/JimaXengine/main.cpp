@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	FbxManager* fbxManager = FbxManager::Create();
 
-	auto& app = Application::Instance();
+	auto& app = Application::GetInstance();
 
 	app.Initialize();
 

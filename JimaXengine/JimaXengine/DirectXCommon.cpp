@@ -3,6 +3,7 @@
 #include <cassert>
 #include <DirectXTexWIC.cpp>
 
+
 DirectXCommon::~DirectXCommon()
 {
 	Finalize();

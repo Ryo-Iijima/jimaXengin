@@ -14,7 +14,6 @@ private:
 	// コピーと代入を禁止する
 	Application() = default;
 	~Application() = default;
-
 	Application(const Application&) = delete;
 	void operator=(const Application&) = delete;
 
@@ -23,7 +22,7 @@ public:
 	/// Applicationのシングルトンインスタンスを得る
 	/// </summary>
 	/// <returns>インスタンス</returns>
-	static Application& Instance();
+	static Application& GetInstance();
 
 	void Initialize();
 	
