@@ -70,7 +70,11 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+[Dd]bug/.obj
+[Dd]ebug/.obj
+[Dd]ebugPublic/.obj
+[Rr]elease/.obj
+[Rr]eleases/.obj
 *.iobj
 *.pch
 *.pdb
@@ -136,6 +140,9 @@ _TeamCity*
 # AxoCover is a Code Coverage Tool
 .axoCover/*
 !.axoCover/settings.json
+
+# Coverlet is a free, cross platform Code Coverage Tool
+coverage*[.json, .xml, .info]
 
 # Visual Studio code coverage results
 *.coverage
@@ -228,6 +235,7 @@ ClientBin/
 *.jfm
 *.pfx
 *.publishsettings
+lib/
 orleans.codegen.cs
 
 # Including strong name files can present a security risk
