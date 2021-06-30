@@ -2,5 +2,5 @@
 
 float4 PSmain(Output input) : SV_TARGET
 {
-	return float4(tex.Sample(smp, input.uv));
+	return float4(input.normal,1);
 }

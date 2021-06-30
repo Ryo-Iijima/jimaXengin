@@ -1,8 +1,11 @@
-﻿  DirectXCommon.cpp
+﻿  Application.cpp
+  DirectXCommon.cpp
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(460,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(630,37): warning C4267: '=': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(631,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(634,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(663,2): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(784,44): warning C4244: '=': 'UINT64' から 'UINT' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(629,37): warning C4267: '=': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(630,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(633,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(662,2): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(783,44): warning C4244: '=': 'UINT64' から 'UINT' への変換です。データが失われる可能性があります。
+  main.cpp
+  コードを生成中...
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

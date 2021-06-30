@@ -272,7 +272,7 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->IASetIndexBuffer(&ibView);	// インデックスバッファの設定コマンド
 
-	_cmdList->DrawIndexedInstanced(24, 1, 0, 0, 0);	// 描画コマンド
+	_cmdList->DrawIndexedInstanced(vertNum, 1, 0, 0, 0);	// 描画コマンド
 
 }
 
@@ -543,7 +543,6 @@ bool DirectXCommon::MapVertexBuffer()
 
 void DirectXCommon::CreateVertexBufferView()
 {
-
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();	// バッファの仮想アドレス
 	vbView.SizeInBytes = sizeof(vertices);		// 全バイト数
 	vbView.StrideInBytes = sizeof(vertices[0]);	// 1頂点のバイト数
@@ -861,6 +860,8 @@ bool DirectXCommon::CreateGPipelineStateObject()
 	{
 		// 座標
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+		// 法線
+		{"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
 		// uv
 		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
 	};
@@ -879,7 +880,7 @@ bool DirectXCommon::CreateGPipelineStateObject()
 	gPipline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	// まだアンチエイリアスを使わないのでfalse
 	gPipline.RasterizerState.MultisampleEnable = false;
-	gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;	// カリングしない
+	gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;	// 背面カリング
 	gPipline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;	// 中身を塗りつぶす
 	gPipline.RasterizerState.DepthClipEnable = true;			// 深度方向のクリッピング
 
