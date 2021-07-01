@@ -62,6 +62,28 @@ private:	// メンバ変数
 
 	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
 
+	ComPtr<ID3D12RootSignature> rootsignature;
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	ComPtr<ID3D12DescriptorHeap> basicDescHeap;
+	ComPtr<ID3D12PipelineState> _piplineState = nullptr;
+	ComPtr<ID3D12Resource> vertBuff = nullptr;
+	D3D12_RESOURCE_DESC resdesc = {};
+	D3D12_HEAP_PROPERTIES heapprop = {};
+	ComPtr<ID3D12Resource> idxBuff = nullptr;
+	TexMetadata metadata = {};
+	ComPtr<ID3D12Resource> texbuff = nullptr;
+	ComPtr<ID3DBlob> vsBlob = nullptr;		// シェーダー保持用
+	ComPtr<ID3DBlob> psBlob = nullptr;
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	D3D12_DESCRIPTOR_RANGE descTblRange[2] = {};
+	D3D12_ROOT_PARAMETER rootparam = {};
+	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
+	D3D12_VIEWPORT viewport = {};
+	D3D12_RECT scissorrect = {};
+	ComPtr<ID3D12Resource> constBuff = nullptr;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
+
 	// 頂点座標
 	const static unsigned int vertNum = 24;
 	Vertex vertices[vertNum] =
@@ -122,27 +144,6 @@ private:	// メンバ変数
 		22,21,23,
 	};
 
-	ComPtr<ID3D12RootSignature> rootsignature;
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
-	ComPtr<ID3D12DescriptorHeap> basicDescHeap;
-	ComPtr<ID3D12PipelineState> _piplineState = nullptr;
-	ComPtr<ID3D12Resource> vertBuff = nullptr;
-	D3D12_RESOURCE_DESC resdesc = {};
-	D3D12_HEAP_PROPERTIES heapprop = {};
-	ComPtr<ID3D12Resource> idxBuff = nullptr;
-	TexMetadata metadata = {};
-	ComPtr<ID3D12Resource> texbuff = nullptr;
-	ComPtr<ID3DBlob> vsBlob = nullptr;		// シェーダー保持用
-	ComPtr<ID3DBlob> psBlob = nullptr;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	D3D12_DESCRIPTOR_RANGE descTblRange[2] = {};
-	D3D12_ROOT_PARAMETER rootparam = {};
-	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
-	D3D12_VIEWPORT viewport = {};
-	D3D12_RECT scissorrect = {};
-	ComPtr<ID3D12Resource> constBuff = nullptr;
-	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
 
 public:		// メンバ関数
 

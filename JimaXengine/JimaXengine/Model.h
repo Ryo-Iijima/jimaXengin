@@ -10,7 +10,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
-
+#include <wrl.h>
 
 /// <summary>
 /// ノード１つ分の情報構造体
@@ -45,6 +45,8 @@ private:	// エイリアス
 
 	using string = std::string;
 	template <class T>using vector = std::vector<T>;
+
+	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:		// フレンドクラス
 
@@ -88,5 +90,20 @@ private:	//変数
 	FBXMaterialData materialData;
 
 	// 各種バッファ・ビュー
+	// 頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff;
+	// インデックスバッファ
+	ComPtr<ID3D12Resource> indexBuff;
+	// テクスチャバッファ
+	ComPtr<ID3D12Resource> texbuff;
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	// インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	// SRV用デスクリプタヒープ
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 	
+public:		// 関数
+	// バッファ生成
+	void CreateBuffers(ID3D12Device* device);
 };

@@ -803,8 +803,8 @@ bool DirectXCommon::LoadShader()
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0,
-		&vsBlob,
-		&errorBlob
+		vsBlob.GetAddressOf(),
+		errorBlob.GetAddressOf()
 	);
 	if (FAILED(result))
 	{
@@ -830,8 +830,8 @@ bool DirectXCommon::LoadShader()
 		"ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0,
-		&psBlob,
-		&errorBlob
+		psBlob.GetAddressOf(),
+		errorBlob.GetAddressOf()
 	);
 	if (FAILED(result))
 	{
