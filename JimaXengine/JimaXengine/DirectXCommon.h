@@ -44,19 +44,20 @@ private:	// メンバ変数
 
 	HRESULT result;
 
-	ID3D12Device* _dev;
-	IDXGIFactory6* _dxgiFactory;
-	IDXGISwapChain4* _swapchain;
-	ID3D12CommandAllocator* _cmdAllocator;
-	ID3D12GraphicsCommandList* _cmdList;
-	ID3D12CommandQueue* _cmdQueue;
+	//ID3D12Device* _dev;
+	ComPtr<ID3D12Device> _dev;
+	ComPtr<IDXGIFactory6> _dxgiFactory;
+	ComPtr<IDXGISwapChain4> _swapchain;
+	ComPtr<ID3D12CommandAllocator> _cmdAllocator;
+	ComPtr<ID3D12GraphicsCommandList> _cmdList;
+	ComPtr<ID3D12CommandQueue> _cmdQueue;
 	std::vector<ID3D12Resource*> _backBuffers;
-	ID3D12DescriptorHeap* rtvHeaps;
+	ComPtr<ID3D12DescriptorHeap> rtvHeaps;
 	UINT bbIdx;
 	D3D12_RESOURCE_BARRIER barrierDesc = {};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvH;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
-	ID3D12Fence* _fence;
+	ComPtr<ID3D12Fence> _fence;
 	UINT16 _fenceVal = 0;
 
 	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
@@ -121,27 +122,27 @@ private:	// メンバ変数
 		22,21,23,
 	};
 
-	ID3D12RootSignature* rootsignature;
+	ComPtr<ID3D12RootSignature> rootsignature;
 	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
-	ID3D12DescriptorHeap* basicDescHeap = nullptr;
-	ID3D12PipelineState* _piplineState = nullptr;
-	ID3D12Resource* vertBuff = nullptr;
+	ComPtr<ID3D12DescriptorHeap> basicDescHeap;
+	ComPtr<ID3D12PipelineState> _piplineState = nullptr;
+	ComPtr<ID3D12Resource> vertBuff = nullptr;
 	D3D12_RESOURCE_DESC resdesc = {};
 	D3D12_HEAP_PROPERTIES heapprop = {};
-	ID3D12Resource* idxBuff = nullptr;
+	ComPtr<ID3D12Resource> idxBuff = nullptr;
 	TexMetadata metadata = {};
-	ID3D12Resource* texbuff = nullptr;
-	ID3DBlob* vsBlob = nullptr;		// シェーダー保持用
-	ID3DBlob* psBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
+	ComPtr<ID3D12Resource> texbuff = nullptr;
+	ComPtr<ID3DBlob> vsBlob = nullptr;		// シェーダー保持用
+	ComPtr<ID3DBlob> psBlob = nullptr;
+	ComPtr<ID3DBlob> errorBlob = nullptr;
 	D3D12_DESCRIPTOR_RANGE descTblRange[2] = {};
 	D3D12_ROOT_PARAMETER rootparam = {};
 	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
 	D3D12_VIEWPORT viewport = {};
 	D3D12_RECT scissorrect = {};
-	ID3D12Resource* constBuff = nullptr;
-	ID3D12DescriptorHeap* dsvHeap = nullptr;
+	ComPtr<ID3D12Resource> constBuff = nullptr;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
 
 public:		// メンバ関数
 
@@ -174,8 +175,8 @@ public:		// メンバ関数
 	void ClearRenderTarget();
 
 	// getter
-	ID3D12Device* GetDevice() { return _dev; }
-	ID3D12GraphicsCommandList* GetCommandList() { return _cmdList; }
+	ID3D12Device* GetDevice() { return _dev.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList() { return _cmdList.Get(); }
 
 private:	// メンバ関数
 	/// <summary>

@@ -129,7 +129,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
 	dsvHeapDesc.NumDescriptors = 1;
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(dsvHeap.GetAddressOf()));
 	if (FAILED(result)) {
 		assert(0);
 	}
@@ -206,7 +206,6 @@ void DirectXCommon::PreDraw()
 	ClearRenderTarget();
 
 #pragma endregion
-
 }
 
 void DirectXCommon::PostDraw()
@@ -221,10 +220,10 @@ void DirectXCommon::PostDraw()
 #pragma region 描画コマンド
 	_cmdList->Close();	// 命令のクローズ
 
-	ID3D12CommandList* cmdLists[] = { _cmdList };	// 実行するコマンドのp配列
+	ID3D12CommandList* cmdLists[] = { _cmdList.Get() };	// 実行するコマンドのp配列
 	_cmdQueue->ExecuteCommandLists(1, cmdLists);	// コマンドリストの実行
 
-	_cmdQueue->Signal(_fence, ++_fenceVal);
+	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
 	if (_fence->GetCompletedValue() != _fenceVal)
 	{
 		auto event = CreateEvent(nullptr, false, false, nullptr);	// イベントハンドルの取得
@@ -234,7 +233,7 @@ void DirectXCommon::PostDraw()
 	}
 
 	_cmdAllocator->Reset();	// キューをクリア
-	_cmdList->Reset(_cmdAllocator, nullptr);	// 再びコマンドリストをためる準備
+	_cmdList->Reset(_cmdAllocator.Get(), nullptr);	// 再びコマンドリストをためる準備
 
 	_swapchain->Present(1, 0);	// バッファをフリップ
 
@@ -253,15 +252,15 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);	// 深度クリア
 
-	_cmdList->SetPipelineState(_piplineState);	// パイプラインステートのセット
+	_cmdList->SetPipelineState(_piplineState.Get());	// パイプラインステートのセット
 
 	_cmdList->RSSetViewports(1, &viewport);
 
 	_cmdList->RSSetScissorRects(1, &scissorrect);
 
-	_cmdList->SetGraphicsRootSignature(rootsignature);		// ルートシグネチャの設定
+	_cmdList->SetGraphicsRootSignature(rootsignature.Get());		// ルートシグネチャの設定
 
-	_cmdList->SetDescriptorHeaps(1, &basicDescHeap);	// ディスクリプターヒープの指定
+	_cmdList->SetDescriptorHeaps(1, basicDescHeap.GetAddressOf());	// ディスクリプターヒープの指定
 
 	auto heapHandle = basicDescHeap->GetGPUDescriptorHandleForHeapStart();
 
@@ -301,7 +300,7 @@ bool DirectXCommon::InitializeDXGIDevice()
 
 	_dxgiFactory = nullptr;
 
-	result = CreateDXGIFactory1(IID_PPV_ARGS(&_dxgiFactory));	// DXGIFactoryを_dxgiFactoryに入れる
+	result = CreateDXGIFactory1(IID_PPV_ARGS(_dxgiFactory.GetAddressOf()));	// DXGIFactoryを_dxgiFactoryに入れる
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -335,7 +334,7 @@ bool DirectXCommon::InitializeDXGIDevice()
 	for (auto lv : levels)
 	{
 		// デバイス生成が成功して
-		if (D3D12CreateDevice(nullptr, lv, IID_PPV_ARGS(&_dev)) == S_OK)
+		if (D3D12CreateDevice(nullptr, lv, IID_PPV_ARGS(_dev.GetAddressOf())) == S_OK)
 		{
 			featureLevel = lv;
 			break;	// 生成可能なバージョンが見つかったら抜ける
@@ -355,14 +354,14 @@ bool DirectXCommon::InitializeCommand()
 
 	// コマンドリストとコマンドアロケーターの生成
 	_cmdAllocator = nullptr;
-	result = _dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&_cmdAllocator));
+	result = _dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_cmdAllocator.GetAddressOf()));
 	if (FAILED(result)) {
 		assert(0);
 		return result;
 	}
 
 	_cmdList = nullptr;
-	result = _dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _cmdAllocator, nullptr, IID_PPV_ARGS(&_cmdList));
+	result = _dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _cmdAllocator.Get(), nullptr, IID_PPV_ARGS(_cmdList.GetAddressOf()));
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -377,7 +376,7 @@ bool DirectXCommon::InitializeCommand()
 	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;				// コマンドリストと合わせる
 
 	_cmdQueue = nullptr;
-	result = _dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&_cmdQueue));		// キュー生成
+	result = _dev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(_cmdQueue.GetAddressOf()));		// キュー生成
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -409,12 +408,12 @@ bool DirectXCommon::CreateSwapChain()
 	_swapchain = nullptr;
 	result = _dxgiFactory->CreateSwapChainForHwnd
 	(
-		_cmdQueue,
+		_cmdQueue.Get(),
 		winApp->GetHwnd(),
 		&swapchainDesc,
 		nullptr,
 		nullptr,
-		(IDXGISwapChain1**)&_swapchain
+		(IDXGISwapChain1**)_swapchain.GetAddressOf()
 	);
 	if (FAILED(result)) {
 		assert(0);
@@ -437,7 +436,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;	// 特に指定なし
 
 	rtvHeaps = nullptr;
-	result = _dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeaps));
+	result = _dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(rtvHeaps.GetAddressOf()));
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -478,7 +477,7 @@ bool DirectXCommon::CreateFence()
 {
 	// フェンスの生成
 	_fence = nullptr;
-	result = _dev->CreateFence(_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_fence));
+	result = _dev->CreateFence(_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(_fence.GetAddressOf()));
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -514,7 +513,7 @@ bool DirectXCommon::GenerateVertexBuffer()
 		&resdesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&vertBuff)
+		IID_PPV_ARGS(vertBuff.GetAddressOf())
 	);
 	if (FAILED(result)) {
 		assert(0);
@@ -551,7 +550,6 @@ void DirectXCommon::CreateVertexBufferView()
 
 bool DirectXCommon::GenerateIndexBuffer()
 {
-
 	// バッファのサイズ以外の設定を使いまわす
 	resdesc.Width = sizeof(indices);
 
@@ -562,7 +560,7 @@ bool DirectXCommon::GenerateIndexBuffer()
 		&resdesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&idxBuff)
+		IID_PPV_ARGS(idxBuff.GetAddressOf())
 	);
 	if (FAILED(result)) {
 		assert(0);
@@ -645,7 +643,7 @@ bool DirectXCommon::GenerateTextureBuffer()
 		&texResDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,		// テクスチャ用指定
 		nullptr,
-		IID_PPV_ARGS(&texbuff)
+		IID_PPV_ARGS(texbuff.GetAddressOf())
 	);
 	if (FAILED(result)) {
 		assert(0);
@@ -718,7 +716,7 @@ bool DirectXCommon::GenerateConstBufferView()
 		&cbResDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff)
+		IID_PPV_ARGS(constBuff.GetAddressOf())
 	);
 	if (FAILED(result)) {
 		assert(0);
@@ -747,7 +745,7 @@ bool DirectXCommon::CreateTextureShaderResourceView()
 	descHeapDesc.NumDescriptors = 2;	// SRVとCBV
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
 
-	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&basicDescHeap));
+	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(basicDescHeap.GetAddressOf()));
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -767,7 +765,7 @@ bool DirectXCommon::CreateTextureShaderResourceView()
 	// シェーダーリソースビューの生成
 	_dev->CreateShaderResourceView
 	(
-		texbuff,		// ビューと関連付けるバッファ
+		texbuff.Get(),	// ビューと関連付けるバッファ
 		&srvDesc,		// テクスチャ設定情報
 		basicHeapHandle	// ヒープのどこに割り当てるか
 	);
@@ -922,10 +920,10 @@ bool DirectXCommon::CreateGPipelineStateObject()
 
 	CreatRootSignature();
 
-	gPipline.pRootSignature = rootsignature;
+	gPipline.pRootSignature = rootsignature.Get();
 
 	// グラフィックパイプラインステートオブジェクトの生成
-	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(&_piplineState));
+	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(_piplineState.GetAddressOf()));
 
 	if (FAILED(result)) {
 		assert(0);
@@ -1003,7 +1001,7 @@ bool DirectXCommon::CreatRootSignature()
 		0,
 		rootSigBlob->GetBufferPointer(),
 		rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(&rootsignature)
+		IID_PPV_ARGS(rootsignature.GetAddressOf())
 	);
 	if (FAILED(result)) {
 		assert(0);

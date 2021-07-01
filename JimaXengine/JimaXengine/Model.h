@@ -6,6 +6,12 @@
 #include <vector>
 #include <DirectXTex.h>
 
+#include <Windows.h>
+#include <wrl.h>
+#include <d3d12.h>
+#include <d3dx12.h>
+
+
 /// <summary>
 /// ノード１つ分の情報構造体
 /// </summary>
@@ -29,6 +35,17 @@ struct Node
 
 class Model
 {
+private:	// エイリアス
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMMATRIX = DirectX::XMMATRIX;
+	using TexMetadata = DirectX::TexMetadata;
+	using ScratchImage = DirectX::ScratchImage;
+
+	using string = std::string;
+	template <class T>using vector = std::vector<T>;
+
 public:		// フレンドクラス
 
 	friend class FbxLoader;
@@ -69,4 +86,7 @@ private:	//変数
 	std::vector<unsigned short> indices;
 	// マテリアルデータ
 	FBXMaterialData materialData;
+
+	// 各種バッファ・ビュー
+	
 };
