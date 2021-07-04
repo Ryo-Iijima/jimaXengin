@@ -106,4 +106,10 @@ private:	//変数
 public:		// 関数
 	// バッファ生成
 	void CreateBuffers(ID3D12Device* device);
+
+	void Draw(ID3D12GraphicsCommandList* cmdList);
+
+	// getter
+	// モデルの変形行列取得
+	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 };
