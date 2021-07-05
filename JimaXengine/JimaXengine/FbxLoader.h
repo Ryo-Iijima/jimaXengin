@@ -78,7 +78,8 @@ public:		// 関数
 	/// モデルファイル読み込み
 	/// </summary>
 	/// <param name="modelName">ファイル名</param>
-	void LoadModelFromFile(const string& modelName);
+	/// <returns>モデルデータ</returns>
+	Model* LoadModelFromFile(const string& modelName);
 
 
 };

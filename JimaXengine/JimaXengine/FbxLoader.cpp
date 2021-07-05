@@ -290,7 +290,7 @@ void FbxLoader::Finalize()
     fbxmanager->Destroy();
 }
 
-void FbxLoader::LoadModelFromFile(const string& modelName)
+Model* FbxLoader::LoadModelFromFile(const string& modelName)
 {
     const string directorypath = BASE_DIRECTORY + modelName + "/";
     const string fileName = modelName + ".fbx";
@@ -322,4 +322,6 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 
     // バッファ生成
     model->CreateBuffers(device);
+
+    return model;
 }

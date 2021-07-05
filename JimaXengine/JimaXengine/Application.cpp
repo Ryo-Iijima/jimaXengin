@@ -20,15 +20,23 @@ void Application::Initialize()
 
 	// 
 	FbxLoader::GetInstance().Initialize(dxCommon->GetDevice());
-	FbxLoader::GetInstance().LoadModelFromFile("cube");
-
+	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
+	// 
 	Object3d::SetDevice(dxCommon->GetDevice());
+	Object3d::CreateGraphicsPipline();
+	// オブジェクトの生成とモデルのセット
+	object = new Object3d;
+	object->Initialize();
+	object->SetModel(model);
 }
 
 void Application::Finalize()
 {
 	// 各種解放処理
 	FbxLoader::GetInstance().Finalize();
+	delete object;
+	delete model;
+
 
 	delete dxCommon;
 
@@ -47,8 +55,12 @@ void Application::Run()
 			break;
 		}
 
+		object->Update();
+
 		// 描画前処理
 		dxCommon->PreDraw();
+
+		object->Draw(dxCommon->GetCommandList());
 
 		// 描画後処理
 		dxCommon->PostDraw();

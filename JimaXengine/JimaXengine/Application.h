@@ -4,6 +4,7 @@
 #pragma once
 #include "WinApp.h"
 #include "DirectXCommon.h"
+#include "Object3d.h"
 
 class Application
 {
@@ -11,6 +12,9 @@ private:	// 変数
 	// 汎用機能
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
+
+	Model* model = nullptr;
+	Object3d* object = nullptr;
 
 private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして

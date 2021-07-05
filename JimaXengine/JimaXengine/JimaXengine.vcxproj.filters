@@ -31,6 +31,9 @@
     <Filter Include="ソース ファイル\3DObject">
       <UniqueIdentifier>{780b877e-b862-4a7f-988a-51decd625dd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\FBX">
+      <UniqueIdentifier>{bb64d4dd-e511-4941-8f73-007c9f712399}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -82,10 +85,19 @@
     <FxCompile Include="BasicVS.hlsl">
       <Filter>シェーダーファイル\Basic</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
+      <Filter>シェーダーファイル\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\FBX\FBXPS.hlsl">
+      <Filter>シェーダーファイル\FBX</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShader.hlsli">
       <Filter>シェーダーファイル\Basic</Filter>
+    </None>
+    <None Include="Resources\shader\FBX\FBXShader.hlsli">
+      <Filter>シェーダーファイル\FBX</Filter>
     </None>
   </ItemGroup>
 </Project>

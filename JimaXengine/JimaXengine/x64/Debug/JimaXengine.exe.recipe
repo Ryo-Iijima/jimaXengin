@@ -12,6 +12,12 @@
     <ContentFile>
       <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicVS.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXVS.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />

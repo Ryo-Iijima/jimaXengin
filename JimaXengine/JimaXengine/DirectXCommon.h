@@ -44,7 +44,6 @@ private:	// ƒƒ“ƒo•Ï”
 
 	HRESULT result;
 
-	//ID3D12Device* _dev;
 	ComPtr<ID3D12Device> _dev;
 	ComPtr<IDXGIFactory6> _dxgiFactory;
 	ComPtr<IDXGISwapChain4> _swapchain;
