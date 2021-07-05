@@ -593,7 +593,6 @@ void DirectXCommon::CreateIndexBufferView()
 
 bool DirectXCommon::GenerateTextureBuffer()
 {
-
 	//WICテクスチャのロード
 	DirectX::ScratchImage scrachImg = {};
 
@@ -664,31 +663,31 @@ bool DirectXCommon::GenerateTextureBuffer()
 		return result;
 	}
 
-	//delete[] textureData;	// 転送が済んだので元データ解放
-
 	return true;
 }
 
 bool DirectXCommon::GenerateConstBufferView()
 {
-	XMMATRIX matrix = XMMatrixIdentity();
+	XMMATRIX matWorld = XMMatrixIdentity();			// ワールド
+	XMMATRIX matView = XMMatrixIdentity();			// ビュー
+	XMMATRIX matProjection = XMMatrixIdentity();	// プロジェクション
 
-	matrix.r[0].m128_f32[0] = 2.0f / WinApp::WINDOW_WIDTH;
-	matrix.r[1].m128_f32[1] = -2.0f / WinApp::WINDOW_HEIGHT;
-	matrix.r[3].m128_f32[0] = -1.0f;
-	matrix.r[3].m128_f32[1] = 1.0f;
+	//matrix.r[0].m128_f32[0] = 2.0f / WinApp::WINDOW_WIDTH;
+	//matrix.r[1].m128_f32[1] = -2.0f / WinApp::WINDOW_HEIGHT;
+	//matrix.r[3].m128_f32[0] = -1.0f;
+	//matrix.r[3].m128_f32[1] = 1.0f;
 
-	matrix = XMMatrixRotationY(XM_PIDIV4);	// ワールド
+	//matWorld = XMMatrixRotationY(XM_PIDIV4);	
 
 	XMFLOAT3 eye(0, 0, -5);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 
-	matrix *= XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));	// ビュー
+	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));	
 
-	matrix *= XMMatrixPerspectiveFovLH
+	matProjection = XMMatrixPerspectiveFovLH	
 	(
-		XM_PIDIV2,	// 画角
+		XM_PIDIV4,	// 画角
 		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
 		1.0f,		// 近いほう
 		10.0f		// 遠いほう
@@ -701,7 +700,7 @@ bool DirectXCommon::GenerateConstBufferView()
 	// リソース設定
 	D3D12_RESOURCE_DESC cbResDesc = {};
 	cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResDesc.Width = (sizeof(matrix) + 0xff) & ~0xff;
+	cbResDesc.Width = (sizeof(ConstBfferData) + 0xff) & ~0xff;
 	cbResDesc.Height = 1;
 	cbResDesc.DepthOrArraySize = 1;
 	cbResDesc.MipLevels = 1;
@@ -724,13 +723,15 @@ bool DirectXCommon::GenerateConstBufferView()
 	}
 
 	// マップ
-	XMMATRIX* mapMatrix;
-	result = constBuff->Map(0, nullptr, (void**)&mapMatrix);
-	*mapMatrix = matrix;	// memcpyの代わりに代入演算子も使えるぞという例
+	ConstBfferData* constMap;
+	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	constMap->matrix = matWorld * matView * matProjection;
+	constMap->color = XMFLOAT4(1, 0, 0, 0);
 	if (FAILED(result)) {
 		assert(0);
 		return false;
 	}
+	
 
 	return true;
 }

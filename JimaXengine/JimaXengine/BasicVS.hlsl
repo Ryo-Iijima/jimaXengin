@@ -1,11 +1,11 @@
 #include "BasicShader.hlsli"
 
-Output VSmain(float4 pos : POSITION, float3 normal : NORMAL , float2 uv : TEXCOORD)
+Output VSmain(VSInput input)
 {
 	Output output;
-	output.svpos = mul(mat, pos);
-	output.normal = normal;
-	output.uv = uv;
+	output.svpos = mul(mat, input.pos);
+	output.normal = input.normal;
+	output.uv = input.uv;
 
 	return output;
 }

@@ -38,6 +38,12 @@ private:	// 構造体
 		XMFLOAT2 uv;
 	};
 
+	struct ConstBfferData
+	{
+		XMMATRIX matrix;
+		XMFLOAT4 color;
+	};
+
 private:	// メンバ変数
 	// ウィンドウズアプリケーション管理
 	WinApp* winApp;
