@@ -1,10 +1,9 @@
-﻿  DirectXCommon.cpp
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(460,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(628,37): warning C4267: '=': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(629,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(632,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(661,2): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(782,44): warning C4244: '=': 'UINT64' から 'UINT' への変換です。データが失われる可能性があります。
-  main.cpp
+﻿  Application.cpp
+  FbxLoader.cpp
+  Model.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(11): error C2102: '&' に左辺値がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(13): error C2102: '&' に左辺値がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(36): error C2102: '&' に左辺値がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(38): error C2102: '&' に左辺値がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(71): error C2102: '&' に左辺値がありません。
   コードを生成中...
-  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

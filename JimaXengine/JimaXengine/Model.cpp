@@ -108,3 +108,7 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 		descHeapSRV->GetCPUDescriptorHandleForHeapStart()	// ヒープの先頭アドス
 	);
 }
+
+void Model::Draw(ID3D12GraphicsCommandList* cmdList)
+{
+}
