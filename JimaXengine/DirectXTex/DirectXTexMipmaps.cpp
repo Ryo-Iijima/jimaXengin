@@ -68,7 +68,7 @@ namespace
     HRESULT EnsureWicBitmapPixelFormat(
         _In_ IWICImagingFactory* pWIC,
         _In_ IWICBitmap* src,
-        _In_ TEX_FILTER_FLAGS filter,
+        _In_ DWORD filter,
         _In_ const WICPixelFormatGUID& desiredPixelFormat,
         _Deref_out_ IWICBitmap** dest) noexcept
     {
@@ -191,12 +191,12 @@ namespace
     {
         for (size_t sy = 0; sy < N; ++sy)
         {
-            const float fy = (float(sy) + 0.5f) / float(N);
+            const float fy = (sy + 0.5f) / N;
             const float ify = 1.0f - fy;
 
             for (size_t sx = 0; sx < N; ++sx)
             {
-                const float fx = (float(sx) + 0.5f) / float(N);
+                const float fx = (sx + 0.5f) / N;
                 const float ifx = 1.0f - fx;
 
                 // [0]=(x+0, y+0), [1]=(x+0, y+1), [2]=(x+1, y+0), [3]=(x+1, y+1)
@@ -226,6 +226,7 @@ namespace
             return E_OUTOFMEMORY;
         }
 
+        const DWORD flags = 0;
         const XMVECTOR scale = XMVectorReplicate(alphaScale);
 
         const uint8_t *pSrcRow0 = srcImage.pixels;
@@ -241,13 +242,13 @@ namespace
         size_t coverageCount = 0;
         for (size_t y = 0; y < srcImage.height - 1; ++y)
         {
-            if (!_LoadScanlineLinear(row0.get(), srcImage.width, pSrcRow0, srcImage.rowPitch, srcImage.format, TEX_FILTER_DEFAULT))
+            if (!_LoadScanlineLinear(row0.get(), srcImage.width, pSrcRow0, srcImage.rowPitch, srcImage.format, flags))
             {
                 return E_FAIL;
             }
 
             const uint8_t *pSrcRow1 = pSrcRow0 + srcImage.rowPitch;
-            if (!_LoadScanlineLinear(row1.get(), srcImage.width, pSrcRow1, srcImage.rowPitch, srcImage.format, TEX_FILTER_DEFAULT))
+            if (!_LoadScanlineLinear(row1.get(), srcImage.width, pSrcRow1, srcImage.rowPitch, srcImage.format, flags))
             {
                 return E_FAIL;
             }
@@ -302,6 +303,7 @@ namespace
     {
         float minAlphaScale = 0.0f;
         float maxAlphaScale = 4.0f;
+        float bestAlphaScale = 1.0f;
         float bestError = FLT_MAX;
 
         // Determine desired scale using a binary search. Hardcoded to 10 steps max.
@@ -320,6 +322,7 @@ namespace
             if (error < bestError)
             {
                 bestError = error;
+                bestAlphaScale = alphaScale;
             }
 
             if (currentCoverage < targetCoverage)
@@ -350,7 +353,7 @@ namespace DirectX
         // Also used by Compress
 
     HRESULT _ResizeSeparateColorAndAlpha(_In_ IWICImagingFactory* pWIC, _In_ bool iswic2, _In_ IWICBitmap* original,
-        _In_ size_t newWidth, _In_ size_t newHeight, _In_ TEX_FILTER_FLAGS filter, _Inout_ const Image* img) noexcept;
+        _In_ size_t newWidth, _In_ size_t newHeight, _In_ DWORD filter, _Inout_ const Image* img) noexcept;
         // Also used by Resize
 
     bool _CalculateMipLevels(_In_ size_t width, _In_ size_t height, _Inout_ size_t& mipLevels) noexcept
@@ -399,7 +402,7 @@ namespace DirectX
         IWICBitmap* original,
         size_t newWidth,
         size_t newHeight,
-        TEX_FILTER_FLAGS filter,
+        DWORD filter,
         const Image* img) noexcept
     {
         if (!pWIC || !original || !img)
@@ -612,7 +615,7 @@ namespace DirectX
 namespace
 {
     //--- determine when to use WIC vs. non-WIC paths ---
-    bool UseWICFiltering(_In_ DXGI_FORMAT format, _In_ TEX_FILTER_FLAGS filter) noexcept
+    bool UseWICFiltering(_In_ DXGI_FORMAT format, _In_ DWORD filter) noexcept
     {
         if (filter & TEX_FILTER_FORCE_NON_WIC)
         {
@@ -632,18 +635,18 @@ namespace
             return false;
         }
 
-#if (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
+#if defined(_XBOX_ONE) && defined(_TITLE)
         if (format == DXGI_FORMAT_R16G16B16A16_FLOAT
             || format == DXGI_FORMAT_R16_FLOAT)
         {
-            // Use non-WIC code paths as these conversions are not supported by Xbox version of WIC
+            // Use non-WIC code paths as these conversions are not supported by Xbox One XDK
             return false;
         }
 #endif
 
-        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
 
-        switch (filter & TEX_FILTER_MODE_MASK)
+        switch (filter & TEX_FILTER_MASK)
         {
         case TEX_FILTER_LINEAR:
             if (filter & TEX_FILTER_WRAP)
@@ -685,7 +688,7 @@ namespace
     //--- mipmap (1D/2D) generation using WIC image scalar ---
     HRESULT GenerateMipMapsUsingWIC(
         _In_ const Image& baseImage,
-        _In_ TEX_FILTER_FLAGS filter,
+        _In_ DWORD filter,
         _In_ size_t levels,
         _In_ const WICPixelFormatGUID& pfGUID,
         _In_ const ScratchImage& mipChain,
@@ -967,7 +970,7 @@ namespace
 
 
     //--- 2D Box Filter ---
-    HRESULT Generate2DMipsBoxFilter(size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain, size_t item) noexcept
+    HRESULT Generate2DMipsBoxFilter(size_t levels, DWORD filter, const ScratchImage& mipChain, size_t item) noexcept
     {
         if (!mipChain.GetImages())
             return E_INVALIDARG;
@@ -1061,7 +1064,7 @@ namespace
 
 
     //--- 2D Linear Filter ---
-    HRESULT Generate2DMipsLinearFilter(size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain, size_t item) noexcept
+    HRESULT Generate2DMipsLinearFilter(size_t levels, DWORD filter, const ScratchImage& mipChain, size_t item) noexcept
     {
         if (!mipChain.GetImages())
             return E_INVALIDARG;
@@ -1172,7 +1175,7 @@ namespace
     }
 
     //--- 2D Cubic Filter ---
-    HRESULT Generate2DMipsCubicFilter(size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain, size_t item) noexcept
+    HRESULT Generate2DMipsCubicFilter(size_t levels, DWORD filter, const ScratchImage& mipChain, size_t item) noexcept
     {
         if (!mipChain.GetImages())
             return E_INVALIDARG;
@@ -1358,7 +1361,7 @@ namespace
 
 
     //--- 2D Triangle Filter ---
-    HRESULT Generate2DMipsTriangleFilter(size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain, size_t item) noexcept
+    HRESULT Generate2DMipsTriangleFilter(size_t levels, DWORD filter, const ScratchImage& mipChain, size_t item) noexcept
     {
         if (!mipChain.GetImages())
             return E_INVALIDARG;
@@ -1774,7 +1777,7 @@ namespace
 
 
     //--- 3D Box Filter ---
-    HRESULT Generate3DMipsBoxFilter(size_t depth, size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain) noexcept
+    HRESULT Generate3DMipsBoxFilter(size_t depth, size_t levels, DWORD filter, const ScratchImage& mipChain) noexcept
     {
         if (!depth || !mipChain.GetImages())
             return E_INVALIDARG;
@@ -1946,7 +1949,7 @@ namespace
 
 
     //--- 3D Linear Filter ---
-    HRESULT Generate3DMipsLinearFilter(size_t depth, size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain) noexcept
+    HRESULT Generate3DMipsLinearFilter(size_t depth, size_t levels, DWORD filter, const ScratchImage& mipChain) noexcept
     {
         if (!depth || !mipChain.GetImages())
             return E_INVALIDARG;
@@ -2139,7 +2142,7 @@ namespace
 
 
     //--- 3D Cubic Filter ---
-    HRESULT Generate3DMipsCubicFilter(size_t depth, size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain) noexcept
+    HRESULT Generate3DMipsCubicFilter(size_t depth, size_t levels, DWORD filter, const ScratchImage& mipChain) noexcept
     {
         if (!depth || !mipChain.GetImages())
             return E_INVALIDARG;
@@ -2518,7 +2521,7 @@ namespace
 
 
     //--- 3D Triangle Filter ---
-    HRESULT Generate3DMipsTriangleFilter(size_t depth, size_t levels, TEX_FILTER_FLAGS filter, const ScratchImage& mipChain) noexcept
+    HRESULT Generate3DMipsTriangleFilter(size_t depth, size_t levels, DWORD filter, const ScratchImage& mipChain) noexcept
     {
         if (!depth || !mipChain.GetImages())
             return E_INVALIDARG;
@@ -2771,7 +2774,7 @@ namespace
 _Use_decl_annotations_
 HRESULT DirectX::GenerateMipMaps(
     const Image& baseImage,
-    TEX_FILTER_FLAGS filter,
+    DWORD filter,
     size_t levels,
     ScratchImage& mipChain,
     bool allow1D) noexcept
@@ -2795,7 +2798,7 @@ HRESULT DirectX::GenerateMipMaps(
 
     HRESULT hr = E_UNEXPECTED;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
 
     bool usewic = UseWICFiltering(baseImage.format, filter);
 
@@ -2819,7 +2822,7 @@ HRESULT DirectX::GenerateMipMaps(
     if (usewic)
     {
         //--- Use WIC filtering to generate mipmaps -----------------------------------
-        switch (filter & TEX_FILTER_MODE_MASK)
+        switch (filter & TEX_FILTER_MASK)
         {
         case 0:
         case TEX_FILTER_POINT:
@@ -2893,7 +2896,7 @@ HRESULT DirectX::GenerateMipMaps(
         mdata.mipLevels = levels;
         mdata.format = baseImage.format;
 
-        unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+        DWORD filter_select = (filter & TEX_FILTER_MASK);
         if (!filter_select)
         {
             // Default filter choice
@@ -2963,7 +2966,7 @@ HRESULT DirectX::GenerateMipMaps(
     const Image* srcImages,
     size_t nimages,
     const TexMetadata& metadata,
-    TEX_FILTER_FLAGS filter,
+    DWORD filter,
     size_t levels,
     ScratchImage& mipChain)
 {
@@ -3008,7 +3011,7 @@ HRESULT DirectX::GenerateMipMaps(
     if (baseImages.empty())
         return hr;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
 
     bool usewic = !metadata.IsPMAlpha() && UseWICFiltering(metadata.format, filter);
 
@@ -3032,7 +3035,7 @@ HRESULT DirectX::GenerateMipMaps(
     if (usewic)
     {
         //--- Use WIC filtering to generate mipmaps -----------------------------------
-        switch (filter & TEX_FILTER_MODE_MASK)
+        switch (filter & TEX_FILTER_MASK)
         {
         case 0:
         case TEX_FILTER_POINT:
@@ -3106,7 +3109,7 @@ HRESULT DirectX::GenerateMipMaps(
         TexMetadata mdata2 = metadata;
         mdata2.mipLevels = levels;
 
-        unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+        DWORD filter_select = (filter & TEX_FILTER_MASK);
         if (!filter_select)
         {
             // Default filter choice
@@ -3194,7 +3197,7 @@ _Use_decl_annotations_
 HRESULT DirectX::GenerateMipMaps3D(
     const Image* baseImages,
     size_t depth,
-    TEX_FILTER_FLAGS filter,
+    DWORD filter,
     size_t levels,
     ScratchImage& mipChain) noexcept
 {
@@ -3229,11 +3232,11 @@ HRESULT DirectX::GenerateMipMaps3D(
     if (IsCompressed(format) || IsTypeless(format) || IsPlanar(format) || IsPalettized(format))
         return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
 
     HRESULT hr = E_UNEXPECTED;
 
-    unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+    DWORD filter_select = (filter & TEX_FILTER_MASK);
     if (!filter_select)
     {
         // Default filter choice
@@ -3302,7 +3305,7 @@ HRESULT DirectX::GenerateMipMaps3D(
     const Image* srcImages,
     size_t nimages,
     const TexMetadata& metadata,
-    TEX_FILTER_FLAGS filter,
+    DWORD filter,
     size_t levels,
     ScratchImage& mipChain)
 {
@@ -3347,9 +3350,9 @@ HRESULT DirectX::GenerateMipMaps3D(
 
     HRESULT hr = E_UNEXPECTED;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
 
-    unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+    DWORD filter_select = (filter & TEX_FILTER_MASK);
     if (!filter_select)
     {
         // Default filter choice

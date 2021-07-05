@@ -22,7 +22,7 @@ using namespace DirectX;
 
 namespace
 {
-    inline uint32_t GetBCFlags(_In_ TEX_COMPRESS_FLAGS compress) noexcept
+    inline DWORD GetBCFlags(_In_ DWORD compress) noexcept
     {
         static_assert(static_cast<int>(TEX_COMPRESS_RGB_DITHER) == static_cast<int>(BC_FLAGS_DITHER_RGB), "TEX_COMPRESS_* flags should match BC_FLAGS_*");
         static_assert(static_cast<int>(TEX_COMPRESS_A_DITHER) == static_cast<int>(BC_FLAGS_DITHER_A), "TEX_COMPRESS_* flags should match BC_FLAGS_*");
@@ -33,34 +33,33 @@ namespace
         return (compress & (BC_FLAGS_DITHER_RGB | BC_FLAGS_DITHER_A | BC_FLAGS_UNIFORM | BC_FLAGS_USE_3SUBSETS | BC_FLAGS_FORCE_BC7_MODE6));
     }
 
-    inline TEX_FILTER_FLAGS GetSRGBFlags(_In_ TEX_COMPRESS_FLAGS compress) noexcept
+    inline DWORD GetSRGBFlags(_In_ DWORD compress) noexcept
     {
-        static_assert(TEX_FILTER_SRGB_IN == 0x1000000, "TEX_FILTER_SRGB flag values don't match TEX_FILTER_SRGB_MASK");
         static_assert(static_cast<int>(TEX_COMPRESS_SRGB_IN) == static_cast<int>(TEX_FILTER_SRGB_IN), "TEX_COMPRESS_SRGB* should match TEX_FILTER_SRGB*");
         static_assert(static_cast<int>(TEX_COMPRESS_SRGB_OUT) == static_cast<int>(TEX_FILTER_SRGB_OUT), "TEX_COMPRESS_SRGB* should match TEX_FILTER_SRGB*");
         static_assert(static_cast<int>(TEX_COMPRESS_SRGB) == static_cast<int>(TEX_FILTER_SRGB), "TEX_COMPRESS_SRGB* should match TEX_FILTER_SRGB*");
-        return static_cast<TEX_FILTER_FLAGS>(compress & TEX_FILTER_SRGB_MASK);
+        return (compress & TEX_COMPRESS_SRGB);
     }
 
-    inline bool DetermineEncoderSettings(_In_ DXGI_FORMAT format, _Out_ BC_ENCODE& pfEncode, _Out_ size_t& blocksize, _Out_ TEX_FILTER_FLAGS& cflags) noexcept
+    inline bool DetermineEncoderSettings(_In_ DXGI_FORMAT format, _Out_ BC_ENCODE& pfEncode, _Out_ size_t& blocksize, _Out_ DWORD& cflags) noexcept
     {
         switch (format)
         {
         case DXGI_FORMAT_BC1_UNORM:
-        case DXGI_FORMAT_BC1_UNORM_SRGB:    pfEncode = nullptr;         blocksize = 8;   cflags = TEX_FILTER_DEFAULT; break;
+        case DXGI_FORMAT_BC1_UNORM_SRGB:    pfEncode = nullptr;         blocksize = 8;   cflags = 0; break;
         case DXGI_FORMAT_BC2_UNORM:
-        case DXGI_FORMAT_BC2_UNORM_SRGB:    pfEncode = D3DXEncodeBC2;   blocksize = 16;  cflags = TEX_FILTER_DEFAULT; break;
+        case DXGI_FORMAT_BC2_UNORM_SRGB:    pfEncode = D3DXEncodeBC2;   blocksize = 16;  cflags = 0; break;
         case DXGI_FORMAT_BC3_UNORM:
-        case DXGI_FORMAT_BC3_UNORM_SRGB:    pfEncode = D3DXEncodeBC3;   blocksize = 16;  cflags = TEX_FILTER_DEFAULT; break;
+        case DXGI_FORMAT_BC3_UNORM_SRGB:    pfEncode = D3DXEncodeBC3;   blocksize = 16;  cflags = 0; break;
         case DXGI_FORMAT_BC4_UNORM:         pfEncode = D3DXEncodeBC4U;  blocksize = 8;   cflags = TEX_FILTER_RGB_COPY_RED; break;
         case DXGI_FORMAT_BC4_SNORM:         pfEncode = D3DXEncodeBC4S;  blocksize = 8;   cflags = TEX_FILTER_RGB_COPY_RED; break;
         case DXGI_FORMAT_BC5_UNORM:         pfEncode = D3DXEncodeBC5U;  blocksize = 16;  cflags = TEX_FILTER_RGB_COPY_RED | TEX_FILTER_RGB_COPY_GREEN; break;
         case DXGI_FORMAT_BC5_SNORM:         pfEncode = D3DXEncodeBC5S;  blocksize = 16;  cflags = TEX_FILTER_RGB_COPY_RED | TEX_FILTER_RGB_COPY_GREEN; break;
-        case DXGI_FORMAT_BC6H_UF16:         pfEncode = D3DXEncodeBC6HU; blocksize = 16;  cflags = TEX_FILTER_DEFAULT; break;
-        case DXGI_FORMAT_BC6H_SF16:         pfEncode = D3DXEncodeBC6HS; blocksize = 16;  cflags = TEX_FILTER_DEFAULT; break;
+        case DXGI_FORMAT_BC6H_UF16:         pfEncode = D3DXEncodeBC6HU; blocksize = 16;  cflags = 0; break;
+        case DXGI_FORMAT_BC6H_SF16:         pfEncode = D3DXEncodeBC6HS; blocksize = 16;  cflags = 0; break;
         case DXGI_FORMAT_BC7_UNORM:
-        case DXGI_FORMAT_BC7_UNORM_SRGB:    pfEncode = D3DXEncodeBC7;   blocksize = 16;  cflags = TEX_FILTER_DEFAULT; break;
-        default:                            pfEncode = nullptr;         blocksize = 0;   cflags = TEX_FILTER_DEFAULT; return false;
+        case DXGI_FORMAT_BC7_UNORM_SRGB:    pfEncode = D3DXEncodeBC7;   blocksize = 16;  cflags = 0; break;
+        default:                            pfEncode = nullptr;         blocksize = 0;   cflags = 0; return false;
         }
 
         return true;
@@ -71,9 +70,9 @@ namespace
     HRESULT CompressBC(
         const Image& image,
         const Image& result,
-        uint32_t bcflags,
-        TEX_FILTER_FLAGS srgb,
-        float threshold) noexcept
+        DWORD bcflags,
+        DWORD srgb,
+        float threshold)
     {
         if (!image.pixels || !result.pixels)
             return E_POINTER;
@@ -100,7 +99,7 @@ namespace
         // Determine BC format encoder
         BC_ENCODE pfEncode;
         size_t blocksize;
-        TEX_FILTER_FLAGS cflags;
+        DWORD cflags;
         if (!DetermineEncoderSettings(result.format, pfEncode, blocksize, cflags))
             return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
 
@@ -200,9 +199,9 @@ namespace
     HRESULT CompressBC_Parallel(
         const Image& image,
         const Image& result,
-        uint32_t bcflags,
-        TEX_FILTER_FLAGS srgb,
-        float threshold) noexcept
+        DWORD bcflags,
+        DWORD srgb,
+        float threshold)
     {
         if (!image.pixels || !result.pixels)
             return E_POINTER;
@@ -229,7 +228,7 @@ namespace
         // Determine BC format encoder
         BC_ENCODE pfEncode;
         size_t blocksize;
-        TEX_FILTER_FLAGS cflags;
+        DWORD cflags;
         if (!DetermineEncoderSettings(result.format, pfEncode, blocksize, cflags))
             return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
 
@@ -453,7 +452,7 @@ namespace
             for (size_t count = 0; (count < cImage.rowPitch) && (w < cImage.width); count += sbpp, w += 4)
             {
                 pfDecode(temp, sptr);
-                _ConvertScanline(temp, 16, format, cformat, TEX_FILTER_DEFAULT);
+                _ConvertScanline(temp, 16, format, cformat, 0);
 
                 size_t pw = std::min<size_t>(4, cImage.width - w);
                 assert(pw > 0 && ph > 0);
@@ -594,9 +593,9 @@ _Use_decl_annotations_
 HRESULT DirectX::Compress(
     const Image& srcImage,
     DXGI_FORMAT format,
-    TEX_COMPRESS_FLAGS compress,
+    DWORD compress,
     float threshold,
-    ScratchImage& image) noexcept
+    ScratchImage& image)
 {
     if (IsCompressed(srcImage.format) || !IsCompressed(format))
         return E_INVALIDARG;
@@ -643,9 +642,9 @@ HRESULT DirectX::Compress(
     size_t nimages,
     const TexMetadata& metadata,
     DXGI_FORMAT format,
-    TEX_COMPRESS_FLAGS compress,
+    DWORD compress,
     float threshold,
-    ScratchImage& cImages) noexcept
+    ScratchImage& cImages)
 {
     if (!srcImages || !nimages)
         return E_INVALIDARG;

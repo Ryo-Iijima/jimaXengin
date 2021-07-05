@@ -10,7 +10,6 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
-#include <wrl.h>
 
 /// <summary>
 /// ƒm[ƒh‚P‚Â•ª‚Ìî•ñ\‘¢‘Ì

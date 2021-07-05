@@ -16,9 +16,7 @@
 #pragma clang diagnostic ignored "-Wsign-conversion"
 #endif
 
-#ifdef _GAMING_XBOX_SCARLETT
-#include <d3dx12_xs.h>
-#elif (defined(_XBOX_ONE) && defined(_TITLE)) || defined(_GAMING_XBOX)
+#if defined(_XBOX_ONE) && defined(_TITLE)
 #include "d3dx12_x.h"
 #else
 #define D3DX12_NO_STATE_OBJECT_HELPERS
@@ -196,6 +194,7 @@ namespace
 
         // Readback resources must be buffers
         D3D12_RESOURCE_DESC bufferDesc = {};
+        bufferDesc.Alignment = desc.Alignment;
         bufferDesc.DepthOrArraySize = 1;
         bufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
         bufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
@@ -205,6 +204,7 @@ namespace
         bufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         bufferDesc.MipLevels = 1;
         bufferDesc.SampleDesc.Count = 1;
+        bufferDesc.SampleDesc.Quality = 0;
 
         ComPtr<ID3D12Resource> copySource(pSource);
         if (desc.SampleDesc.Count > 1)

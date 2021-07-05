@@ -1,9 +1,1 @@
-﻿  Application.cpp
-  FbxLoader.cpp
-  Model.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(11): error C2102: '&' に左辺値がありません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(13): error C2102: '&' に左辺値がありません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(36): error C2102: '&' に左辺値がありません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(38): error C2102: '&' に左辺値がありません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Model.cpp(71): error C2102: '&' に左辺値がありません。
-  コードを生成中...
+﻿  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "FbxLoader.h"
+#include "Object3d.h"
 
 Application& Application::GetInstance()
 {
@@ -17,10 +18,11 @@ void Application::Initialize()
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
 
+	// 
 	FbxLoader::GetInstance().Initialize(dxCommon->GetDevice());
-	// ŽŽ‚µ
 	FbxLoader::GetInstance().LoadModelFromFile("cube");
 
+	Object3d::SetDevice(dxCommon->GetDevice());
 }
 
 void Application::Finalize()
