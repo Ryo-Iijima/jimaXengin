@@ -3,7 +3,8 @@
 
 using namespace DirectX;
 
-const std::string FbxLoader::BASE_DIRECTORY = "Resources/";
+const std::string FbxLoader::BASE_DIRECTORY_MODEL = "Resources/model/";
+const std::string FbxLoader::BASE_DIRECTORY_TEX = "Resources/texture/";
 const std::string FbxLoader::DEFAULT_TEXTURE_FILENAME = "white1x1.png";
 
 void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
@@ -217,7 +218,7 @@ void FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
                     string path_str(filepath);
                     string name = ExtractFileName(path_str);
                     // テクスチャ読み込み
-                    LoadTexture(model, BASE_DIRECTORY + model->name + "/" + name);
+                    LoadTexture(model, BASE_DIRECTORY_TEX + model->name + "/" + name);
                     textureLoaded = true;
                 }
             }
@@ -225,7 +226,7 @@ void FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
         // テクスチャがない場合はデフォルトテクスチャを張る
         if (!textureLoaded)
         {
-            LoadTexture(model, BASE_DIRECTORY + DEFAULT_TEXTURE_FILENAME);
+            LoadTexture(model, BASE_DIRECTORY_TEX + DEFAULT_TEXTURE_FILENAME);
         }
     }
 }
@@ -292,7 +293,7 @@ void FbxLoader::Finalize()
 
 Model* FbxLoader::LoadModelFromFile(const string& modelName)
 {
-    const string directorypath = BASE_DIRECTORY + modelName + "/";
+    const string directorypath = BASE_DIRECTORY_MODEL + modelName + "/";
     const string fileName = modelName + ".fbx";
     const string fullpath = directorypath + fileName;
 

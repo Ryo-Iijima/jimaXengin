@@ -17,7 +17,8 @@ private:	// エイリアス
 
 public:		// 定数
 	// ファイルパスの前半の共通部分
-	static const string BASE_DIRECTORY;
+	static const string BASE_DIRECTORY_MODEL;
+	static const string BASE_DIRECTORY_TEX;
 	// マテリアル用デフォルトテクスチャ
 	static const string DEFAULT_TEXTURE_FILENAME;
 private:	// 変数

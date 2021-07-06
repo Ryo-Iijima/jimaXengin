@@ -622,7 +622,7 @@ bool DirectXCommon::GenerateTextureBuffer()
 
 	result = LoadFromWICFile
 	(
-		L"Resources/colorGrid.png",
+		L"Resources/texture/colorGrid.png",
 		WIC_FLAGS_NONE,
 		&metadata,
 		scrachImg
