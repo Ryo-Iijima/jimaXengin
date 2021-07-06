@@ -525,6 +525,30 @@ bool DirectXCommon::GenerateVertexBuffer()
 
 bool DirectXCommon::MapVertexBuffer()
 {
+	// 法線の計算
+	for (int i = 0; i < indicesNum / 3; i++)
+	{
+		// 三角形のインデックスを一時的な変数に入れる
+		unsigned short index0 = indices[i * 3 + 0];
+		unsigned short index1 = indices[i * 3 + 1];
+		unsigned short index2 = indices[i * 3 + 2];
+		// 三角形を構成する頂点座標をベクトルに代入
+		XMVECTOR p0 = XMLoadFloat3(&vertices[index0].pos);
+		XMVECTOR p1 = XMLoadFloat3(&vertices[index1].pos);
+		XMVECTOR p2 = XMLoadFloat3(&vertices[index2].pos);
+		// ベクトルを計算
+		XMVECTOR v1 = XMVectorSubtract(p1, p0);
+		XMVECTOR v2 = XMVectorSubtract(p2, p0);
+		// 2つのベクトルの外積
+		XMVECTOR normal = XMVector3Cross(v1, v2);
+		// 正規化
+		normal = XMVector3Normalize(normal);
+		// 法線を代入
+		XMStoreFloat3(&vertices[index0].normal, normal);
+		XMStoreFloat3(&vertices[index1].normal, normal);
+		XMStoreFloat3(&vertices[index2].normal, normal);
+	}
+
 	// 頂点情報のマップ
 	Vertex* vertMap = nullptr;
 
@@ -668,30 +692,7 @@ bool DirectXCommon::GenerateTextureBuffer()
 
 bool DirectXCommon::GenerateConstBufferView()
 {
-	XMMATRIX matWorld = XMMatrixIdentity();			// ワールド
-	XMMATRIX matView = XMMatrixIdentity();			// ビュー
-	XMMATRIX matProjection = XMMatrixIdentity();	// プロジェクション
-
-	//matrix.r[0].m128_f32[0] = 2.0f / WinApp::WINDOW_WIDTH;
-	//matrix.r[1].m128_f32[1] = -2.0f / WinApp::WINDOW_HEIGHT;
-	//matrix.r[3].m128_f32[0] = -1.0f;
-	//matrix.r[3].m128_f32[1] = 1.0f;
-
-	//matWorld = XMMatrixRotationY(XM_PIDIV4);	
-
-	XMFLOAT3 eye(0, 0, -5);
-	XMFLOAT3 target(0, 0, 0);
-	XMFLOAT3 up(0, 1, 0);
-
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));	
-
-	matProjection = XMMatrixPerspectiveFovLH	
-	(
-		XM_PIDIV4,	// 画角
-		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
-		1.0f,		// 近いほう
-		10.0f		// 遠いほう
-	);
+	CalculateMat();
 
 	// ヒープ設定
 	D3D12_HEAP_PROPERTIES cbHeapProp = {};
@@ -726,14 +727,57 @@ bool DirectXCommon::GenerateConstBufferView()
 	ConstBfferData* constMap;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	constMap->matrix = matWorld * matView * matProjection;
-	constMap->color = XMFLOAT4(1, 0, 0, 0);
+	constMap->color = XMFLOAT4(1, 1, 1, 0);
 	if (FAILED(result)) {
 		assert(0);
 		return false;
 	}
 	
-
 	return true;
+}
+
+void DirectXCommon::CalculateMat()
+{
+	matWorld = XMMatrixIdentity();
+	matView = XMMatrixIdentity();
+	matProjection = XMMatrixIdentity();
+
+	// ワールド行列の計算
+	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
+	XMFLOAT3 rotation = { -30.0f,45.0f,0.0f };
+	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
+
+	XMMATRIX matScale = XMMatrixIdentity();
+	XMMATRIX matRot = XMMatrixIdentity();
+	XMMATRIX matTrans = XMMatrixIdentity();
+
+	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+
+	matWorld *= matScale;
+	matWorld *= matRot;
+	matWorld *= matTrans;
+
+	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 target(0, 0, 0);
+	XMFLOAT3 up(0, 1, 0);
+
+	// 平行移動行列の計算
+	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+
+	// プロジェクション行列の計算
+	matProjection = XMMatrixPerspectiveFovLH
+	(
+		XM_PIDIV4,	// 画角
+		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
+		1.0f,		// 近いほう
+		10.0f		// 遠いほう
+	);
 }
 
 bool DirectXCommon::CreateTextureShaderResourceView()
@@ -881,6 +925,7 @@ bool DirectXCommon::CreateGPipelineStateObject()
 	// まだアンチエイリアスを使わないのでfalse
 	gPipline.RasterizerState.MultisampleEnable = false;
 	gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;	// 背面カリング
+	//gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;	// カリングしない
 	gPipline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;	// 中身を塗りつぶす
 	gPipline.RasterizerState.DepthClipEnable = true;			// 深度方向のクリッピング
 
