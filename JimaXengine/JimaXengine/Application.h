@@ -5,6 +5,7 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
 #include "Object3d.h"
+#include "Sound.h"
 
 class Application
 {
@@ -15,6 +16,8 @@ private:	// 変数
 
 	Model* model = nullptr;
 	Object3d* object = nullptr;
+
+	Sound* sound = nullptr;
 
 private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして

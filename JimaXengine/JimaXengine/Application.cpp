@@ -28,6 +28,12 @@ void Application::Initialize()
 	object = new Object3d;
 	object->Initialize();
 	object->SetModel(model);
+
+	// ƒTƒEƒ“ƒh‚Ì“Ç‚Ýž‚Ý‚ÆÄ¶
+	sound = new Sound;
+	sound->Initialize();
+	sound->LoadFile("Resources/sound/Alarm01.wav");
+	sound->Play();
 }
 
 void Application::Finalize()
