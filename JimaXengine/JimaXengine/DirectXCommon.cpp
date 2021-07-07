@@ -867,7 +867,7 @@ bool DirectXCommon::LoadShader()
 
 	result = D3DCompileFromFile
 	(
-		L"BasicVS.hlsl",
+		L"Resources/shader/Basic/BasicVS.hlsl",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"VSmain",
@@ -894,7 +894,7 @@ bool DirectXCommon::LoadShader()
 
 	result = D3DCompileFromFile
 	(
-		L"BasicPS.hlsl",
+		L"Resources/shader/Basic/BasicPS.hlsl",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"PSmain",

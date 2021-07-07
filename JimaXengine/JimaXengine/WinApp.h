@@ -44,6 +44,7 @@ public:		// ƒƒ“ƒoŠÖ”
 
 	// getter
 	HWND GetHwnd() { return hwnd; }
+	WNDCLASSEX GetWndClass() { return wndClass; }
 	HINSTANCE GetInstance() { return wndClass.hInstance; }
 
 };

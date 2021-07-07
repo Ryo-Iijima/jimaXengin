@@ -1,5 +1,5 @@
 #include "WinApp.h"
-#include "imGuiDevice.h"
+#include "general/imGuiDevice.h"
 
 const wchar_t WinApp::windowClassName[] = L"DirectXGame";
 

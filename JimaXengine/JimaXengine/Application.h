@@ -4,9 +4,9 @@
 #pragma once
 #include "WinApp.h"
 #include "DirectXCommon.h"
-#include "Object3d.h"
-#include "Sound.h"
-#include "imGuiDevice.h"
+#include "3d/Object3d.h"
+#include "general/Sound.h"
+#include "general/imGuiDevice.h"
 
 class Application
 {
@@ -21,6 +21,7 @@ private:	// 変数
 	Sound* sound = nullptr;
 
 	imGuiDevice* imguiDev = nullptr;
+	imGuiDevice* imguiDev2 = nullptr;
 
 private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして

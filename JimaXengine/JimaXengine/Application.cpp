@@ -1,6 +1,6 @@
 #include "Application.h"
-#include "FbxLoader.h"
-#include "Object3d.h"
+#include "3d/FbxLoader.h"
+#include "3d/Object3d.h"
 
 Application& Application::GetInstance()
 {
@@ -38,6 +38,9 @@ void Application::Initialize()
 	// imgui
 	imguiDev = new imGuiDevice();
 	imguiDev->Initialize(winApp, dxCommon);
+	
+	imguiDev2 = new imGuiDevice();
+	imguiDev2->Initialize(winApp, dxCommon);
 
 
 }
@@ -73,9 +76,35 @@ void Application::Run()
 		// 描画前処理
 		dxCommon->PreDraw();
 
-		// imgui描画
-		imguiDev->PreDraw();
-		imguiDev->Draw();
+		//imgui描画
+		{
+			imguiDev->Update();
+
+			ImGui::Begin("Test Window");	// ウィンドウの名前
+			ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);	// ウィンドウサイズ
+
+			bool blnChk = false;
+			ImGui::Checkbox("CheckBoxTest", &blnChk);
+
+			ImGui::End();
+
+			imguiDev->Draw();
+		}
+
+		{
+			imguiDev2->Update();
+
+			ImGui::Begin("Test Window2");	// ウィンドウの名前
+			ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);	// ウィンドウサイズ
+			//ImGui::SetWindowPos(ImVec2(700, 0), ImGuiCond_::ImGuiCond_FirstUseEver);
+
+			bool blnChk2 = false;
+			ImGui::Checkbox("CheckBoxTest", &blnChk2);
+
+			ImGui::End();
+
+			imguiDev2->Draw();
+		}
 
 		object->Draw(dxCommon->GetCommandList());
 
