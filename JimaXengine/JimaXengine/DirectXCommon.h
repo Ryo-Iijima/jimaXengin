@@ -46,7 +46,7 @@ private:	// 構造体
 
 private:	// メンバ変数
 	// ウィンドウズアプリケーション管理
-	WinApp* winApp;
+	WinApp* winApp = nullptr;
 
 	HRESULT result;
 
@@ -92,6 +92,9 @@ private:	// メンバ変数
 	XMMATRIX matWorld;			// ワールド
 	XMMATRIX matView;			// ビュー
 	XMMATRIX matProjection;		// プロジェクション
+
+	// imgui用ヒープ
+	ComPtr<ID3D12DescriptorHeap> _heapForImgui;
 
 	// 頂点座標
 	const static unsigned int vertNum = 24;
@@ -187,6 +190,10 @@ public:		// メンバ関数
 	// getter
 	ID3D12Device* GetDevice() { return _dev.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() { return _cmdList.Get(); }
+
+	// imgui用のヒープ生成
+	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeapForImgui();
+	ComPtr<ID3D12DescriptorHeap> GetHeapForImgui();
 
 private:	// メンバ関数
 	/// <summary>

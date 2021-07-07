@@ -32,8 +32,14 @@ void Application::Initialize()
 	// ƒTƒEƒ“ƒh‚Ì“Ç‚Ýž‚Ý‚ÆÄ¶
 	sound = new Sound;
 	sound->Initialize();
-	sound->LoadFile("Resources/sound/Alarm01.wav");
-	sound->Play();
+	//sound->LoadFile("Resources/sound/Alarm01.wav");
+	//sound->Play();
+
+	// imgui
+	imguiDev = new imGuiDevice();
+	imguiDev->Initialize(winApp, dxCommon);
+
+
 }
 
 void Application::Finalize()
@@ -68,7 +74,13 @@ void Application::Run()
 
 		object->Draw(dxCommon->GetCommandList());
 
+
 		// •`‰æŒãˆ—
 		dxCommon->PostDraw();
+
+		// imgui•`‰æ
+		imguiDev->PreDraw();
+		imguiDev->Draw();
+
 	}
 }

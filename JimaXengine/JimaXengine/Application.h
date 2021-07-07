@@ -6,6 +6,7 @@
 #include "DirectXCommon.h"
 #include "Object3d.h"
 #include "Sound.h"
+#include "imGuiDevice.h"
 
 class Application
 {
@@ -18,6 +19,8 @@ private:	// 変数
 	Object3d* object = nullptr;
 
 	Sound* sound = nullptr;
+
+	imGuiDevice* imguiDev = nullptr;
 
 private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして
