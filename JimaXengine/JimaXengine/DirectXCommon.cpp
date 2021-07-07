@@ -207,7 +207,7 @@ void DirectXCommon::PreDraw()
 	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	dsvH = dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	_cmdList->OMSetRenderTargets(1, &rtvH, true, &dsvH);
+	//_cmdList->OMSetRenderTargets(1, &rtvH, true, &dsvH);
 
 	ClearRenderTarget();
 

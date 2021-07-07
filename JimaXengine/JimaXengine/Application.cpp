@@ -67,20 +67,21 @@ void Application::Run()
 			break;
 		}
 
+
 		object->Update();
 
 		// •`‰æ‘Oˆ—
 		dxCommon->PreDraw();
 
-		object->Draw(dxCommon->GetCommandList());
+		// imgui•`‰æ
+		imguiDev->PreDraw();
+		imguiDev->Draw();
 
+		object->Draw(dxCommon->GetCommandList());
 
 		// •`‰æŒãˆ—
 		dxCommon->PostDraw();
 
-		// imgui•`‰æ
-		imguiDev->PreDraw();
-		imguiDev->Draw();
 
 	}
 }
