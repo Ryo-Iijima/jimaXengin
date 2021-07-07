@@ -14,6 +14,8 @@ public:
 
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
 
+	void Update();
+
 	void PreDraw();
 
 	void Draw();

@@ -29,6 +29,12 @@ void imGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 		this->dxCommon->GetHeapForImgui()->GetCPUDescriptorHandleForHeapStart(),	// CPUハンドル
 		this->dxCommon->GetHeapForImgui()->GetGPUDescriptorHandleForHeapStart()		// GPUハンドル
 	);
+
+
+}
+
+void imGuiDevice::Update()
+{
 }
 
 void imGuiDevice::PreDraw()
@@ -41,7 +47,27 @@ void imGuiDevice::PreDraw()
 	// ウィンドウの定義
 	ImGui::Begin("Test Window");	// ウィンドウの名前
 	ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);	// ウィンドウサイズ
+
+	{	// 練習
+		bool blnChk = false;
+		ImGui::Checkbox("CheckBoxTest", &blnChk);
+
+		static int radio = 0;
+		ImGui::RadioButton("Radio 1", &radio, 0);
+		ImGui::SameLine();
+		ImGui::RadioButton("Radio 2", &radio, 1);
+		ImGui::SameLine();
+		ImGui::RadioButton("Radio 3", &radio, 2);
+
+		float fSlider[3] = {};
+		ImGui::SliderFloat3("Float Sloder", fSlider, 0.0f, 100.0f);
+
+		float color[4] = {};
+		ImGui::ColorPicker4("ColorPicker4", color, ImGuiColorEditFlags_AlphaBar);
+	}
+
 	ImGui::End();
+
 }
 
 void imGuiDevice::Draw()

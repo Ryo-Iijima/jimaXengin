@@ -1,6 +1,9 @@
 #include "WinApp.h"
+#include "imGuiDevice.h"
 
 const wchar_t WinApp::windowClassName[] = L"DirectXGame";
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -10,6 +13,7 @@ LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 		PostQuitMessage(0);	// OSに対して「もうこのアプリは終わる」と伝える
 		return 0;
 	}
+	ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam);	// imgui用
 	return DefWindowProc(hwnd, msg, wparam, lparam);	// 既定の処理を行う
 }
 
