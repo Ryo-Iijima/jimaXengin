@@ -20,8 +20,8 @@ private:	// 変数
 
 	Sound* sound = nullptr;
 
-	imGuiDevice* imguiDev = nullptr;
-	imGuiDevice* imguiDev2 = nullptr;
+	ImGuiDevice* imguiDev = nullptr;
+	ImGuiDevice* imguiDev2 = nullptr;
 
 private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして

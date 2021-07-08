@@ -8,13 +8,16 @@
 #include "../WinApp.h"
 #include "../DirectXCommon.h"
 
-class imGuiDevice
+class ImGuiDevice
 {
 private:
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 
 public:
+	ImGuiDevice();
+
+	~ImGuiDevice();
 
 	void Initialize(WinApp* winApp, DirectXCommon* dxCommon);
 

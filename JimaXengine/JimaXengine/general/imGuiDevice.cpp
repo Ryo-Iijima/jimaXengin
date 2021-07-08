@@ -1,6 +1,14 @@
 #include "imGuiDevice.h"
 
-void imGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
+ImGuiDevice::ImGuiDevice()
+{
+}
+
+ImGuiDevice::~ImGuiDevice()
+{
+}
+
+void ImGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 {
 	this->winApp = winApp;
 	this->dxCommon = dxCommon;
@@ -25,11 +33,9 @@ void imGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 		this->dxCommon->GetHeapForImgui()->GetCPUDescriptorHandleForHeapStart(),	// CPUハンドル
 		this->dxCommon->GetHeapForImgui()->GetGPUDescriptorHandleForHeapStart()		// GPUハンドル
 	);
-
-
 }
 
-void imGuiDevice::Update()
+void ImGuiDevice::Update()
 {
 	// 描画前処理
 	ImGui_ImplDX12_NewFrame();
@@ -37,7 +43,7 @@ void imGuiDevice::Update()
 	ImGui::NewFrame();
 }
 
-void imGuiDevice::Draw()
+void ImGuiDevice::Draw()
 {
 	ImGui::Render();
 	dxCommon->GetCommandList()->SetDescriptorHeaps(1, dxCommon->GetHeapForImgui().GetAddressOf());

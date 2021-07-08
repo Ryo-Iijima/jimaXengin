@@ -36,12 +36,11 @@ void Application::Initialize()
 	//sound->Play();
 
 	// imgui
-	imguiDev = new imGuiDevice();
+	imguiDev = new ImGuiDevice();
 	imguiDev->Initialize(winApp, dxCommon);
 	
-	imguiDev2 = new imGuiDevice();
+	imguiDev2 = new ImGuiDevice();
 	imguiDev2->Initialize(winApp, dxCommon);
-
 
 }
 
@@ -81,7 +80,6 @@ void Application::Run()
 			imguiDev->Update();
 
 			ImGui::Begin("Test Window");	// ウィンドウの名前
-			ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);	// ウィンドウサイズ
 
 			bool blnChk = false;
 			ImGui::Checkbox("CheckBoxTest", &blnChk);
@@ -95,11 +93,10 @@ void Application::Run()
 			imguiDev2->Update();
 
 			ImGui::Begin("Test Window2");	// ウィンドウの名前
-			ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);	// ウィンドウサイズ
-			//ImGui::SetWindowPos(ImVec2(700, 0), ImGuiCond_::ImGuiCond_FirstUseEver);
 
 			bool blnChk2 = false;
 			ImGui::Checkbox("CheckBoxTest", &blnChk2);
+
 
 			ImGui::End();
 
