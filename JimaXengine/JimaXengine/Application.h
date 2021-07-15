@@ -7,6 +7,8 @@
 #include "3d/Object3d.h"
 #include "general/Sound.h"
 #include "general/imGuiDevice.h"
+#include "general/FPSManager.h"
+#include "general/Input.h"
 
 class Application
 {
@@ -14,14 +16,17 @@ private:	// 変数
 	// 汎用機能
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
+	
+	FPSManager* fpsManager = nullptr;
 
 	Model* model = nullptr;
 	Object3d* object = nullptr;
 
+	Input* input = nullptr;
+
 	Sound* sound = nullptr;
 
 	ImGuiDevice* imguiDev = nullptr;
-	ImGuiDevice* imguiDev2 = nullptr;
 
 private:	// シングルトンのためのこと
 	// コンストラクタをprivateにして

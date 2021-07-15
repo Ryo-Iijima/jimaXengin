@@ -23,6 +23,10 @@
 #include <d3dx12.h>
 using namespace DirectX;
 
+#include "math/Vector2.h"
+#include "math/Vector3.h"
+#include "Camera.h"
+
 
 class DirectXCommon
 {
@@ -33,9 +37,9 @@ private:	// 構造体
 	// 頂点データ構造体
 	struct Vertex
 	{
-		XMFLOAT3 pos;
-		XMFLOAT3 normal;
-		XMFLOAT2 uv;
+		Vector3 pos;
+		Vector3 normal;
+		Vector2 uv;
 	};
 
 	struct ConstBfferData
@@ -86,6 +90,7 @@ private:	// メンバ変数
 	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
 	D3D12_VIEWPORT viewport = {};
 	D3D12_RECT scissorrect = {};
+	ComPtr<ID3D12Resource> depthBuffer = nullptr;
 	ComPtr<ID3D12Resource> constBuff = nullptr;
 	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
 
@@ -156,6 +161,8 @@ private:	// メンバ変数
 		22,21,23,
 	};
 
+	
+	Camera* camera = nullptr;
 
 public:		// メンバ関数
 
@@ -268,10 +275,22 @@ private:	// メンバ関数
 	bool GenerateTextureBuffer();
 
 	/// <summary>
-	/// 定数バッファの生成
+	/// 定数バッファビューの生成
 	/// </summary>
 	/// <returns>成否</returns>
 	bool GenerateConstBufferView();
+
+	/// <summary>
+	/// 深度バッファの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateDepthBuffer();
+
+	/// <summary>
+	/// 深度バッファビューの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateDepthBufferView();
 
 	/// <summary>
 	/// 行列計算

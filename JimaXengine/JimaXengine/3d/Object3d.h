@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+#include "../Camera.h"
 
 #include <Windows.h>
 #include <wrl.h>
@@ -44,6 +45,8 @@ protected:
 	XMMATRIX matWorld;
 	// モデル
 	Model* model = nullptr;
+	// カメラ
+	Camera* camera = nullptr;
 
 private:	// static変数
 
@@ -58,6 +61,7 @@ private:	// static変数
 public:		// static関数
 
 	static void CreateGraphicsPipline();
+
 	/// <summary>
 	/// ルートパラメーターの設定
 	/// </summary>

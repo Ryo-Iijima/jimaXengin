@@ -1,5 +1,6 @@
 #include "Object3d.h"
 #include <d3dcompiler.h>
+#include "../WinApp.h"
 #pragma comment (lib,"d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
@@ -180,6 +181,16 @@ void Object3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(constBufferTranceform.GetAddressOf())
 	);
+
+	Vector3 eye(0, 0, -5);
+	Vector3 target(0, 0, 0);
+	Vector3 up(0, 1, 0);
+
+	camera = new Camera();
+	// 平行移動行列の計算
+	camera->SetViewMatrix(eye, target, up);
+	// プロジェクション行列の計算
+	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 }
 
 void Object3d::Update()
@@ -200,9 +211,9 @@ void Object3d::Update()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
-	//const XMMATRIX& matViewProjection=
+	const XMMATRIX& matViewProjection = camera->GetMatView() * camera->GetMatProjection();
 	const XMMATRIX& modelTransform = model->GetModelTransform();
-	//const XMFLOAT3& cameraPos=
+	const XMFLOAT3& cameraPos = camera->GetEye();
 
 	HRESULT result;
 	// 定数バッファに転送
@@ -210,9 +221,9 @@ void Object3d::Update()
 	result = constBufferTranceform->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
-		//constMap->viewproj = matViewProjection;
+		constMap->viewproj = matViewProjection;
 		constMap->world = modelTransform * matWorld;
-		//constMap->cameraPos = cameraPos;
+		constMap->cameraPos = cameraPos;
 		constBufferTranceform->Unmap(0, nullptr);
 	}
 }

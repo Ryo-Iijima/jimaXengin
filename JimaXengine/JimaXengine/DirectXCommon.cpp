@@ -14,6 +14,8 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	assert(winApp);
 
 	this->winApp = winApp;
+	camera = new Camera();
+	
 
 	// DXGIデバイス初期化
 	if (!InitializeDXGIDevice()) 
@@ -87,68 +89,18 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		assert(0);
 	}
 
-#pragma region 深度バッファ
-	// リソース作成
-	D3D12_RESOURCE_DESC depthResDesc = {};
-	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResDesc.Width = WinApp::WINDOW_WIDTH;		// レンダーターゲットのサイズ
-	depthResDesc.Height = WinApp::WINDOW_HEIGHT;
-	depthResDesc.DepthOrArraySize = 1;
-	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値フォーマット
-	depthResDesc.SampleDesc.Count = 1;
-	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-	// 深度値用ヒーププロパティ
-	D3D12_HEAP_PROPERTIES depthHeapProp = {};
-	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
-	depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	// 深度値のクリア設定
-	D3D12_CLEAR_VALUE depthClearValue = {};
-	depthClearValue.DepthStencil.Depth = 1.0f;
-	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
-	// リソース生成
-	ID3D12Resource* depthBuffer = nullptr;
-	result = _dev->CreateCommittedResource
-	(
-		&depthHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&depthResDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// 深度値書き込み用
-		&depthClearValue,
-		IID_PPV_ARGS(&depthBuffer)
-	);
-	if (FAILED(result)) {
+	// 深度バッファの生成
+	if (!GenerateDepthBuffer())
+	{
 		assert(0);
 	}
 
-#pragma endregion
-
-#pragma region 深度バッファビュー
-	// 深度ビュー用デスクリプターヒープ作成
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(dsvHeap.GetAddressOf()));
-	if (FAILED(result)) {
+	// 深度バッファビューの生成
+	if (!GenerateDepthBufferView())
+	{
 		assert(0);
 	}
 
-	// 深度ビュー生成
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値に32ビット使う
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
-	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;	// 特になし
-
-	_dev->CreateDepthStencilView
-	(
-		depthBuffer,
-		&dsvDesc,
-		dsvHeap->GetCPUDescriptorHandleForHeapStart()
-	);
-
-
-
-#pragma endregion
 	// シェーダーリソースビューの作成
 	if (!CreateTextureShaderResourceView())
 	{
@@ -752,7 +704,7 @@ bool DirectXCommon::GenerateConstBufferView()
 	// マップ
 	ConstBfferData* constMap;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->matrix = matWorld * matView * matProjection;
+	constMap->matrix = matWorld * camera->GetMatView() * camera->GetMatProjection();
 	constMap->color = XMFLOAT4(1, 1, 1, 0);
 	if (FAILED(result)) {
 		assert(0);
@@ -762,16 +714,81 @@ bool DirectXCommon::GenerateConstBufferView()
 	return true;
 }
 
+bool DirectXCommon::GenerateDepthBuffer()
+{
+	// リソース作成
+	D3D12_RESOURCE_DESC depthResDesc = {};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = WinApp::WINDOW_WIDTH;		// レンダーターゲットのサイズ
+	depthResDesc.Height = WinApp::WINDOW_HEIGHT;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値フォーマット
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp = {};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue = {};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	// リソース生成
+	depthBuffer = nullptr;
+	result = _dev->CreateCommittedResource
+	(
+		&depthHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// 深度値書き込み用
+		&depthClearValue,
+		IID_PPV_ARGS(depthBuffer.GetAddressOf())
+	);
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+
+	return true;
+}
+
+bool DirectXCommon::GenerateDepthBufferView()
+{
+	// 深度ビュー用デスクリプターヒープ作成
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(dsvHeap.GetAddressOf()));
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+
+	// 深度ビュー生成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値に32ビット使う
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;	// 特になし
+
+	_dev->CreateDepthStencilView
+	(
+		depthBuffer.Get(),
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart()
+	);
+
+	return true;
+}
+
 void DirectXCommon::CalculateMat()
 {
 	matWorld = XMMatrixIdentity();
-	matView = XMMatrixIdentity();
-	matProjection = XMMatrixIdentity();
 
 	// ワールド行列の計算
-	XMFLOAT3 scale = { 1.0f,1.0f,1.0f };
-	XMFLOAT3 rotation = { -30.0f,45.0f,0.0f };
-	XMFLOAT3 position = { 0.0f,0.0f,0.0f };
+	Vector3 scale = { 1.0f,1.0f,1.0f };
+	Vector3 rotation = { -30.0f,45.0f,0.0f };
+	Vector3 position = { 0.0f,0.0f,0.0f };
 
 	XMMATRIX matScale = XMMatrixIdentity();
 	XMMATRIX matRot = XMMatrixIdentity();
@@ -789,21 +806,15 @@ void DirectXCommon::CalculateMat()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
-	XMFLOAT3 eye(0, 0, -5);
-	XMFLOAT3 target(0, 0, 0);
-	XMFLOAT3 up(0, 1, 0);
+	Vector3 eye(0, 0, -50);
+	Vector3 target(0, 0, 0);
+	Vector3 up(0, 1, 0);
 
 	// 平行移動行列の計算
-	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+	camera->SetViewMatrix(eye, target, up);
 
 	// プロジェクション行列の計算
-	matProjection = XMMatrixPerspectiveFovLH
-	(
-		XM_PIDIV4,	// 画角
-		static_cast<float>(WinApp::WINDOW_WIDTH) / static_cast<float>(WinApp::WINDOW_HEIGHT),	// アスペクト比
-		1.0f,		// 近いほう
-		10.0f		// 遠いほう
-	);
+	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 }
 
 bool DirectXCommon::CreateTextureShaderResourceView()
