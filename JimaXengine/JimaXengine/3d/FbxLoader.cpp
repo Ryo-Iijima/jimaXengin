@@ -208,7 +208,7 @@ void FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
 
             // ディフューズテクスチャを取り出す
             const FbxProperty diffuseProperty = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
-            if (diffuseProperty.IsAnimated())
+            if (diffuseProperty.IsValid())
             {
                 const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
                 if (texture)
@@ -218,7 +218,7 @@ void FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
                     string path_str(filepath);
                     string name = ExtractFileName(path_str);
                     // テクスチャ読み込み
-                    LoadTexture(model, BASE_DIRECTORY_TEX + model->name + "/" + name);
+                    LoadTexture(model, BASE_DIRECTORY_MODEL + model->name + "/" + name);
                     textureLoaded = true;
                 }
             }

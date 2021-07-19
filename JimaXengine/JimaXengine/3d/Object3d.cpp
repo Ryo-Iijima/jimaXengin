@@ -182,7 +182,7 @@ void Object3d::Initialize()
 		IID_PPV_ARGS(constBufferTranceform.GetAddressOf())
 	);
 
-	Vector3 eye(0, 0, -5);
+	Vector3 eye(0, 0, 200);
 	Vector3 target(0, 0, 0);
 	Vector3 up(0, 1, 0);
 
@@ -200,9 +200,9 @@ void Object3d::Update()
 	// 行列の計算
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
-	matRot += XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot += XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot += XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 	// ワールド行列の合成
@@ -211,9 +211,13 @@ void Object3d::Update()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
-	const XMMATRIX& matViewProjection = camera->GetMatView() * camera->GetMatProjection();
-	const XMMATRIX& modelTransform = model->GetModelTransform();
-	const XMFLOAT3& cameraPos = camera->GetEye();
+	const auto matView = camera->GetMatView();
+	const auto matProje = camera->GetMatProjection();
+	
+
+	const XMMATRIX matViewProjection = matView * matProje;
+	const XMMATRIX modelTransform = model->GetModelTransform();
+	const XMFLOAT3 cameraPos = camera->GetEye();
 
 	HRESULT result;
 	// 定数バッファに転送
@@ -222,7 +226,7 @@ void Object3d::Update()
 	if (SUCCEEDED(result))
 	{
 		constMap->viewproj = matViewProjection;
-		constMap->world = modelTransform * matWorld;
+		constMap->world = matWorld;
 		constMap->cameraPos = cameraPos;
 		constBufferTranceform->Unmap(0, nullptr);
 	}

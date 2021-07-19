@@ -81,20 +81,20 @@ void Application::Run()
 
 		input->Update();
 
-		imguiDev->Update();
+		//imguiDev->Update();
 
 		// 描画前処理
 		dxCommon->PreDraw();
 
 		// imgui描画
-		{
-			ImGui::Begin("Test Window");	// ウィンドウの名前
-			float slider = fpsManager->GetFPS();
-			ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
-			ImGui::End();
+		//{
+		//	ImGui::Begin("Test Window");	// ウィンドウの名前
+		//	float slider = fpsManager->GetFPS();
+		//	ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
+		//	ImGui::End();
 
-			imguiDev->Draw();
-		}
+		//	imguiDev->Draw();
+		//}
 
 		object->Draw(dxCommon->GetCommandList());
 

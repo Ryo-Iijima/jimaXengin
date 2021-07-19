@@ -139,7 +139,7 @@ void DirectXCommon::Finalize()
 
 void DirectXCommon::PreDraw()
 {
-	result = _cmdAllocator->Reset();	// コマンドアロケーターのクリア
+	//result = _cmdAllocator->Reset();	// コマンドアロケーターのクリア
 	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
 
 #pragma region リソースバリアを変更
@@ -210,27 +210,29 @@ void DirectXCommon::ClearRenderTarget()
 
 	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);	// 深度クリア
 
-	_cmdList->SetPipelineState(_piplineState.Get());	// パイプラインステートのセット
+
+
+	//_cmdList->SetPipelineState(_piplineState.Get());	// パイプラインステートのセット
 
 	_cmdList->RSSetViewports(1, &viewport);
 
 	_cmdList->RSSetScissorRects(1, &scissorrect);
 
-	_cmdList->SetGraphicsRootSignature(rootsignature.Get());		// ルートシグネチャの設定
+	//_cmdList->SetGraphicsRootSignature(rootsignature.Get());		// ルートシグネチャの設定
 
-	_cmdList->SetDescriptorHeaps(1, basicDescHeap.GetAddressOf());	// ディスクリプターヒープの指定
+	//_cmdList->SetDescriptorHeaps(1, basicDescHeap.GetAddressOf());	// ディスクリプターヒープの指定
 
-	auto heapHandle = basicDescHeap->GetGPUDescriptorHandleForHeapStart();
+	//auto heapHandle = basicDescHeap->GetGPUDescriptorHandleForHeapStart();
 
-	_cmdList->SetGraphicsRootDescriptorTable(0, heapHandle);	// ルートパラメーターとディスクリプターヒープの関連付け
+	//_cmdList->SetGraphicsRootDescriptorTable(0, heapHandle);	// ルートパラメーターとディスクリプターヒープの関連付け
 
-	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
+	//_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
 
-	_cmdList->IASetVertexBuffers(0, 1, &vbView);	// 頂点バッファの設定コマンド
+	//_cmdList->IASetVertexBuffers(0, 1, &vbView);	// 頂点バッファの設定コマンド
 
-	_cmdList->IASetIndexBuffer(&ibView);	// インデックスバッファの設定コマンド
+	//_cmdList->IASetIndexBuffer(&ibView);	// インデックスバッファの設定コマンド
 
-	_cmdList->DrawIndexedInstanced(indicesNum, 1, 0, 0, 0);	// 描画コマンド
+	//_cmdList->DrawIndexedInstanced(indicesNum, 1, 0, 0, 0);	// 描画コマンド
 
 }
 

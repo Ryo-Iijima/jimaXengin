@@ -15,14 +15,16 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 		nullptr,
 		IID_PPV_ARGS(vertBuff.GetAddressOf())
 	);
+	assert(SUCCEEDED(result));
+
 	// 頂点バッファへのデータ転送
 	FBXVertexData* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
-	if (SUCCEEDED(result))
-	{
-		std::copy(vertices.begin(), vertices.end(), vertMap);
-		vertBuff->Unmap(0, nullptr);
-	}
+	assert(SUCCEEDED(result));
+		
+	std::copy(vertices.begin(), vertices.end(), vertMap);
+	vertBuff->Unmap(0, nullptr);
+
 	// 頂点バッファビューの作成
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
@@ -40,14 +42,15 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 		nullptr,
 		IID_PPV_ARGS(indexBuff.GetAddressOf())
 	);
+	assert(SUCCEEDED(result));
+
 	// インデックスバッファへのデータ転送
 	unsigned short* indexMap = nullptr;
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
-	if (SUCCEEDED(result))
-	{
-		std::copy(indices.begin(), indices.end(), indexMap);
-		indexBuff->Unmap(0, nullptr);
-	}
+	assert(SUCCEEDED(result));
+
+	std::copy(indices.begin(), indices.end(), indexMap);
+	indexBuff->Unmap(0, nullptr);
 	// インデックスバッファビューの作成
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
@@ -75,6 +78,8 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 		nullptr,
 		IID_PPV_ARGS(texbuff.GetAddressOf())
 	);
+	assert(SUCCEEDED(result));
+
 	// テクスチャバッファにデータ転送
 	result = texbuff->WriteToSubresource
 	(
@@ -84,6 +89,7 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 		(UINT)img->rowPitch,	// 1ラインサイズ
 		(UINT)img->slicePitch	// 1枚サイズ
 	);
+	assert(SUCCEEDED(result));
 
 	// SRV用デスクリプタヒープを生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
