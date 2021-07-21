@@ -3,6 +3,8 @@
 #include "../WinApp.h"
 #pragma comment (lib,"d3dcompiler.lib")
 
+#include "../general/Input.h"
+
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
@@ -182,9 +184,9 @@ void Object3d::Initialize()
 		IID_PPV_ARGS(constBufferTranceform.GetAddressOf())
 	);
 
-	Vector3 eye(0, 0, 200);
-	Vector3 target(0, 0, 0);
-	Vector3 up(0, 1, 0);
+	eye = { 0, 0, 200 };
+	target = { 0, 0, 0 };
+	up = { 0, 1, 0 };
 
 	camera = new Camera();
 	// 平行移動行列の計算
@@ -195,6 +197,8 @@ void Object3d::Initialize()
 
 void Object3d::Update()
 {
+	CameraMove();
+
 	XMMATRIX matScale, matRot, matTrans;
 
 	// 行列の計算
@@ -213,7 +217,6 @@ void Object3d::Update()
 
 	const auto matView = camera->GetMatView();
 	const auto matProje = camera->GetMatProjection();
-	
 
 	const XMMATRIX matViewProjection = matView * matProje;
 	const XMMATRIX modelTransform = model->GetModelTransform();
@@ -226,7 +229,7 @@ void Object3d::Update()
 	if (SUCCEEDED(result))
 	{
 		constMap->viewproj = matViewProjection;
-		constMap->world = matWorld;
+		constMap->world = matWorld * modelTransform;
 		constMap->cameraPos = cameraPos;
 		constBufferTranceform->Unmap(0, nullptr);
 	}
@@ -246,4 +249,79 @@ void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetGraphicsRootConstantBufferView(0, constBufferTranceform->GetGPUVirtualAddress());
 
 	model->Draw(cmdList);
+}
+
+void Object3d::CameraMove()
+{
+	//Vector2 currentMousePos = input->GetCurrentMousePos();
+	//printf("mousePos:%f \n", currentMousePos.x);
+	float moveAcc = 10;
+	// 左クリックホールドで
+	if (input->MouseButtonPress(0))
+	{
+		// ALT押しながら動かすとtarget固定でeyeを動かす
+		if (input->KeyPress(DIK_LMENU))
+		{
+			// 右
+			if (input->GetPrevMousePos().x < input->GetCurrentMousePos().x)
+			{
+				eye.x += 10;
+			}
+			// 左
+			if (input->GetPrevMousePos().x > input->GetCurrentMousePos().x)
+			{
+				eye.x -= 10;
+			}
+
+			// 上
+			if (input->GetPrevMousePos().y < input->GetCurrentMousePos().y)
+			{
+				eye.y += 10;
+			}
+			// 下
+			if (input->GetPrevMousePos().y > input->GetCurrentMousePos().y)
+			{
+				eye.y -= 10;
+			}
+		}
+		// eye固定でtargetを動かす
+		else
+		{
+			// 右
+			if (input->GetPrevMousePos().x < input->GetCurrentMousePos().x)
+			{
+				target.x += 10;
+			}
+			// 左
+			if (input->GetPrevMousePos().x > input->GetCurrentMousePos().x)
+			{
+				target.x -= 10;
+			}
+
+			// 上
+			if (input->GetPrevMousePos().y < input->GetCurrentMousePos().y)
+			{
+				target.y += 10;
+			}
+			// 下
+			if (input->GetPrevMousePos().y > input->GetCurrentMousePos().y)
+			{
+				target.y -= 10;
+			}
+		}
+	}
+
+	if (input->MouseWheelMove()<0)
+	{
+		target.z -= 10;
+		eye.z -= 10;
+	}
+	else if (input->MouseWheelMove() > 0)
+	{
+		target.z += 10;
+		eye.z += 10;
+
+	}
+
+	camera->SetViewMatrix(eye, target, up);
 }

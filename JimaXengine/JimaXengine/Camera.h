@@ -13,8 +13,6 @@ private:
 	DirectX::XMMATRIX matBillboard;		// 全方向ビルボード
 	DirectX::XMMATRIX matBillboardY;	// Y軸ビルボード
 
-	Vector3 rotationEye;
-	Vector3 rotationTarget;	// カメラの回転角
 public:
 	Camera();
 	~Camera();

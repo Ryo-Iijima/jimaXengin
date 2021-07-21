@@ -10,6 +10,7 @@
 #include <DirectXMath.h>
 #include <string>
 
+class Input;
 class Object3d
 {
 private:	// エイリアス
@@ -57,7 +58,6 @@ private:	// static変数
 	static ComPtr<ID3D12PipelineState> piplineState;
 
 
-
 public:		// static関数
 
 	static void CreateGraphicsPipline();
@@ -86,6 +86,12 @@ private:	// 変数
 
 	ComPtr<ID3D12Resource> constBufferTranceform;
 
+	Vector3 eye;
+	Vector3 target;
+	Vector3 up;
+
+	Input* input;
+
 
 public:		// 関数
 
@@ -95,8 +101,12 @@ public:		// 関数
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	// カメラ操作（実験）
+	void CameraMove();
+
 	// setter
 	void SetModel(Model* model) { this->model = model; }
 
+	void SetInput(Input* input) { this->input = input; }
 };
 

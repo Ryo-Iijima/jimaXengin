@@ -74,9 +74,6 @@ public:
 	static bool PadRTTrigger();
 	static bool PadRTRelease();
 
-	//左トリガー(深度)
-	//右トリガー(深度)
-
 	//左スティック(bool)
 	static bool PadLeftStickRight();
 	static bool PadLeftStickLeft();

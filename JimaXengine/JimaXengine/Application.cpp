@@ -37,6 +37,8 @@ void Application::Initialize()
 	input = new Input();
 	input->Initialize(winApp);
 
+	object->SetInput(input);
+
 	// ƒTƒEƒ“ƒh‚Ì“Ç‚Ýž‚Ý‚ÆÄ¶
 	sound = new Sound;
 	sound->Initialize();
