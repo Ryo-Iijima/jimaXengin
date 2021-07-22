@@ -258,7 +258,8 @@ void Object3d::Update()
 	if (SUCCEEDED(result))
 	{
 		constMap->viewproj = matViewProjection;
-		constMap->world = matWorld * modelTransform;
+		//constMap->world = matWorld * modelTransform;
+		constMap->world = matWorld;
 		constMap->cameraPos = cameraPos;
 		constBufferTranceform->Unmap(0, nullptr);
 	}
@@ -278,7 +279,10 @@ void Object3d::Update()
 			currentTime = startTime;
 		}
 	}
-	PlayAnimation();
+	else
+	{
+		PlayAnimation();
+	}
 
 	// ƒ{[ƒ“”z—ñ
 	std::vector<Model::Bone>& bones = model->GetBonse();
