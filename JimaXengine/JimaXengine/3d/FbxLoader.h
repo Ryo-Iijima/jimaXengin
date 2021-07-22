@@ -62,6 +62,8 @@ private:	// 関数
 	std::string ExtractFileName(const std::string& path);
 	// テクスチャ読み取り
 	void LoadTexture(Model* model, const std::string& fullpath);
+	// スキニング情報の読み取り
+	void ParseSkin(Model* model, FbxMesh* fbxMesh);
 
 
 public:		// 関数
@@ -82,5 +84,11 @@ public:		// 関数
 	/// <returns>モデルデータ</returns>
 	Model* LoadModelFromFile(const string& modelName);
 
+	/// <summary>
+	/// FBX行列をXMMATRIXに変換
+	/// </summary>
+	/// <param name="dst">書き込み先</param>
+	/// <param name="src">元となるFBX行列</param>
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, FbxAMatrix& src);
 
 };

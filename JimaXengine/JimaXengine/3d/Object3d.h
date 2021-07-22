@@ -26,6 +26,16 @@ private:	// エイリアス
 
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+private:		// 定数
+	// ボーンの最大数
+	static const int MAX_BONES = 32;
+
+	enum ViewName
+	{
+		transform,
+		texture,
+		skin,
+	};
 public:		// サブクラス
 	// 座標変換行列(CB)用構造体
 	struct TransformData
@@ -33,6 +43,11 @@ public:		// サブクラス
 		XMMATRIX viewproj;
 		XMMATRIX world;
 		XMFLOAT3 cameraPos;
+	};
+	// スキニング情報(CB)用構造体
+	struct SkinData
+	{
+		XMMATRIX bones[MAX_BONES];
 	};
 protected:
 
@@ -85,6 +100,7 @@ public:		// static関数
 private:	// 変数
 
 	ComPtr<ID3D12Resource> constBufferTranceform;
+	ComPtr<ID3D12Resource> constBufferSkin;
 
 	Vector3 eye;
 	Vector3 target;
@@ -92,6 +108,23 @@ private:	// 変数
 
 	Input* input;
 
+	// アニメーション再生関連
+	// 1フレームの時間
+	FbxTime frameTime;
+	// アニメーション開始時間
+	FbxTime startTime;
+	// アニメーション終了時間
+	FbxTime endTime;
+	// 現在時間
+	FbxTime currentTime;
+	// アニメーション再生中
+	bool isPlay = false;
+
+private:	// 関数
+	/// <summary>
+	/// アニメーション再生
+	/// </summary>
+	void PlayAnimation();
 
 public:		// 関数
 

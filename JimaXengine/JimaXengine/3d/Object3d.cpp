@@ -4,6 +4,7 @@
 #pragma comment (lib,"d3dcompiler.lib")
 
 #include "../general/Input.h"
+#include "FbxLoader.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -73,19 +74,27 @@ void Object3d::CreateGraphicsPipline()
 	}
 
 	// 頂点レイアウト
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] = 
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
 		// xy座標
-		{ 
+		{
 			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
 		// 法線ベクトル
-		{ 
+		{
 			"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
 		// uv座標
-		{ 
+		{
 			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		},
+		// 影響を受けるボーン番号
+		{
+			"BONEINDICES",0,DXGI_FORMAT_R32G32B32A32_UINT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		},
+		// ボーンのスキンウェイト
+		{
+			"BONEWEIGHTS",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
 	};
 
@@ -137,11 +146,13 @@ void Object3d::CreateGraphicsPipline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[2];
+	CD3DX12_ROOT_PARAMETER rootparams[3];
 	// CBV（座標変換行列用）
-	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[transform].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
-	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[texture].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	// CBV（スキニング用）
+	rootparams[skin].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -183,8 +194,20 @@ void Object3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(constBufferTranceform.GetAddressOf())
 	);
+	assert(!result);
 
-	eye = { 0, 0, 200 };
+	result = _dev->CreateCommittedResource
+	(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(SkinData) + 0xff) & ~0xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(constBufferSkin.GetAddressOf())
+	);
+	assert(!result);
+
+	eye = { 0, 0, -20 };
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 
@@ -193,10 +216,16 @@ void Object3d::Initialize()
 	camera->SetViewMatrix(eye, target, up);
 	// プロジェクション行列の計算
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+
+	// 1フレーム分の時間を60FPSに設定
+	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
 
 void Object3d::Update()
 {
+	////////////////////////////
+	/// トランスフォームの転送
+	////////////////////////////
 	CameraMove();
 
 	XMMATRIX matScale, matRot, matTrans;
@@ -233,6 +262,42 @@ void Object3d::Update()
 		constMap->cameraPos = cameraPos;
 		constBufferTranceform->Unmap(0, nullptr);
 	}
+
+	////////////////////////////
+	/// スキンの転送
+	////////////////////////////
+
+	// アニメーション
+	if (isPlay)
+	{
+		// 1フレーム進める
+		currentTime += frameTime;
+		// 最後まで再生したら先頭に戻す
+		if (currentTime > endTime)
+		{
+			currentTime = startTime;
+		}
+	}
+	PlayAnimation();
+
+	// ボーン配列
+	std::vector<Model::Bone>& bones = model->GetBonse();
+
+	// 定数バッファへデータ転送
+	SkinData* constMapSkin = nullptr;
+	result = constBufferSkin->Map(0, nullptr, (void**)&constMapSkin);
+	for (int i = 0; i < bones.size(); i++)
+	{
+		// 今の姿勢行列
+		XMMATRIX matCurrentPos;
+		// 今の姿勢行列を取得
+		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
+		// XMMATRIXに変換
+		FbxLoader::ConvertMatrixFromFbx(&matCurrentPos, fbxCurrentPose);
+		// 合成してスキニング行列に
+		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPos;
+	}
+	constBufferSkin->Unmap(0, nullptr);
 }
 
 void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -246,16 +311,37 @@ void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
 	cmdList->SetPipelineState(piplineState.Get());
 	cmdList->SetGraphicsRootSignature(rootSignature.Get());
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	cmdList->SetGraphicsRootConstantBufferView(0, constBufferTranceform->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(transform, constBufferTranceform->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
 
 	model->Draw(cmdList);
+}
+
+void Object3d::PlayAnimation()
+{
+	FbxScene* fbxScene = model->GetFbxScene();
+	// 0番のアニメーション取得
+	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	// アニメーションの名前取得
+	const char* animstackname = animstack->GetName();
+	// アニメーションの時間情報
+	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
+
+	// 開始時間取得
+	startTime = takeinfo->mLocalTimeSpan.GetStart();
+	// 終了時間取得
+	endTime = takeinfo->mLocalTimeSpan.GetStop();
+	// 開始時間に合わせる
+	currentTime = startTime;
+	// 再生中状態にする
+	isPlay = true;
 }
 
 void Object3d::CameraMove()
 {
 	//Vector2 currentMousePos = input->GetCurrentMousePos();
 	//printf("mousePos:%f \n", currentMousePos.x);
-	float moveAcc = 10;
+	float moveAcc = 1;
 	// 左クリックホールドで
 	if (input->MouseButtonPress(0))
 	{
@@ -265,23 +351,23 @@ void Object3d::CameraMove()
 			// 右
 			if (input->GetPrevMousePos().x < input->GetCurrentMousePos().x)
 			{
-				eye.x += 10;
+				eye.x += moveAcc;
 			}
 			// 左
 			if (input->GetPrevMousePos().x > input->GetCurrentMousePos().x)
 			{
-				eye.x -= 10;
+				eye.x -= moveAcc;
 			}
 
 			// 上
 			if (input->GetPrevMousePos().y < input->GetCurrentMousePos().y)
 			{
-				eye.y += 10;
+				eye.y += moveAcc;
 			}
 			// 下
 			if (input->GetPrevMousePos().y > input->GetCurrentMousePos().y)
 			{
-				eye.y -= 10;
+				eye.y -= moveAcc;
 			}
 		}
 		// eye固定でtargetを動かす
@@ -290,37 +376,36 @@ void Object3d::CameraMove()
 			// 右
 			if (input->GetPrevMousePos().x < input->GetCurrentMousePos().x)
 			{
-				target.x += 10;
+				target.x += moveAcc;
 			}
 			// 左
 			if (input->GetPrevMousePos().x > input->GetCurrentMousePos().x)
 			{
-				target.x -= 10;
+				target.x -= moveAcc;
 			}
 
 			// 上
 			if (input->GetPrevMousePos().y < input->GetCurrentMousePos().y)
 			{
-				target.y += 10;
+				target.y += moveAcc;
 			}
 			// 下
 			if (input->GetPrevMousePos().y > input->GetCurrentMousePos().y)
 			{
-				target.y -= 10;
+				target.y -= moveAcc;
 			}
 		}
 	}
 
 	if (input->MouseWheelMove()<0)
 	{
-		target.z -= 10;
-		eye.z -= 10;
+		target.z -= moveAcc;
+		eye.z -= moveAcc;
 	}
 	else if (input->MouseWheelMove() > 0)
 	{
-		target.z += 10;
-		eye.z += 10;
-
+		target.z += moveAcc;
+		eye.z += moveAcc;
 	}
 
 	camera->SetViewMatrix(eye, target, up);

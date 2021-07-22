@@ -24,7 +24,7 @@ void Application::Initialize()
 
 	// 
 	FbxLoader::GetInstance().Initialize(dxCommon->GetDevice());
-	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
+	model = FbxLoader::GetInstance().LoadModelFromFile("boneTest");
 	// 
 	Object3d::SetDevice(dxCommon->GetDevice());
 	Object3d::CreateGraphicsPipline();

@@ -11,6 +11,8 @@
 #include <d3d12.h>
 #include <d3dx12.h>
 
+#include <fbxsdk.h>
+
 /// <summary>
 /// ノード１つ分の情報構造体
 /// </summary>
@@ -51,6 +53,10 @@ public:		// フレンドクラス
 
 	friend class FbxLoader;
 
+public:		// 定数
+	// ボーンインデックスの最大数
+	static const int MAX_BONE_INDOCES = 4;
+
 public:		// サブクラス
 
 	// FBX頂点データ構造体
@@ -59,6 +65,8 @@ public:		// サブクラス
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
+		UINT boneIndex[MAX_BONE_INDOCES];	// ボーン番号
+		float boneWeight[MAX_BONE_INDOCES]; // ボーン重み
 	};
 
 	// FBXマテリアルデータ構造体
@@ -74,6 +82,19 @@ public:		// サブクラス
 		DirectX::ScratchImage scrachImg = {};
 	};
 
+	// ボーン構造体
+	struct Bone
+	{
+		std::string name;
+		DirectX::XMMATRIX invInitialPose;	// 初期姿勢の逆行列		
+		FbxCluster* fbxCluster;				// クラスター（FBX側のボーン情報）
+		Bone(const std::string& name)
+		{
+			this->name = name;
+		}
+	};
+
+
 private:	//変数
 	// モデル名
 	std::string name;
@@ -87,6 +108,10 @@ private:	//変数
 	std::vector<unsigned short> indices;
 	// マテリアルデータ
 	FBXMaterialData materialData;
+	// ボーン配置
+	std::vector<Bone> bones;
+	// FBXシーン
+	FbxScene* fbxScene = nullptr;
 
 	// 各種バッファ・ビュー
 	// 頂点バッファ
@@ -103,6 +128,8 @@ private:	//変数
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 	
 public:		// 関数
+	~Model();
+
 	// バッファ生成
 	void CreateBuffers(ID3D12Device* device);
 
@@ -111,4 +138,6 @@ public:		// 関数
 	// getter
 	// モデルの変形行列取得
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	std::vector<Bone>& GetBonse() { return bones; }
+	FbxScene* GetFbxScene() { return fbxScene; }
 };
