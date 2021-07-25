@@ -233,6 +233,18 @@ private:	// メンバ関数
 	/// <returns>成否</returns>
 	bool CreateFence();
 
+	/// <summary>
+	/// 深度バッファの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateDepthBuffer();
+
+	/// <summary>
+	/// 深度バッファビューの生成
+	/// </summary>
+	/// <returns>成否</returns>
+	bool GenerateDepthBufferView();
+
 
 	/// <summary>
 	/// 頂点バッファの生成
@@ -279,18 +291,6 @@ private:	// メンバ関数
 	/// </summary>
 	/// <returns>成否</returns>
 	bool GenerateConstBufferView();
-
-	/// <summary>
-	/// 深度バッファの生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool GenerateDepthBuffer();
-
-	/// <summary>
-	/// 深度バッファビューの生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool GenerateDepthBufferView();
 
 	/// <summary>
 	/// 行列計算

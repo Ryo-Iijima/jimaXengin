@@ -39,7 +39,6 @@ void ImGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 
 void ImGuiDevice::Update()
 {
-	// •`‰æ‘Oˆ—
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();

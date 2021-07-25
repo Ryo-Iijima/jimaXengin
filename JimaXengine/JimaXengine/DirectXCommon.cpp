@@ -47,17 +47,30 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		assert(0);
 	}
 
+	// 深度バッファの生成
+	if (!GenerateDepthBuffer())
+	{
+		assert(0);
+	}
+
+	// 深度バッファビューの生成
+	if (!GenerateDepthBufferView())
+	{
+		assert(0);
+	}
+
+
 	// 頂点バッファの生成
 	if (!GenerateVertexBuffer())
 	{
 		assert(0);
 	}
 
-	// 頂点情報のマップ
-	if (!MapVertexBuffer())
-	{
-		assert(0);
-	}
+	//// 頂点情報のマップ
+	//if (!MapVertexBuffer())
+	//{
+	//	assert(0);
+	//}
 
 	// 頂点バッファビューの作成
 	CreateVertexBufferView();
@@ -68,11 +81,11 @@ void DirectXCommon::Initialize(WinApp* winApp)
 		assert(0);
 	}
 
-	// インデックスバッファのマップ
-	if (!MapIndexBuffer())
-	{
-		assert(0);
-	}
+	//// インデックスバッファのマップ
+	//if (!MapIndexBuffer())
+	//{
+	//	assert(0);
+	//}
 
 	// インデックスバッファビューの作成
 	CreateIndexBufferView();
@@ -85,18 +98,6 @@ void DirectXCommon::Initialize(WinApp* winApp)
 
 	// 定数バッファの生成
 	if (!GenerateConstBufferView())
-	{
-		assert(0);
-	}
-
-	// 深度バッファの生成
-	if (!GenerateDepthBuffer())
-	{
-		assert(0);
-	}
-
-	// 深度バッファビューの生成
-	if (!GenerateDepthBufferView())
 	{
 		assert(0);
 	}
