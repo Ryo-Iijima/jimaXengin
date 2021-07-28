@@ -30,8 +30,59 @@ using namespace DirectX;
 
 class DirectXCommon
 {
-private:	// エイリアス
+private:
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+private:
+	WinApp* winApp = nullptr;
+
+	ComPtr<ID3D12Device> _dev;
+	ComPtr<ID3D12GraphicsCommandList> _cmdList;
+	ComPtr<IDXGIFactory6> _dxgiFactory;
+	ComPtr<ID3D12CommandAllocator> _cmdAllocator;
+	ComPtr<ID3D12CommandQueue> _cmdQueue;
+	ComPtr<IDXGISwapChain4> _swapchain;
+	ComPtr<ID3D12DescriptorHeap> rtvHeaps;
+	std::vector< ComPtr<ID3D12Resource>> _backBuffers;
+	ComPtr<ID3D12Fence> _fence;
+	ComPtr<ID3D12Resource> depthBuffer = nullptr;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
+
+	UINT16 _fenceVal = 0;
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvH;
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
+
+	// imgui用ヒープ
+	ComPtr<ID3D12DescriptorHeap> _heapForImgui;
+
+private:
+	bool InitializeDXGIDevice();
+	bool InitializeCommand();
+	bool CreateSwapChain();
+	bool CreateFinalRenderTargets();
+	bool CreateFence();
+	bool GenerateDepthBuffer();
+	bool GenerateDepthBufferView();
+
+public:
+	DirectXCommon();
+	~DirectXCommon();
+
+	void Initialize(WinApp* win);
+	void Finalize();
+	void PreDraw();
+	void PostDraw();
+
+	ID3D12Device* GetDevice() { return _dev.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList() { return _cmdList.Get(); }
+
+	// imgui用のヒープ生成
+	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeapForImgui();
+	ComPtr<ID3D12DescriptorHeap> GetHeapForImgui();
+
+/// ここから上に切り離す ////////////////////////////////////////////////////////////////////////////
+/// 下は別クラスで
+
 
 private:	// 構造体
 	// 頂点データ構造体
@@ -42,40 +93,28 @@ private:	// 構造体
 		Vector2 uv;
 	};
 
-	struct ConstBfferData
-	{
-		XMMATRIX matrix;
-		XMFLOAT4 color;
-	};
+	//struct ConstBfferData
+	//{
+	//	XMMATRIX matrix;
+	//	XMFLOAT4 color;
+	//};
 
 private:	// メンバ変数
-	// ウィンドウズアプリケーション管理
-	WinApp* winApp = nullptr;
 
 	HRESULT result;
 
-	ComPtr<ID3D12Device> _dev;
-	ComPtr<IDXGIFactory6> _dxgiFactory;
-	ComPtr<IDXGISwapChain4> _swapchain;
-	ComPtr<ID3D12CommandAllocator> _cmdAllocator;
-	ComPtr<ID3D12GraphicsCommandList> _cmdList;
-	ComPtr<ID3D12CommandQueue> _cmdQueue;
-	std::vector<ID3D12Resource*> _backBuffers;
-	ComPtr<ID3D12DescriptorHeap> rtvHeaps;
+
 	UINT bbIdx;
 	D3D12_RESOURCE_BARRIER barrierDesc = {};
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH;
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvH;
-	ComPtr<ID3D12Fence> _fence;
-	UINT16 _fenceVal = 0;
+
 
 	float clearColor[4] = { 0.3f,0.3f,0.7f,1.0f };	// 画面クリア色
 
-	ComPtr<ID3D12RootSignature> rootsignature;
+	//ComPtr<ID3D12RootSignature> rootsignature;
 	D3D12_VERTEX_BUFFER_VIEW vbView = {};
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
-	ComPtr<ID3D12DescriptorHeap> basicDescHeap;
-	ComPtr<ID3D12PipelineState> _piplineState = nullptr;
+	//ComPtr<ID3D12DescriptorHeap> basicDescHeap;
+	//ComPtr<ID3D12PipelineState> _piplineState = nullptr;
 	ComPtr<ID3D12Resource> vertBuff = nullptr;
 	D3D12_RESOURCE_DESC resdesc = {};
 	D3D12_HEAP_PROPERTIES heapprop = {};
@@ -90,16 +129,12 @@ private:	// メンバ変数
 	D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
 	D3D12_VIEWPORT viewport = {};
 	D3D12_RECT scissorrect = {};
-	ComPtr<ID3D12Resource> depthBuffer = nullptr;
-	ComPtr<ID3D12Resource> constBuff = nullptr;
-	ComPtr<ID3D12DescriptorHeap> dsvHeap = nullptr;
+	//ComPtr<ID3D12Resource> constBuff = nullptr;
 
 	XMMATRIX matWorld;			// ワールド
 	XMMATRIX matView;			// ビュー
 	XMMATRIX matProjection;		// プロジェクション
 
-	// imgui用ヒープ
-	ComPtr<ID3D12DescriptorHeap> _heapForImgui;
 
 	// 頂点座標
 	const static unsigned int vertNum = 24;
@@ -166,84 +201,8 @@ private:	// メンバ変数
 
 public:		// メンバ関数
 
-	~DirectXCommon();
-
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="win"></param>
-	void Initialize(WinApp* win);
-
-	/// <summary>
-	/// 後処理
-	/// </summary>
-	void Finalize();
-
-	/// <summary>
-	/// 描画前準備
-	/// </summary>
-	void PreDraw();
-
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
-	void PostDraw();
-
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void ClearRenderTarget();
-
-	// getter
-	ID3D12Device* GetDevice() { return _dev.Get(); }
-	ID3D12GraphicsCommandList* GetCommandList() { return _cmdList.Get(); }
-
-	// imgui用のヒープ生成
-	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeapForImgui();
-	ComPtr<ID3D12DescriptorHeap> GetHeapForImgui();
 
 private:	// メンバ関数
-	/// <summary>
-	/// DXGIデバイス初期化
-	/// </summary>
-	/// <returns>成否</returns>
-	bool InitializeDXGIDevice();
-
-	/// <summary>
-	/// コマンド関連初期化
-	/// </summary>
-	/// <returns>成否</returns>
-	bool InitializeCommand();
-
-	/// <summary>
-	/// スワップチェーンの生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool CreateSwapChain();
-
-	/// <summary>
-	/// レンダーターゲット生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool CreateFinalRenderTargets();
-
-	/// <summary>
-	/// フェンス生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool CreateFence();
-
-	/// <summary>
-	/// 深度バッファの生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool GenerateDepthBuffer();
-
-	/// <summary>
-	/// 深度バッファビューの生成
-	/// </summary>
-	/// <returns>成否</returns>
-	bool GenerateDepthBufferView();
 
 
 	/// <summary>

@@ -162,9 +162,11 @@
     <ClCompile Include="3d\FbxLoader.cpp" />
     <ClCompile Include="3d\Model.cpp" />
     <ClCompile Include="3d\Object3d.cpp" />
+    <ClCompile Include="3d\ResourceShader.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
+    <ClCompile Include="General.cpp" />
     <ClCompile Include="general\FPSManager.cpp" />
     <ClCompile Include="general\imGuiDevice.cpp" />
     <ClCompile Include="general\Input.cpp" />
@@ -179,15 +181,22 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
+    <ClCompile Include="math\Vector4.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\FbxLoader.h" />
     <ClInclude Include="3d\Model.h" />
     <ClInclude Include="3d\Object3d.h" />
+    <ClInclude Include="3d\ResourceShader.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ConsoleOutput.h" />
     <ClInclude Include="DirectXCommon.h" />
+    <ClInclude Include="FBXSubClass.h" />
+    <ClInclude Include="General.h" />
     <ClInclude Include="general\FPSManager.h" />
     <ClInclude Include="general\imGuiDevice.h" />
     <ClInclude Include="general\Input.h" />
@@ -203,6 +212,9 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
+    <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="ModelManager.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>

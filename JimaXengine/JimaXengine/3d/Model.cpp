@@ -36,6 +36,8 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
+	/////////////////////////////////////////////////////////////////////////////////////////////
+
 	// 頂点インデックス全体のサイズ
 	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
 	// インデックスバッファ生成
@@ -61,6 +63,8 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// テクスチャ画像データ
 	const DirectX::Image* img = materialData.scrachImg.GetImage(0, 0, 0);
@@ -96,6 +100,8 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 		(UINT)img->slicePitch	// 1枚サイズ
 	);
 	assert(SUCCEEDED(result));
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// SRV用デスクリプタヒープを生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};

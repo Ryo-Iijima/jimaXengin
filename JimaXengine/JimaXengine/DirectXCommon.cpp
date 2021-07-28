@@ -4,251 +4,8 @@
 #include <DirectXTexWIC.cpp>
 
 
-DirectXCommon::~DirectXCommon()
-{
-	Finalize();
-}
-
-void DirectXCommon::Initialize(WinApp* winApp)
-{
-	assert(winApp);
-
-	this->winApp = winApp;
-	camera = new Camera();
-	
-
-	// DXGIデバイス初期化
-	if (!InitializeDXGIDevice()) 
-	{
-		assert(0);
-	}
-
-	// コマンド関連初期化
-	if (!InitializeCommand())
-	{
-		assert(0);
-	}
-
-	// スワップチェーンの生成
-	if (!CreateSwapChain())
-	{
-		assert(0);
-	}
-
-	// レンダーターゲット生成
-	if (!CreateFinalRenderTargets()) 
-	{
-		assert(0);
-	}
-
-	// フェンス生成
-	if (!CreateFence()) 
-	{
-		assert(0);
-	}
-
-	// 深度バッファの生成
-	if (!GenerateDepthBuffer())
-	{
-		assert(0);
-	}
-
-	// 深度バッファビューの生成
-	if (!GenerateDepthBufferView())
-	{
-		assert(0);
-	}
-
-
-	// 頂点バッファの生成
-	if (!GenerateVertexBuffer())
-	{
-		assert(0);
-	}
-
-	//// 頂点情報のマップ
-	//if (!MapVertexBuffer())
-	//{
-	//	assert(0);
-	//}
-
-	// 頂点バッファビューの作成
-	CreateVertexBufferView();
-
-	// インデックスバッファの生成
-	if (!GenerateIndexBuffer())
-	{
-		assert(0);
-	}
-
-	//// インデックスバッファのマップ
-	//if (!MapIndexBuffer())
-	//{
-	//	assert(0);
-	//}
-
-	// インデックスバッファビューの作成
-	CreateIndexBufferView();
-
-	// テクスチャバッファの生成
-	if (!GenerateTextureBuffer())
-	{
-		assert(0);
-	}
-
-	// 定数バッファの生成
-	if (!GenerateConstBufferView())
-	{
-		assert(0);
-	}
-
-	// シェーダーリソースビューの作成
-	if (!CreateTextureShaderResourceView())
-	{
-		assert(0);
-	}
-
-	// シェーダーの読み込み
-	if (!LoadShader())
-	{
-		assert(0);
-	}
-
-	// グラフィックスパイプラインステートオブジェクトの作成
-	if (!CreateGPipelineStateObject())
-	{
-		assert(0);
-	}
-
-	// ビューポートの設定
-	SetUpViewport();
-
-	// シザー矩形の設定
-	SetUpScissorrect();
-
-	// imgui関連
-	_heapForImgui = CreateDescriptorHeapForImgui();
-	if (_heapForImgui == nullptr)
-	{
-		assert(0);
-	}
-}
-
-void DirectXCommon::Finalize()
-{
-}
-
-void DirectXCommon::PreDraw()
-{
-	//result = _cmdAllocator->Reset();	// コマンドアロケーターのクリア
-	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
-
-#pragma region リソースバリアを変更
-
-	barrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;	// 遷移
-	barrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;		// 特になし
-	barrierDesc.Transition.pResource = _backBuffers[bbIdx];		// バックバッファリソース
-	barrierDesc.Transition.Subresource = 0;
-	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;		// 表示から
-	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;	// 描画へ
-	_cmdList->ResourceBarrier(1, &barrierDesc);		// バリア指定実行
-
-#pragma endregion
-
-#pragma region 画面クリアコマンド
-	rtvH = rtvHeaps->GetCPUDescriptorHandleForHeapStart();
-	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	dsvH = dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	_cmdList->OMSetRenderTargets(1, &rtvH, true, &dsvH);
-
-	ClearRenderTarget();
-
-#pragma endregion
-}
-
-void DirectXCommon::PostDraw()
-{
-#pragma region リソースバリアを戻す
-	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;		// 描画から
-	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;				// 表示へ
-	_cmdList->ResourceBarrier(1, &barrierDesc);		// バリア指定実行
-
-#pragma endregion
-
-#pragma region 描画コマンド
-	_cmdList->Close();	// 命令のクローズ
-
-	ID3D12CommandList* cmdLists[] = { _cmdList.Get() };	// 実行するコマンドのp配列
-	_cmdQueue->ExecuteCommandLists(1, cmdLists);	// コマンドリストの実行
-
-	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
-	if (_fence->GetCompletedValue() != _fenceVal)
-	{
-		auto event = CreateEvent(nullptr, false, false, nullptr);	// イベントハンドルの取得
-		_fence->SetEventOnCompletion(_fenceVal, event);
-		WaitForSingleObject(event, INFINITE);	// イベントが発生するまで待ち続ける
-		CloseHandle(event);		// イベントハンドルを閉じる
-	}
-
-	_cmdAllocator->Reset();	// キューをクリア
-	_cmdList->Reset(_cmdAllocator.Get(), nullptr);	// 再びコマンドリストをためる準備
-
-	_swapchain->Present(1, 0);	// バッファをフリップ
-
-#pragma endregion
-
-}
-
-void DirectXCommon::ClearRenderTarget()
-{
-	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
-
-	rtvH = rtvHeaps->GetCPUDescriptorHandleForHeapStart();
-	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);	// 画面クリア
-
-	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);	// 深度クリア
-
-
-
-	//_cmdList->SetPipelineState(_piplineState.Get());	// パイプラインステートのセット
-
-	_cmdList->RSSetViewports(1, &viewport);
-
-	_cmdList->RSSetScissorRects(1, &scissorrect);
-
-	//_cmdList->SetGraphicsRootSignature(rootsignature.Get());		// ルートシグネチャの設定
-
-	//_cmdList->SetDescriptorHeaps(1, basicDescHeap.GetAddressOf());	// ディスクリプターヒープの指定
-
-	//auto heapHandle = basicDescHeap->GetGPUDescriptorHandleForHeapStart();
-
-	//_cmdList->SetGraphicsRootDescriptorTable(0, heapHandle);	// ルートパラメーターとディスクリプターヒープの関連付け
-
-	//_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	// プリミティブ形状の設定コマンド
-
-	//_cmdList->IASetVertexBuffers(0, 1, &vbView);	// 頂点バッファの設定コマンド
-
-	//_cmdList->IASetIndexBuffer(&ibView);	// インデックスバッファの設定コマンド
-
-	//_cmdList->DrawIndexedInstanced(indicesNum, 1, 0, 0, 0);	// 描画コマンド
-
-}
-
 bool DirectXCommon::InitializeDXGIDevice()
 {
-#ifdef DEBUG
-	// デバッグレイヤーをオンに
-	ID3D12Debug* debugContoroller;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugContoroller))))
-	{
-		debugContoroller->EnableDebugLayer();
-	}
-
-	//debugContoroller->Release();
-#endif // DEBUG
 
 	// フィーチャーレベルを連続でチェックする用配列
 	D3D_FEATURE_LEVEL levels[4] =
@@ -346,26 +103,6 @@ bool DirectXCommon::InitializeCommand()
 	return true;
 }
 
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeapForImgui()
-{
-	ComPtr<ID3D12DescriptorHeap> ret;
-
-	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	desc.NodeMask = 0;
-	desc.NumDescriptors = 1;
-	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-
-	_dev->CreateDescriptorHeap(&desc, IID_PPV_ARGS(ret.ReleaseAndGetAddressOf()));
-
-	return ret;
-}
-
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::GetHeapForImgui()
-{
-	return _heapForImgui;
-}
-
 bool DirectXCommon::CreateSwapChain()
 {
 	result = S_FALSE;
@@ -448,7 +185,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 
 		D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeaps->GetCPUDescriptorHandleForHeapStart();	// デスクリプタヒープのハンドルを取得
 		handle.ptr += i * _dev->GetDescriptorHandleIncrementSize(heapDesc.Type);	// 裏表のアドレスのずれ
-		_dev->CreateRenderTargetView(_backBuffers[i], &rtvDesc, handle);			// RTVの生成
+		_dev->CreateRenderTargetView(_backBuffers[i].Get(), &rtvDesc, handle);			// RTVの生成
 	}
 
 	return true;
@@ -466,6 +203,310 @@ bool DirectXCommon::CreateFence()
 
 	return true;
 }
+
+bool DirectXCommon::GenerateDepthBuffer()
+{
+	// リソース作成
+	D3D12_RESOURCE_DESC depthResDesc = {};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = WinApp::WINDOW_WIDTH;		// レンダーターゲットのサイズ
+	depthResDesc.Height = WinApp::WINDOW_HEIGHT;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値フォーマット
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp = {};
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE depthClearValue = {};
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	// リソース生成
+	depthBuffer = nullptr;
+	result = _dev->CreateCommittedResource
+	(
+		&depthHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// 深度値書き込み用
+		&depthClearValue,
+		IID_PPV_ARGS(depthBuffer.GetAddressOf())
+	);
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+
+	return true;
+}
+
+bool DirectXCommon::GenerateDepthBufferView()
+{
+	// 深度ビュー用デスクリプターヒープ作成
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+	dsvHeapDesc.NumDescriptors = 1;
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(dsvHeap.GetAddressOf()));
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+
+	// 深度ビュー生成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値に32ビット使う
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;	// 特になし
+
+	_dev->CreateDepthStencilView
+	(
+		depthBuffer.Get(),
+		&dsvDesc,
+		dsvHeap->GetCPUDescriptorHandleForHeapStart()
+	);
+
+	return true;
+}
+
+DirectXCommon::DirectXCommon()
+{
+}
+
+DirectXCommon::~DirectXCommon()
+{
+}
+
+void DirectXCommon::Initialize(WinApp* winApp)
+{
+	assert(winApp);
+
+	this->winApp = winApp;	
+
+	// DXGIデバイス初期化
+	if (!InitializeDXGIDevice()) 
+	{
+		assert(0);
+	}
+
+	// コマンド関連初期化
+	if (!InitializeCommand())
+	{
+		assert(0);
+	}
+
+	// スワップチェーンの生成
+	if (!CreateSwapChain())
+	{
+		assert(0);
+	}
+
+	// レンダーターゲット生成
+	if (!CreateFinalRenderTargets()) 
+	{
+		assert(0);
+	}
+
+	// フェンス生成
+	if (!CreateFence()) 
+	{
+		assert(0);
+	}
+
+	// 深度バッファの生成
+	if (!GenerateDepthBuffer())
+	{
+		assert(0);
+	}
+
+	// 深度バッファビューの生成
+	if (!GenerateDepthBufferView())
+	{
+		assert(0);
+	}
+
+#ifdef _DEBUG
+	printf("directx12 device initialized\n");
+#endif // _DEBUG
+
+
+	// 頂点バッファの生成
+	if (!GenerateVertexBuffer())
+	{
+		assert(0);
+	}
+
+	//// 頂点情報のマップ
+	//if (!MapVertexBuffer())
+	//{
+	//	assert(0);
+	//}
+
+	// 頂点バッファビューの作成
+	CreateVertexBufferView();
+
+	// インデックスバッファの生成
+	if (!GenerateIndexBuffer())
+	{
+		assert(0);
+	}
+
+	//// インデックスバッファのマップ
+	//if (!MapIndexBuffer())
+	//{
+	//	assert(0);
+	//}
+
+	// インデックスバッファビューの作成
+	CreateIndexBufferView();
+
+	// テクスチャバッファの生成
+	if (!GenerateTextureBuffer())
+	{
+		assert(0);
+	}
+
+	// 定数バッファの生成
+	if (!GenerateConstBufferView())
+	{
+		assert(0);
+	}
+
+	// シェーダーリソースビューの作成
+	if (!CreateTextureShaderResourceView())
+	{
+		assert(0);
+	}
+
+	// シェーダーの読み込み
+	if (!LoadShader())
+	{
+		assert(0);
+	}
+
+	// グラフィックスパイプラインステートオブジェクトの作成
+	if (!CreateGPipelineStateObject())
+	{
+		assert(0);
+	}
+
+	// ビューポートの設定
+	SetUpViewport();
+
+	// シザー矩形の設定
+	SetUpScissorrect();
+
+	// imgui関連
+	_heapForImgui = CreateDescriptorHeapForImgui();
+	if (_heapForImgui == nullptr)
+	{
+		assert(0);
+	}
+}
+
+void DirectXCommon::Finalize()
+{
+}
+
+void DirectXCommon::PreDraw()
+{
+	//result = _cmdAllocator->Reset();	// コマンドアロケーターのクリア
+	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
+
+#pragma region リソースバリアを変更
+
+	barrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;	// 遷移
+	barrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;		// 特になし
+	barrierDesc.Transition.pResource = _backBuffers[bbIdx].Get();		// バックバッファリソース
+	barrierDesc.Transition.Subresource = 0;
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;		// 表示から
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;	// 描画へ
+	_cmdList->ResourceBarrier(1, &barrierDesc);		// バリア指定実行
+
+#pragma endregion
+
+#pragma region 画面クリアコマンド
+	rtvH = rtvHeaps->GetCPUDescriptorHandleForHeapStart();
+	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	dsvH = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	_cmdList->OMSetRenderTargets(1, &rtvH, true, &dsvH);
+
+	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
+
+	rtvH = rtvHeaps->GetCPUDescriptorHandleForHeapStart();
+	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);	// 画面クリア
+
+	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);	// 深度クリア
+
+	_cmdList->RSSetViewports(1, &viewport);
+
+	_cmdList->RSSetScissorRects(1, &scissorrect);
+
+#pragma endregion
+}
+
+void DirectXCommon::PostDraw()
+{
+#pragma region リソースバリアを戻す
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;		// 描画から
+	barrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;				// 表示へ
+	_cmdList->ResourceBarrier(1, &barrierDesc);		// バリア指定実行
+
+#pragma endregion
+
+#pragma region 描画コマンド
+	_cmdList->Close();	// 命令のクローズ
+
+	ID3D12CommandList* cmdLists[] = { _cmdList.Get() };	// 実行するコマンドのp配列
+	_cmdQueue->ExecuteCommandLists(1, cmdLists);	// コマンドリストの実行
+
+	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
+	if (_fence->GetCompletedValue() != _fenceVal)
+	{
+		auto event = CreateEvent(nullptr, false, false, nullptr);	// イベントハンドルの取得
+		_fence->SetEventOnCompletion(_fenceVal, event);
+		WaitForSingleObject(event, INFINITE);	// イベントが発生するまで待ち続ける
+		CloseHandle(event);		// イベントハンドルを閉じる
+	}
+
+	_cmdAllocator->Reset();	// キューをクリア
+	_cmdList->Reset(_cmdAllocator.Get(), nullptr);	// 再びコマンドリストをためる準備
+
+	_swapchain->Present(1, 0);	// バッファをフリップ
+
+#pragma endregion
+
+}
+
+
+
+ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeapForImgui()
+{
+	ComPtr<ID3D12DescriptorHeap> ret;
+
+	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	desc.NodeMask = 0;
+	desc.NumDescriptors = 1;
+	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+
+	_dev->CreateDescriptorHeap(&desc, IID_PPV_ARGS(ret.ReleaseAndGetAddressOf()));
+
+	return ret;
+}
+
+ComPtr<ID3D12DescriptorHeap> DirectXCommon::GetHeapForImgui()
+{
+	return _heapForImgui;
+}
+
+
+
 
 bool DirectXCommon::GenerateVertexBuffer()
 {
@@ -673,116 +714,50 @@ bool DirectXCommon::GenerateTextureBuffer()
 
 bool DirectXCommon::GenerateConstBufferView()
 {
-	CalculateMat();
+	//CalculateMat();
 
-	// ヒープ設定
-	D3D12_HEAP_PROPERTIES cbHeapProp = {};
-	cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	// 転送用
+	//// ヒープ設定
+	//D3D12_HEAP_PROPERTIES cbHeapProp = {};
+	//cbHeapProp.Type = D3D12_HEAP_TYPE_UPLOAD;	// 転送用
 
-	// リソース設定
-	D3D12_RESOURCE_DESC cbResDesc = {};
-	cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	cbResDesc.Width = (sizeof(ConstBfferData) + 0xff) & ~0xff;
-	cbResDesc.Height = 1;
-	cbResDesc.DepthOrArraySize = 1;
-	cbResDesc.MipLevels = 1;
-	cbResDesc.SampleDesc.Count = 1;
-	cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	//// リソース設定
+	//D3D12_RESOURCE_DESC cbResDesc = {};
+	//cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	//cbResDesc.Width = (sizeof(ConstBfferData) + 0xff) & ~0xff;
+	//cbResDesc.Height = 1;
+	//cbResDesc.DepthOrArraySize = 1;
+	//cbResDesc.MipLevels = 1;
+	//cbResDesc.SampleDesc.Count = 1;
+	//cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	// 定数バッファ作成
-	result = _dev->CreateCommittedResource
-	(
-		&cbHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&cbResDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(constBuff.GetAddressOf())
-	);
-	if (FAILED(result)) {
-		assert(0);
-		return false;
-	}
+	//// 定数バッファ作成
+	//result = _dev->CreateCommittedResource
+	//(
+	//	&cbHeapProp,
+	//	D3D12_HEAP_FLAG_NONE,
+	//	&cbResDesc,
+	//	D3D12_RESOURCE_STATE_GENERIC_READ,
+	//	nullptr,
+	//	IID_PPV_ARGS(constBuff.GetAddressOf())
+	//);
+	//if (FAILED(result)) {
+	//	assert(0);
+	//	return false;
+	//}
 
-	// マップ
-	ConstBfferData* constMap;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->matrix = matWorld * camera->GetMatView() * camera->GetMatProjection();
-	constMap->color = XMFLOAT4(1, 1, 1, 0);
-	if (FAILED(result)) {
-		assert(0);
-		return false;
-	}
-	
-	return true;
+	//// マップ
+	//ConstBfferData* constMap;
+	//result = constBuff->Map(0, nullptr, (void**)&constMap);
+	//constMap->matrix = matWorld * camera->GetMatView() * camera->GetMatProjection();
+	//constMap->color = XMFLOAT4(1, 1, 1, 0);
+	//if (FAILED(result)) {
+	//	assert(0);
+	//	return false;
+	//}
+	//
+	//return true;
 }
 
-bool DirectXCommon::GenerateDepthBuffer()
-{
-	// リソース作成
-	D3D12_RESOURCE_DESC depthResDesc = {};
-	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	depthResDesc.Width = WinApp::WINDOW_WIDTH;		// レンダーターゲットのサイズ
-	depthResDesc.Height = WinApp::WINDOW_HEIGHT;
-	depthResDesc.DepthOrArraySize = 1;
-	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値フォーマット
-	depthResDesc.SampleDesc.Count = 1;
-	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-	// 深度値用ヒーププロパティ
-	D3D12_HEAP_PROPERTIES depthHeapProp = {};
-	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
-	depthHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	depthHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	// 深度値のクリア設定
-	D3D12_CLEAR_VALUE depthClearValue = {};
-	depthClearValue.DepthStencil.Depth = 1.0f;
-	depthClearValue.Format = DXGI_FORMAT_D32_FLOAT;
-	// リソース生成
-	depthBuffer = nullptr;
-	result = _dev->CreateCommittedResource
-	(
-		&depthHeapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&depthResDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// 深度値書き込み用
-		&depthClearValue,
-		IID_PPV_ARGS(depthBuffer.GetAddressOf())
-	);
-	if (FAILED(result)) {
-		assert(0);
-		return false;
-	}
-
-	return true;
-}
-
-bool DirectXCommon::GenerateDepthBufferView()
-{
-	// 深度ビュー用デスクリプターヒープ作成
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	result = _dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(dsvHeap.GetAddressOf()));
-	if (FAILED(result)) {
-		assert(0);
-		return false;
-	}
-
-	// 深度ビュー生成
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;	// 深度値に32ビット使う
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;	// 2Dテクスチャ
-	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;	// 特になし
-
-	_dev->CreateDepthStencilView
-	(
-		depthBuffer.Get(),
-		&dsvDesc,
-		dsvHeap->GetCPUDescriptorHandleForHeapStart()
-	);
-
-	return true;
-}
 
 void DirectXCommon::CalculateMat()
 {
@@ -822,19 +797,19 @@ void DirectXCommon::CalculateMat()
 
 bool DirectXCommon::CreateTextureShaderResourceView()
 {
-	// デスクリプタヒープの作成
-	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
+	//// デスクリプタヒープの作成
+	//D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 
-	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	// シェーダーから見えるように
-	descHeapDesc.NodeMask = 0;	// マスク0
-	descHeapDesc.NumDescriptors = 2;	// SRVとCBV
-	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
+	//descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;	// シェーダーから見えるように
+	//descHeapDesc.NodeMask = 0;	// マスク0
+	//descHeapDesc.NumDescriptors = 2;	// SRVとCBV
+	//descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
 
-	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(basicDescHeap.GetAddressOf()));
-	if (FAILED(result)) {
-		assert(0);
-		return result;
-	}
+	//result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(basicDescHeap.GetAddressOf()));
+	//if (FAILED(result)) {
+	//	assert(0);
+	//	return result;
+	//}
 
 	// シェーダーリソースビューを作る
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -939,84 +914,84 @@ bool DirectXCommon::LoadShader()
 
 bool DirectXCommon::CreateGPipelineStateObject()
 {
-	// 頂点レイアウトの設定
-	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
-	{
-		// 座標
-		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-		// 法線
-		{"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-		// uv
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
-	};
+	//// 頂点レイアウトの設定
+	//D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+	//{
+	//	// 座標
+	//	{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+	//	// 法線
+	//	{"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+	//	// uv
+	//	{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0},
+	//};
 
-	// シェーダーのセット
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC gPipline = {};
+	//// シェーダーのセット
+	//D3D12_GRAPHICS_PIPELINE_STATE_DESC gPipline = {};
 
-	gPipline.pRootSignature = nullptr;
+	//gPipline.pRootSignature = nullptr;
 
-	gPipline.VS.pShaderBytecode = vsBlob->GetBufferPointer();
-	gPipline.VS.BytecodeLength = vsBlob->GetBufferSize();
-	gPipline.PS.pShaderBytecode = psBlob->GetBufferPointer();
-	gPipline.PS.BytecodeLength = psBlob->GetBufferSize();
+	//gPipline.VS.pShaderBytecode = vsBlob->GetBufferPointer();
+	//gPipline.VS.BytecodeLength = vsBlob->GetBufferSize();
+	//gPipline.PS.pShaderBytecode = psBlob->GetBufferPointer();
+	//gPipline.PS.BytecodeLength = psBlob->GetBufferSize();
 
-	// サンプルマスクとラスタライザ―ステートの設定
-	gPipline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	// まだアンチエイリアスを使わないのでfalse
-	gPipline.RasterizerState.MultisampleEnable = false;
-	gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;	// 背面カリング
-	//gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;	// カリングしない
-	gPipline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;	// 中身を塗りつぶす
-	gPipline.RasterizerState.DepthClipEnable = true;			// 深度方向のクリッピング
+	//// サンプルマスクとラスタライザ―ステートの設定
+	//gPipline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	//// まだアンチエイリアスを使わないのでfalse
+	//gPipline.RasterizerState.MultisampleEnable = false;
+	//gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;	// 背面カリング
+	////gPipline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;	// カリングしない
+	//gPipline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;	// 中身を塗りつぶす
+	//gPipline.RasterizerState.DepthClipEnable = true;			// 深度方向のクリッピング
 
-	// 深度
-	gPipline.DepthStencilState.DepthEnable = true;	// 深度バッファ有効
-	gPipline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;	// 書き込む
-	gPipline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;	// 小さいほうをs採用
+	//// 深度
+	//gPipline.DepthStencilState.DepthEnable = true;	// 深度バッファ有効
+	//gPipline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;	// 書き込む
+	//gPipline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;	// 小さいほうをs採用
 
-	// ブレンドステートの設定
-	gPipline.BlendState.AlphaToCoverageEnable = false;
-	gPipline.BlendState.IndependentBlendEnable = false;
+	//// ブレンドステートの設定
+	//gPipline.BlendState.AlphaToCoverageEnable = false;
+	//gPipline.BlendState.IndependentBlendEnable = false;
 
-	D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc = {};
-	renderTargetBlendDesc.BlendEnable = false;
-	renderTargetBlendDesc.LogicOpEnable = false;
-	renderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	//D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc = {};
+	//renderTargetBlendDesc.BlendEnable = false;
+	//renderTargetBlendDesc.LogicOpEnable = false;
+	//renderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-	gPipline.BlendState.RenderTarget[0] = renderTargetBlendDesc;
+	//gPipline.BlendState.RenderTarget[0] = renderTargetBlendDesc;
 
-	// 入力レイアウトの設定
-	gPipline.InputLayout.pInputElementDescs = inputLayout;		// レイアウト先頭アドレス
-	gPipline.InputLayout.NumElements = _countof(inputLayout);	// レイアウト配列の要素数
-	gPipline.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;		// カット無し
-	gPipline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;	// 三角形で構成
+	//// 入力レイアウトの設定
+	//gPipline.InputLayout.pInputElementDescs = inputLayout;		// レイアウト先頭アドレス
+	//gPipline.InputLayout.NumElements = _countof(inputLayout);	// レイアウト配列の要素数
+	//gPipline.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;		// カット無し
+	//gPipline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;	// 三角形で構成
 
-	// レンダーターゲットの設定
-	gPipline.NumRenderTargets = 1;		// 今は1つのみ
-	gPipline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;	// 0~1に正規化されたRGBA
+	//// レンダーターゲットの設定
+	//gPipline.NumRenderTargets = 1;		// 今は1つのみ
+	//gPipline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;	// 0~1に正規化されたRGBA
 
-	// アンチエイリアシングのためのサンプル数設定
-	gPipline.SampleDesc.Count = 1;	// サンプリングは1ピクセル1回
-	gPipline.SampleDesc.Quality = 0;	// 最低クオリティ
+	//// アンチエイリアシングのためのサンプル数設定
+	//gPipline.SampleDesc.Count = 1;	// サンプリングは1ピクセル1回
+	//gPipline.SampleDesc.Quality = 0;	// 最低クオリティ
 
 
-	SetUpRootParameter();
+	//SetUpRootParameter();
 
-	SetUpSampler();
+	//SetUpSampler();
 
-	CreatRootSignature();
+	//CreatRootSignature();
 
-	gPipline.pRootSignature = rootsignature.Get();
+	//gPipline.pRootSignature = rootsignature.Get();
 
-	// グラフィックパイプラインステートオブジェクトの生成
-	result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(_piplineState.GetAddressOf()));
+	//// グラフィックパイプラインステートオブジェクトの生成
+	//result = _dev->CreateGraphicsPipelineState(&gPipline, IID_PPV_ARGS(_piplineState.GetAddressOf()));
 
-	if (FAILED(result)) {
-		assert(0);
-		return result;
-	}
+	//if (FAILED(result)) {
+	//	assert(0);
+	//	return result;
+	//}
 
-	return true;
+	//return true;
 }
 
 void DirectXCommon::SetUpRootParameter()
@@ -1057,46 +1032,46 @@ void DirectXCommon::SetUpSampler()
 
 bool DirectXCommon::CreatRootSignature()
 {
-	// D3D12_ROOT_SIGNAAATURE_DESCの設定
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+	//// D3D12_ROOT_SIGNAAATURE_DESCの設定
+	//D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	rootSignatureDesc.pParameters = &rootparam;				// ルートパラメーターの先頭アドレス
-	rootSignatureDesc.NumParameters = 1;					// ルートパラメーターの数
-	rootSignatureDesc.pStaticSamplers = &samplerDesc;
-	rootSignatureDesc.NumStaticSamplers = 1;
+	//rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	//rootSignatureDesc.pParameters = &rootparam;				// ルートパラメーターの先頭アドレス
+	//rootSignatureDesc.NumParameters = 1;					// ルートパラメーターの数
+	//rootSignatureDesc.pStaticSamplers = &samplerDesc;
+	//rootSignatureDesc.NumStaticSamplers = 1;
 
-	// バイナリコードの作成
-	ID3D10Blob* rootSigBlob = nullptr;
+	//// バイナリコードの作成
+	//ID3D10Blob* rootSigBlob = nullptr;
 
-	result = D3D12SerializeRootSignature
-	(
-		&rootSignatureDesc,				// ルートシグネチャ設定
-		D3D_ROOT_SIGNATURE_VERSION_1_0,	// ルートシグネチャバージョン
-		&rootSigBlob,
-		&errorBlob
-	);
-	if (FAILED(result)) {
-		assert(0);
-		return result;
-	}
+	//result = D3D12SerializeRootSignature
+	//(
+	//	&rootSignatureDesc,				// ルートシグネチャ設定
+	//	D3D_ROOT_SIGNATURE_VERSION_1_0,	// ルートシグネチャバージョン
+	//	&rootSigBlob,
+	//	&errorBlob
+	//);
+	//if (FAILED(result)) {
+	//	assert(0);
+	//	return result;
+	//}
 
-	// ルートシグネチャオブジェクトの作成
-	result = _dev->CreateRootSignature
-	(
-		0,
-		rootSigBlob->GetBufferPointer(),
-		rootSigBlob->GetBufferSize(),
-		IID_PPV_ARGS(rootsignature.GetAddressOf())
-	);
-	if (FAILED(result)) {
-		assert(0);
-		return result;
-	}
+	//// ルートシグネチャオブジェクトの作成
+	//result = _dev->CreateRootSignature
+	//(
+	//	0,
+	//	rootSigBlob->GetBufferPointer(),
+	//	rootSigBlob->GetBufferSize(),
+	//	IID_PPV_ARGS(rootsignature.GetAddressOf())
+	//);
+	//if (FAILED(result)) {
+	//	assert(0);
+	//	return result;
+	//}
 
-	rootSigBlob->Release();
+	//rootSigBlob->Release();
 
-	return true;
+	//return true;
 }
 
 void DirectXCommon::SetUpViewport()
