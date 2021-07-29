@@ -5,16 +5,23 @@
 
 #include "../general/Input.h"
 #include "FbxLoader.h"
+#include "../DirectXCommon.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
 // staticïœêîÇÃé¿ëÃ
+DirectXCommon* Object3d::dxCommon = nullptr;;
 ID3D12Device* Object3d::_dev = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootSignature;
 ComPtr<ID3D12PipelineState> Object3d::piplineState;
 
 
+
+void Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp)
+{
+	Object3d::dxCommon = dxcommon;
+}
 
 void Object3d::CreateGraphicsPipline()
 {
@@ -304,21 +311,30 @@ void Object3d::Update()
 	constBufferSkin->Unmap(0, nullptr);
 }
 
-void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
+//void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
+void Object3d::Draw()
 {
 	// ÉÇÉfÉãÇ™Ç»ÇØÇÍÇŒï`âÊÇµÇ»Ç¢
 	if (model == nullptr)
 	{
 		return;
 	}
+	
+	Object3d::dxCommon->GetCommandList()->SetPipelineState(piplineState.Get());
+	Object3d::dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	Object3d::dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(transform, constBufferTranceform->GetGPUVirtualAddress());
+	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
 
-	cmdList->SetPipelineState(piplineState.Get());
-	cmdList->SetGraphicsRootSignature(rootSignature.Get());
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	cmdList->SetGraphicsRootConstantBufferView(transform, constBufferTranceform->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
+	model->Draw(Object3d::dxCommon->GetCommandList());
 
-	model->Draw(cmdList);
+	//cmdList->SetPipelineState(piplineState.Get());
+	//cmdList->SetGraphicsRootSignature(rootSignature.Get());
+	//cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//cmdList->SetGraphicsRootConstantBufferView(transform, constBufferTranceform->GetGPUVirtualAddress());
+	//cmdList->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
+
+	//model->Draw(cmdList);
 }
 
 void Object3d::PlayAnimation()
