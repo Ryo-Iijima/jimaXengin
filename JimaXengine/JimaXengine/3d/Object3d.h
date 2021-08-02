@@ -10,6 +10,8 @@
 #include <DirectXMath.h>
 #include <string>
 
+class DirectXCommon;
+class WinApp;
 class Input;
 class Object3d
 {
@@ -66,6 +68,8 @@ protected:
 
 private:	// static変数
 
+	static DirectXCommon* dxCommon;
+
 	static ID3D12Device* _dev;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootSignature;
@@ -74,6 +78,7 @@ private:	// static変数
 
 
 public:		// static関数
+	static void StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp);
 
 	static void CreateGraphicsPipline();
 
@@ -132,7 +137,8 @@ public:		// 関数
 
 	void Update();
 
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	//void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 
 	// カメラ操作（実験）
 	void CameraMove();
@@ -140,6 +146,7 @@ public:		// 関数
 	// setter
 	void SetModel(Model* model) { this->model = model; }
 
+	void SetPosition(Vector3& position) { this->position = position; }
 	void SetInput(Input* input) { this->input = input; }
 };
 

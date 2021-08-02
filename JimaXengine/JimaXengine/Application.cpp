@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "3d/FbxLoader.h"
 #include "3d/Object3d.h"
+#include "Title.h"
 
 Application& Application::GetInstance()
 {
@@ -22,28 +23,30 @@ void Application::Initialize()
 	fpsManager = new FPSManager();
 	fpsManager->Initialize(60.0f);
 
-	// 
+	// デバイス渡す
 	FbxLoader::GetInstance().Initialize(dxCommon->GetDevice());
-	model = FbxLoader::GetInstance().LoadModelFromFile("boneTest");
 	// 
+	Object3d::StaticInitialize(dxCommon, winApp);
 	Object3d::SetDevice(dxCommon->GetDevice());
 	Object3d::CreateGraphicsPipline();
-	// オブジェクトの生成とモデルのセット
-	object = new Object3d;
-	object->Initialize();
-	object->SetModel(model);
 
 	// 入力
 	input = new Input();
 	input->Initialize(winApp);
 
-	object->SetInput(input);
+	//object->SetInput(input);
 
 	// サウンドの読み込みと再生
 	sound = new Sound;
 	sound->Initialize();
 	//sound->LoadFile("Resources/sound/Alarm01.wav");
 	//sound->Play();
+
+	// シーンの設定
+	sceneManager = new SceneManager;
+	sceneManager->Add("Title", new Title(winApp));
+
+	sceneManager->Change("Title");
 
 	// imgui
 	imguiDev = new ImGuiDevice();
@@ -57,8 +60,6 @@ void Application::Finalize()
 	input->Finalize();
 
 	FbxLoader::GetInstance().Finalize();
-	delete object;
-	delete model;
 
 	delete dxCommon;
 
@@ -79,9 +80,10 @@ void Application::Run()
 
 		fpsManager->Update();
 
-		object->Update();
 
 		input->Update();
+
+		sceneManager->Update();
 
 		//imguiDev->Update();
 
@@ -98,7 +100,7 @@ void Application::Run()
 		//	imguiDev->Draw();
 		//}
 
-		object->Draw(dxCommon->GetCommandList());
+		sceneManager->Draw();
 
 		// 描画後処理
 		dxCommon->PostDraw();

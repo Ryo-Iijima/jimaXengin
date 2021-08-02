@@ -1,6 +1,3 @@
-// mainから機能を避けてきた
-// シングルトンのクラス
-
 #pragma once
 #include "WinApp.h"
 #include "DirectXCommon.h"
@@ -9,44 +6,32 @@
 #include "general/imGuiDevice.h"
 #include "general/FPSManager.h"
 #include "general/Input.h"
+#include "scene/SceneManager.h"
 
 class Application
 {
-private:	// 変数
-	// 汎用機能
+private:
+
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
-	
 	FPSManager* fpsManager = nullptr;
-
-	Model* model = nullptr;
-	Object3d* object = nullptr;
-
 	Input* input = nullptr;
-
 	Sound* sound = nullptr;
-
+	SceneManager* sceneManager = nullptr;
 	ImGuiDevice* imguiDev = nullptr;
 
-private:	// シングルトンのためのこと
-	// コンストラクタをprivateにして
-	// コピーと代入を禁止する
+private:
+
 	Application() = default;
 	~Application() = default;
 	Application(const Application&) = delete;
 	void operator=(const Application&) = delete;
 
-public:		// 関数
-	/// <summary>
-	/// Applicationのシングルトンインスタンスを得る
-	/// </summary>
-	/// <returns>インスタンス</returns>
+public:	
+
 	static Application& GetInstance();
-
-	void Initialize();
-	
+	void Initialize();	
 	void Finalize();
-
 	void Run();
 
 };
