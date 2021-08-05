@@ -9,7 +9,7 @@ float4 main(VSOutput input) : SV_TARGET
 
 	float4 texcolor = tex.Sample(smp,input.uv);
 
-	//return texcolor;
+	return texcolor;
 
 	// Lambert”½ŽË
 	float3 light = normalize(float3(1, -1, 1));

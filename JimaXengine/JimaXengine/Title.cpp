@@ -39,8 +39,6 @@ void Title::Update()
 
 void Title::Draw()
 {
-	//object->Draw(dxCommon->GetCommandList());
 	object->Draw();
 	object2->Draw();
-
 }

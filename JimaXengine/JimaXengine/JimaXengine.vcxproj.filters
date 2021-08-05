@@ -120,9 +120,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル\3DObject</Filter>
     </ClCompile>
-    <ClCompile Include="scene\Scene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="scene\SceneManager.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>

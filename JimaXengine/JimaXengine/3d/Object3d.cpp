@@ -214,6 +214,16 @@ void Object3d::Initialize()
 	);
 	assert(!result);
 
+	// スキン無し用
+	SkinData* constMapSkin = nullptr;
+	result = constBufferSkin->Map(0, nullptr, (void**)&constMapSkin);
+	for (int i = 0; i < MAX_BONES; i++)
+	{
+		constMapSkin->bones[i] = XMMatrixIdentity();
+	}
+	constBufferSkin->Unmap(0, nullptr);
+	assert(!result);
+
 	eye = { 0, 0, -20 };
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
@@ -342,6 +352,11 @@ void Object3d::PlayAnimation()
 	FbxScene* fbxScene = model->GetFbxScene();
 	// 0番のアニメーション取得
 	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	if (!animstack)
+	{
+		// アニメーションがなかったら返す
+		return;
+	}
 	// アニメーションの名前取得
 	const char* animstackname = animstack->GetName();
 	// アニメーションの時間情報

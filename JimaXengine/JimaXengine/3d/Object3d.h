@@ -30,7 +30,7 @@ private:	// エイリアス
 
 private:		// 定数
 	// ボーンの最大数
-	static const int MAX_BONES = 32;
+	static const int MAX_BONES = 256;
 
 	enum ViewName
 	{

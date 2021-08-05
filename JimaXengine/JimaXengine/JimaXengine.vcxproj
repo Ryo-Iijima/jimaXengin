@@ -179,7 +179,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
-    <ClCompile Include="scene\Scene.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="WinApp.cpp" />
