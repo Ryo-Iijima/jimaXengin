@@ -3,7 +3,7 @@
 
 class Model;
 class Object3d;
-class Title : public Scene
+class Play : public Scene
 {
 private:
 
@@ -12,8 +12,8 @@ private:
 	Object3d* object2 = nullptr;
 
 public:
-	Title(WinApp* winapp);
-	~Title();
+	Play(WinApp* winapp);
+	~Play();
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;

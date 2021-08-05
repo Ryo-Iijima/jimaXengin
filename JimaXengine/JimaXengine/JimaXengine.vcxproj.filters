@@ -9,27 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{0f2739e7-0e35-46b1-b48e-b84138f13802}</UniqueIdentifier>
     </Filter>
     <Filter Include="シェーダーファイル\Basic">
       <UniqueIdentifier>{2d713744-e68c-49eb-a7d5-d8c39d90851b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\base">
-      <UniqueIdentifier>{0f41e774-beff-44d6-8140-a5cd8377dfca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\3DObject">
-      <UniqueIdentifier>{5b50282c-3385-487a-9d61-10fa512448c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\base">
-      <UniqueIdentifier>{d95e8d0e-56da-45ff-8326-17da4b79ab64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\3DObject">
-      <UniqueIdentifier>{780b877e-b862-4a7f-988a-51decd625dd9}</UniqueIdentifier>
     </Filter>
     <Filter Include="シェーダーファイル\FBX">
       <UniqueIdentifier>{bb64d4dd-e511-4941-8f73-007c9f712399}</UniqueIdentifier>
@@ -37,37 +21,67 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{a35860e3-991c-4210-aeca-babf4ba2a149}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\general">
-      <UniqueIdentifier>{484ed773-a3d9-4f5b-a45d-476c84f59475}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\engin">
+      <UniqueIdentifier>{e60812d6-a8b3-42d5-8e28-2782a4055870}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\general">
-      <UniqueIdentifier>{c21ed642-3376-42c5-ba6c-82cd336e87d6}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\app">
+      <UniqueIdentifier>{4b0f03f9-101d-4f97-9303-3d1c8d6fdf7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\math">
-      <UniqueIdentifier>{9d23d376-a8bb-4c7a-9e01-0b6259744171}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\engin">
+      <UniqueIdentifier>{fd9d90e5-2820-4497-91b3-f91413b350d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\math">
+    <Filter Include="ヘッダー ファイル\app">
+      <UniqueIdentifier>{a40d66de-4c54-4693-89f5-366bc1d881b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\app\actor">
+      <UniqueIdentifier>{9a79c865-6474-4a1a-8a3c-b4c55a56edda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\engin\math">
       <UniqueIdentifier>{2e8a7d2b-ba35-4512-9ffa-c20a0a2b4aa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scene">
+    <Filter Include="ヘッダー ファイル\engin\general">
+      <UniqueIdentifier>{484ed773-a3d9-4f5b-a45d-476c84f59475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\engin\base">
+      <UniqueIdentifier>{0f41e774-beff-44d6-8140-a5cd8377dfca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\engin\3DObject">
+      <UniqueIdentifier>{5b50282c-3385-487a-9d61-10fa512448c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\app\Scene">
+      <UniqueIdentifier>{b6006756-3a6b-4a2f-b026-16179e40998f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\app\Scene">
       <UniqueIdentifier>{daa65e51-36ff-416a-8fb5-003811abc84f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Scene">
-      <UniqueIdentifier>{b6006756-3a6b-4a2f-b026-16179e40998f}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\app\actor">
+      <UniqueIdentifier>{2160614a-d08d-4867-82c2-224c436e96a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engin\math">
+      <UniqueIdentifier>{9d23d376-a8bb-4c7a-9e01-0b6259744171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engin\general">
+      <UniqueIdentifier>{c21ed642-3376-42c5-ba6c-82cd336e87d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engin\base">
+      <UniqueIdentifier>{d95e8d0e-56da-45ff-8326-17da4b79ab64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engin\3DObject">
+      <UniqueIdentifier>{780b877e-b862-4a7f-988a-51decd625dd9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
-      <Filter>ソース ファイル\base</Filter>
+      <Filter>ソース ファイル\engin\base</Filter>
     </ClCompile>
     <ClCompile Include="DirectXCommon.cpp">
-      <Filter>ソース ファイル\base</Filter>
+      <Filter>ソース ファイル\engin\base</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル\base</Filter>
+      <Filter>ソース ファイル\engin\base</Filter>
     </ClCompile>
     <ClCompile Include="WinApp.cpp">
-      <Filter>ソース ファイル\base</Filter>
+      <Filter>ソース ファイル\engin\base</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -88,54 +102,66 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="3d\FbxLoader.cpp">
-      <Filter>ソース ファイル\3DObject</Filter>
+      <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
     <ClCompile Include="3d\Model.cpp">
-      <Filter>ソース ファイル\3DObject</Filter>
+      <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
     <ClCompile Include="3d\Object3d.cpp">
-      <Filter>ソース ファイル\3DObject</Filter>
+      <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
     <ClCompile Include="general\FPSManager.cpp">
-      <Filter>ソース ファイル\general</Filter>
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
     <ClCompile Include="general\imGuiDevice.cpp">
-      <Filter>ソース ファイル\general</Filter>
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
     <ClCompile Include="general\Input.cpp">
-      <Filter>ソース ファイル\general</Filter>
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
     <ClCompile Include="general\Sound.cpp">
-      <Filter>ソース ファイル\general</Filter>
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
     <ClCompile Include="general\XAudio2VoiceCallBack.cpp">
-      <Filter>ソース ファイル\general</Filter>
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
     <ClCompile Include="math\Vector2.cpp">
-      <Filter>ソース ファイル\math</Filter>
+      <Filter>ソース ファイル\engin\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Vector3.cpp">
-      <Filter>ソース ファイル\math</Filter>
+      <Filter>ソース ファイル\engin\math</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル\3DObject</Filter>
+      <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
     <ClCompile Include="scene\SceneManager.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ソース ファイル\app\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ソース ファイル\app\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="Play.cpp">
+      <Filter>ソース ファイル\app\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>ヘッダー ファイル\base</Filter>
+      <Filter>ヘッダー ファイル\engin\base</Filter>
     </ClInclude>
     <ClInclude Include="DirectXCommon.h">
-      <Filter>ヘッダー ファイル\base</Filter>
+      <Filter>ヘッダー ファイル\engin\base</Filter>
     </ClInclude>
     <ClInclude Include="WinApp.h">
-      <Filter>ヘッダー ファイル\base</Filter>
+      <Filter>ヘッダー ファイル\engin\base</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
       <Filter>imgui</Filter>
@@ -162,46 +188,58 @@
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="3d\FbxLoader.h">
-      <Filter>ヘッダー ファイル\3DObject</Filter>
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
     <ClInclude Include="3d\Model.h">
-      <Filter>ヘッダー ファイル\3DObject</Filter>
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
     <ClInclude Include="3d\Object3d.h">
-      <Filter>ヘッダー ファイル\3DObject</Filter>
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
     <ClInclude Include="general\FPSManager.h">
-      <Filter>ヘッダー ファイル\general</Filter>
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
     <ClInclude Include="general\imGuiDevice.h">
-      <Filter>ヘッダー ファイル\general</Filter>
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
     <ClInclude Include="general\Input.h">
-      <Filter>ヘッダー ファイル\general</Filter>
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
     <ClInclude Include="general\Sound.h">
-      <Filter>ヘッダー ファイル\general</Filter>
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
     <ClInclude Include="general\XAudio2VoiceCallBack.h">
-      <Filter>ヘッダー ファイル\general</Filter>
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
     <ClInclude Include="math\Vector2.h">
-      <Filter>ヘッダー ファイル\math</Filter>
+      <Filter>ヘッダー ファイル\engin\math</Filter>
     </ClInclude>
     <ClInclude Include="math\Vector3.h">
-      <Filter>ヘッダー ファイル\math</Filter>
+      <Filter>ヘッダー ファイル\engin\math</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル\3DObject</Filter>
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
     <ClInclude Include="scene\Scene.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
     <ClInclude Include="scene\SceneManager.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Title.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionPrimitive.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Play.h">
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

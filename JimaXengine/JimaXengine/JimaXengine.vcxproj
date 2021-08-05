@@ -164,6 +164,8 @@
     <ClCompile Include="3d\Object3d.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="CollisionPrimitive.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="general\FPSManager.cpp" />
     <ClCompile Include="general\imGuiDevice.cpp" />
@@ -179,6 +181,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
+    <ClCompile Include="Play.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="WinApp.cpp" />
@@ -189,6 +193,8 @@
     <ClInclude Include="3d\Object3d.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionPrimitive.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="general\FPSManager.h" />
     <ClInclude Include="general\imGuiDevice.h" />
@@ -205,6 +211,8 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
+    <ClInclude Include="Play.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />
     <ClInclude Include="Title.h" />

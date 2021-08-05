@@ -2,6 +2,7 @@
 #include "3d/FbxLoader.h"
 #include "3d/Object3d.h"
 #include "Title.h"
+#include "Play.h"
 
 Application& Application::GetInstance()
 {
@@ -45,6 +46,7 @@ void Application::Initialize()
 	// ƒV[ƒ“‚ÌÝ’è
 	sceneManager = new SceneManager;
 	sceneManager->Add("Title", new Title(winApp));
+	sceneManager->Add("Play", new Play(winApp));
 
 	sceneManager->Change("Title");
 
