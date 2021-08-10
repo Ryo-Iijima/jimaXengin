@@ -1,15 +1,11 @@
 #pragma once
 #include "scene/Scene.h"
 
-class Model;
-class Object3d;
+class Player;
 class Play : public Scene
 {
 private:
-
-	Model* model = nullptr;
-	Object3d* object = nullptr;
-	Object3d* object2 = nullptr;
+	Player* player;
 
 public:
 	Play(WinApp* winapp);

@@ -146,7 +146,11 @@ public:		// ŠÖ”
 	// setter
 	void SetModel(Model* model) { this->model = model; }
 
+	void SetScale(Vector3& scale) { this->scale = scale; }
+	void SetRotation(Vector3& rotation) { this->rotation = rotation; }
 	void SetPosition(Vector3& position) { this->position = position; }
+
+
 	void SetInput(Input* input) { this->input = input; }
 };
 

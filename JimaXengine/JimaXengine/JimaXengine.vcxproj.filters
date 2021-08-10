@@ -69,6 +69,9 @@
     <Filter Include="ソース ファイル\engin\3DObject">
       <UniqueIdentifier>{780b877e-b862-4a7f-988a-51decd625dd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\engin\general\hidapi">
+      <UniqueIdentifier>{2ab9405b-a0dd-4277-b0f4-c96a9ec2ab75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="hidapi\hid.c">
+      <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="hidapi\hidapi.h">
+      <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

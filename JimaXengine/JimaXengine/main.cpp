@@ -8,6 +8,9 @@
 
 #include "lib/fbx_sdk/include/fbxsdk.h"
 
+
+#include "hidapi/hidapi.h"
+
 //// @drief コンソール画面にフォーマット付き文字列を表示
 //// @param format フォーマット（%dとか%fとかの）
 //// @param 可変長引数
@@ -30,6 +33,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #endif // _DEBUG
 	//DebugOutputFormatStrings("Show window test.");
 	//getchar();
+
+	hid_device_info* device = hid_enumerate(0, 0);
+
+	while (device)
+	{
+		hid_device* dev = hid_open(device->vendor_id, device->product_id, device->serial_number);
+ 		printf("\nproduct_id: %ls", device->product_string);
+ 		device = device->next;
+	}
+	hid_free_enumeration(device);
+
+
+	////////////////////////////////////////////////////////////////////////////////////
 
 	FbxManager* fbxManager = FbxManager::Create();
 

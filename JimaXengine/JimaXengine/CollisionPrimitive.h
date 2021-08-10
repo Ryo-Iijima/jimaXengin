@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <DirectXMath.h>
-#include "Vector3.h"
+#include "math/Vector3.h"
 
 //球
 struct Sphere

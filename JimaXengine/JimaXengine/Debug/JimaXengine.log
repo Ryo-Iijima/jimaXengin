@@ -1,3 +1,48 @@
-﻿  main.cpp
-C:\Users\ryo\Desktop\魔導書リスタート\JimaXengine\JimaXengine\main.cpp(230,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-  JimaXengine.vcxproj -> C:\Users\ryo\Desktop\魔導書リスタート\JimaXengine\Debug\JimaXengine.exe
+﻿  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\BasicPS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\BasicVS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\FBXPS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\FBXVS.cso
+  FbxLoader.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\FbxLoader.cpp(283,27): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\FbxLoader.cpp(369,23): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  Model.cpp
+  Object3d.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\Object3d.cpp(231,23): warning C4316: 'Camera': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\Object3d.cpp(310,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  Application.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Application.cpp(20,32): warning C4316: 'DirectXCommon': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  Camera.cpp
+  Collision.cpp
+  CollisionPrimitive.cpp
+  DirectXCommon.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(17,23): warning C4316: 'Camera': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(441,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(633,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(636,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(867,44): warning C4244: '=': 'UINT64' から 'UINT' への変換です。データが失われる可能性があります。
+  FPSManager.cpp
+  imGuiDevice.cpp
+  Input.cpp
+  Sound.cpp
+  XAudio2VoiceCallBack.cpp
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_dx12.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\imgui\imgui_impl_dx12.cpp(396,39): error C2338: Can't pack descriptor handle into TexID, 32-bit not supported yet.
+  imgui_impl_win32.cpp
+  imgui_widgets.cpp
+  main.cpp
+  コードを生成中...
+  コンパイル中...
+  Vector2.cpp
+  Vector3.cpp
+  Play.cpp
+  Player.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(20,23): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  SceneManager.cpp
+  Title.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(21,23): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(24,24): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  WinApp.cpp
+  コードを生成中...

@@ -48,7 +48,7 @@ void Application::Initialize()
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
 
-	sceneManager->Change("Title");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev = new ImGuiDevice();
