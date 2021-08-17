@@ -26,29 +26,8 @@ void SendSubcommand(hid_device* dev, uint8_t command, uint8_t subcommand[], int 
     hid_write(dev, buf, 0x40);
 }
 
-Player::Player()
+void Player::JoyConInitialize()
 {
-
-}
-
-Player::~Player()
-{
-	delete object;
-	delete model;
-}
-
-void Player::Initialize()
-{
-	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
-	// オブジェクトの生成とモデルのセット
-	object = new Object3d;
-	object->Initialize();
-	object->SetModel(model);
-
-	object->SetPosition(Vector3(10, 0, 0));
-
-
-
     int globalCount = 0;
     device = hid_enumerate(0, 0);
 
@@ -81,7 +60,7 @@ void Player::Initialize()
 
             // ------ ボタンの入力を任意のタイミングで取得する。------
             // ノンブロッキングをONにする。
-            // hid_set_nonblocking(dev, 1);
+            hid_set_nonblocking(dev, 1);
 
             // imuを有効にする
             data[0] = 0x01;
@@ -141,26 +120,20 @@ void Player::Initialize()
             //    Sleep(1000);
 
             //}
-        }
 
-        // joyconじゃなかったら次のデバイスへ。　　
-        if (device->product_id != JOYCON_L_PRODUCT_ID || device->product_id != JOYCON_R_PRODUCT_ID)
-        {
-            device = device->next;
+            //break;
         }
-        else
-        {
-            break;
-        }
+        device = device->next;
     }
     hid_free_enumeration(device);
 
 }
 
-void Player::Update()
+void Player::JoyConUpdate()
 {
+    // input report を受けとる。
+    if (dev)
     {
-        // input report を受けとる。
         int ret = hid_read(dev, buff, size);
 
         // input report の id が 0x3F のものに絞る。
@@ -210,15 +183,54 @@ void Player::Update()
         //Sleep(500);
 
     }
+
+
+
     cur_gyro_x = gyro.x;
 
     //gyro_x += (pre_gyro_x - cur_gyro_x);
     gyro_x += cur_gyro_x;
 
     object->SetRotation(Vector3(gyro_x, 0, 0));
-	object->Update();
 
     pre_gyro_x = cur_gyro_x;
+
+}
+
+Player::Player()
+{
+
+}
+
+Player::~Player()
+{
+	delete object;
+	delete model;
+
+    delete device;
+    delete dev;
+}
+
+void Player::Initialize()
+{
+	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
+	object = new Object3d;
+	object->Initialize();
+	object->SetModel(model);
+
+	object->SetPosition(Vector3(10, 0, 0));
+
+
+    //JoyConInitialize();
+
+}
+
+void Player::Update()
+{
+    //JoyConUpdate();
+
+    object->Update();
+
 }
 
 void Player::Draw()

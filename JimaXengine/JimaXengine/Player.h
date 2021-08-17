@@ -23,6 +23,10 @@ private:
 	float gyro_x;
 	Vector3 accel, gyro;
 
+private:
+	void JoyConInitialize();
+	void JoyConUpdate();
+
 public:
 	Player();
 	~Player();
