@@ -180,6 +180,7 @@
     <ClCompile Include="CollisionPrimitive.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="general\FPSManager.cpp" />
+    <ClCompile Include="general\General.cpp" />
     <ClCompile Include="general\imGuiDevice.cpp" />
     <ClCompile Include="general\Input.cpp" />
     <ClCompile Include="general\Sound.cpp" />
@@ -199,9 +200,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
+    <ClCompile Include="math\Vector4.cpp" />
+    <ClCompile Include="Object2d.cpp" />
     <ClCompile Include="Play.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ResourceShader.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
@@ -215,6 +220,7 @@
     <ClInclude Include="CollisionPrimitive.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="general\FPSManager.h" />
+    <ClInclude Include="general\General.h" />
     <ClInclude Include="general\imGuiDevice.h" />
     <ClInclude Include="general\Input.h" />
     <ClInclude Include="general\Sound.h" />
@@ -230,10 +236,14 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
+    <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="Object2d.h" />
     <ClInclude Include="Play.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ResourceShader.h" />
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
@@ -278,10 +288,23 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpritePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpriteVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Basic\BasicShader.hlsli" />
     <None Include="Resources\shader\FBX\FBXShader.hlsli" />
+    <None Include="Resources\shader\Sprite\SpriteShaderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">

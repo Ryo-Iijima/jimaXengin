@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include "DirectXCommon.h"
 
-//#include "2d/Object2d.h"
+#include "Object2d.h"
 #include "3d/Object3d.h"
 #include "general/General.h"
 #include "ConsoleOutput.h"
@@ -128,8 +128,8 @@ void Texture::LoadTexture(const std::string& filename)
 	metadataMap.emplace(filename, metadata);
 	types.emplace(filename, RESOURCE);
 
-	//Object2d::LoadTexture(filename);
-	Object3d::LoadResourceTexture(filename);
+	Object2d::LoadTexture(filename);
+	//Object3d::LoadResourceTexture(filename);
 }
 
 void Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, int texWidth, int texHeight)
@@ -193,7 +193,7 @@ void Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, in
 	texBuffers.emplace(filename, texbuff);
 	types.emplace(filename, CREATE);
 
-	//Object2d::LoadTexture(filename);
+	Object2d::LoadTexture(filename);
 	//Object3d::LoadResourceTexture(filename);
 
 	delete[] texturedata;

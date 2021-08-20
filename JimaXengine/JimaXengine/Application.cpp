@@ -1,8 +1,11 @@
 #include "Application.h"
 #include "3d/FbxLoader.h"
 #include "3d/Object3d.h"
+#include "Object2d.h"
 #include "Title.h"
 #include "Play.h"
+#include "Texture.h"
+#include "ResourceShader.h"
 
 Application& Application::GetInstance()
 {
@@ -20,6 +23,9 @@ void Application::Initialize()
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
 
+	ResourceShader::CompileShader("Sprite/SpritePixelShader.hlsl", "main", "ps_5_0");
+	ResourceShader::CompileShader("Sprite/SpriteVertexShader.hlsl", "main", "vs_5_0");
+
 	// FPSŠÇ—
 	fpsManager = new FPSManager();
 	fpsManager->Initialize(60.0f);
@@ -30,10 +36,18 @@ void Application::Initialize()
 	Object3d::StaticInitialize(dxCommon, winApp);
 	Object3d::SetDevice(dxCommon->GetDevice());
 	Object3d::CreateGraphicsPipline();
+	//
+	Object2d::Initialize(dxCommon, winApp);
+	//
+	Texture::Initialize(dxCommon);
 
 	// “ü—Í
 	input = new Input();
 	input->Initialize(winApp);
+
+
+	Texture::LoadTexture("colorGrid.png");
+
 
 	//object->SetInput(input);
 

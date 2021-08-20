@@ -4,6 +4,7 @@
 #include <dinput.h>
 #include <Xinput.h>
 #include <DirectXMath.h>
+#include "math/Vector2.h"
 
 #pragma comment (lib, "dinput8.lib")
 #pragma comment (lib, "dxguid.lib")

@@ -72,6 +72,9 @@
     <Filter Include="ヘッダー ファイル\engin\general\hidapi">
       <UniqueIdentifier>{2ab9405b-a0dd-4277-b0f4-c96a9ec2ab75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Sprite">
+      <UniqueIdentifier>{978919eb-8857-4d4a-b2ca-9e6c3ee07634}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -157,6 +160,21 @@
     </ClCompile>
     <ClCompile Include="hidapi\hid.c">
       <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
+    </ClCompile>
+    <ClCompile Include="Object2d.cpp">
+      <Filter>ソース ファイル\engin</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceShader.cpp">
+      <Filter>ソース ファイル\engin</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\engin</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Vector4.cpp">
+      <Filter>ソース ファイル\engin\math</Filter>
+    </ClCompile>
+    <ClCompile Include="general\General.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +268,21 @@
     <ClInclude Include="hidapi\hidapi.h">
       <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
     </ClInclude>
+    <ClInclude Include="Object2d.h">
+      <Filter>ヘッダー ファイル\engin</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceShader.h">
+      <Filter>ヘッダー ファイル\engin</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ヘッダー ファイル\engin</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector4.h">
+      <Filter>ヘッダー ファイル\engin\math</Filter>
+    </ClInclude>
+    <ClInclude Include="general\General.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
@@ -264,6 +297,12 @@
     <FxCompile Include="Resources\shader\Basic\BasicVS.hlsl">
       <Filter>シェーダーファイル\Basic</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpritePixelShader.hlsl">
+      <Filter>シェーダーファイル\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Sprite\SpriteVertexShader.hlsl">
+      <Filter>シェーダーファイル\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX\FBXShader.hlsli">
@@ -271,6 +310,9 @@
     </None>
     <None Include="Resources\shader\Basic\BasicShader.hlsli">
       <Filter>シェーダーファイル\Basic</Filter>
+    </None>
+    <None Include="Resources\shader\Sprite\SpriteShaderHeader.hlsli">
+      <Filter>シェーダーファイル\Sprite</Filter>
     </None>
   </ItemGroup>
 </Project>

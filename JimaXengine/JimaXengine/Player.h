@@ -11,6 +11,7 @@ private:
 	Object3d* object = nullptr;
 
 	Vector3 pos;
+	Vector3 vel;
 	Vector3 rot;
 
 	hid_device_info* device = nullptr;
@@ -26,7 +27,7 @@ private:
 private:
 	void JoyConInitialize();
 	void JoyConUpdate();
-
+	void Move();
 public:
 	Player();
 	~Player();
@@ -35,4 +36,3 @@ public:
 	void Update();
 	void Draw();
 };
-

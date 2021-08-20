@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "3d/Object3d.h"
 #include "3d/FbxLoader.h"
+#include "Object2d.h"
 
 Play::Play(WinApp* winapp)
 {
@@ -21,6 +22,9 @@ void Play::Initialize()
 	floor->Initialize();
 	floor->SetModel(model);
 	floor->SetScale(Vector3(10, 0.01f, 10));
+
+	object2d = new Object2d();
+	object2d->CreateSprite();
 }
 
 void Play::Update()
@@ -31,6 +35,9 @@ void Play::Update()
 
 void Play::Draw()
 {
+	object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f,
+		Vector2(1.0f, 1.0f), "ALPHA");
+
 	player->Draw();
 	floor->Draw();
 }

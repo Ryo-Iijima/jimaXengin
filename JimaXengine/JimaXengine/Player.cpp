@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "3d/Object3d.h"
 #include "3d/FbxLoader.h"
+#include "Input.h"
 
 #define JOYCON_L_PRODUCT_ID 8198
 #define JOYCON_R_PRODUCT_ID 8199
@@ -197,6 +198,18 @@ void Player::JoyConUpdate()
 
 }
 
+void Player::Move()
+{
+    vel = { 0,0,0 };
+
+    if (Input::KeyPress(DIK_W)) vel.z = 1;
+    if (Input::KeyPress(DIK_S)) vel.z = -1;
+    if (Input::KeyPress(DIK_A)) vel.x = -1;
+    if (Input::KeyPress(DIK_D)) vel.x = 1;
+
+    pos += vel;
+}
+
 Player::Player()
 {
 
@@ -228,7 +241,10 @@ void Player::Initialize()
 void Player::Update()
 {
     //JoyConUpdate();
+    
+    Move();
 
+    object->SetPosition(pos);
     object->Update();
 
 }

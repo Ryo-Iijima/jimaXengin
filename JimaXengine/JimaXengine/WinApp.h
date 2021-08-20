@@ -46,5 +46,7 @@ public:		// ƒƒ“ƒoŠÖ”
 	HWND GetHwnd() { return hwnd; }
 	WNDCLASSEX GetWndClass() { return wndClass; }
 	HINSTANCE GetInstance() { return wndClass.hInstance; }
+	int GetWindowWidth() { return WINDOW_WIDTH; }
+	int GetWindowHeight() { return WINDOW_HEIGHT; }
 
 };
