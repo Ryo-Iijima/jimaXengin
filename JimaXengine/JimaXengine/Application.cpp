@@ -46,7 +46,11 @@ void Application::Initialize()
 	input->Initialize(winApp);
 
 
+	Texture::LoadTexture("white1x1.png");
 	Texture::LoadTexture("colorGrid.png");
+	Texture::LoadTexture("test_256x256.png");
+	Texture::LoadTexture("pushstart.png");
+	Texture::LoadTexture("title.png");
 
 
 	//object->SetInput(input);
@@ -62,7 +66,8 @@ void Application::Initialize()
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
 
-	sceneManager->Change("Play");
+	sceneManager->Change("Title");
+	//sceneManager->Change("Play");
 
 	// imgui
 	imguiDev = new ImGuiDevice();

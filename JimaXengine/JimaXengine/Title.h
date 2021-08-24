@@ -3,13 +3,23 @@
 
 class Model;
 class Object3d;
+class Object2d;
+
 class Title : public Scene
 {
 private:
 
 	Model* model = nullptr;
 	Object3d* object = nullptr;
-	Object3d* object2 = nullptr;
+
+	Object2d* pushStartTex = nullptr;
+	Vector2 pushStartTexPos;
+
+	Object2d* titleTex = nullptr;
+	Vector2 titleTexPos;
+
+	Object2d* bg = nullptr;
+	Vector2 bgPos;
 
 public:
 	Title(WinApp* winapp);

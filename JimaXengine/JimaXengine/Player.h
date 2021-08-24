@@ -19,9 +19,9 @@ private:
 	uint8_t buff[0x40];
 	size_t size;
 
-	float pre_gyro_x = 0;
-	float cur_gyro_x = 0;
-	float gyro_x;
+	int pre_gyro_x = 0;
+	int cur_gyro_x = 0;
+	int gyro_x;
 	Vector3 accel, gyro;
 
 private:

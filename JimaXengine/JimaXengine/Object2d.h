@@ -70,10 +70,10 @@ public:
 		Vector4 color = { 1,1,1,1 });
 
 	void DrawRect(const std::string& filename,
-		Vector2 position,//画像の表示座標
-		Vector2 texpos,//画像切り出しの左上座標
-		Vector2 texlength,//左上からの長さ
-		Vector2 size,//ピクセル単位での大きさ
+		Vector2 position,	//画像の表示座標
+		Vector2 texpos,		//画像切り出しの左上座標
+		Vector2 texlength,	//左上からの長さ
+		Vector2 size,		//ピクセル単位での大きさ
 		float angle,
 		std::string blendtype,
 		Vector2 anchor = { 0.0f,0.0f },

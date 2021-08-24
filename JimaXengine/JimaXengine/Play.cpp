@@ -14,6 +14,10 @@ Play::~Play()
 
 void Play::Initialize()
 {
+	isEnd = false;
+	nowScene = "Play";
+	nextScene = "Title";
+
 	player = new Player();
 	player->Initialize();
 
@@ -31,6 +35,12 @@ void Play::Update()
 {
 	player->Update();
 	floor->Update();
+
+	if (Input::KeyTrigger(DIK_1))
+	{
+		ShutDown();
+	}
+
 }
 
 void Play::Draw()

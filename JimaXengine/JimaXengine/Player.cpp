@@ -169,12 +169,12 @@ void Player::JoyConUpdate()
         //accel.y = buff[16];
         //accel.z = buff[18];
 
-        //gyro.x = buff[19];
-        //gyro.y = buff[21];
-        //gyro.z = buff[23];
-        gyro.x = buff[20];
-        gyro.y = buff[22];
-        gyro.z = buff[24];
+        gyro.x = buff[19];
+        gyro.y = buff[21];
+        gyro.z = buff[23];
+        //gyro.x = buff[20];
+        //gyro.y = buff[22];
+        //gyro.z = buff[24];
 
         //printf("accel: %f, %f, %f\n", accel.x, accel.y, accel.z);
         //printf("gyro: %f, %f, %f\n", gyro.x, gyro.y, gyro.z);
@@ -186,11 +186,10 @@ void Player::JoyConUpdate()
     }
 
 
-
     cur_gyro_x = gyro.x;
 
     //gyro_x += (pre_gyro_x - cur_gyro_x);
-    gyro_x += cur_gyro_x;
+    gyro_x = cur_gyro_x;
 
     object->SetRotation(Vector3(gyro_x, 0, 0));
 
