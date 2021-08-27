@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "3d/Object3d.h"
 #include "3d/FbxLoader.h"
-#include "Input.h"
+#include "general/Input.h"
 
 #define JOYCON_L_PRODUCT_ID 8198
 #define JOYCON_R_PRODUCT_ID 8199
@@ -251,4 +251,8 @@ void Player::Update()
 void Player::Draw()
 {
 	object->Draw();
+}
+
+void Player::DrawAlphaObj()
+{
 }

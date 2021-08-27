@@ -11,8 +11,6 @@ Title::~Title()
 {
 	delete titleTex;
 	delete pushStartTex;
-	delete object;
-	delete model;
 }
 
 void Title::Initialize()
@@ -20,13 +18,6 @@ void Title::Initialize()
 	isEnd = false;
 	nowScene = "Title";
 	nextScene = "Play";
-
-	model = FbxLoader::GetInstance().LoadModelFromFile("boneTest");
-	// オブジェクトの生成とモデルのセット
-	object = new Object3d;
-	object->Initialize();
-	object->SetModel(model);
-
 
 
 	bg = new Object2d;
@@ -47,12 +38,9 @@ void Title::Initialize()
 
 void Title::Update()
 {
-	object->SetPosition(Vector3(3, 3, 0));
-	object->Update();
 
 	if (Input::KeyTrigger(DIK_1))
 	{
-
 		ShutDown();
 	}
 }
@@ -60,8 +48,6 @@ void Title::Update()
 void Title::Draw()
 {
 	bg->DrawOriginal("white1x1.png", bgPos, 0.0f, Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT), "ALPHA", Vector2(0.0f, 0.0f), Vector4(0.3f, 0.3f, 0.3f, 1));
-
-	object->Draw();
 
 	pushStartTex->DrawOriginal("pushstart.png", pushStartTexPos, 0.0f, Vector2(1.0f, 1.0f), "ALPHA", Vector2(0.5f, 0.5f));
 

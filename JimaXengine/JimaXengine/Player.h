@@ -1,7 +1,8 @@
 #pragma once
-#include "3d/Object3d.h"
 #include "hidapi/hidapi.h"
+#include "math/Vector3.h"
 
+class Camera;
 class Model;
 class Object3d;
 class Player
@@ -9,6 +10,7 @@ class Player
 private:
 	Model* model = nullptr;
 	Object3d* object = nullptr;
+	Camera* camera = nullptr;
 
 	Vector3 pos;
 	Vector3 vel;
@@ -35,4 +37,7 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
+
+	Camera* GetCamera() { return camera; }
+	void DrawAlphaObj();
 };

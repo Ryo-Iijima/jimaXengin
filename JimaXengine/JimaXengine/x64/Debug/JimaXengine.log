@@ -1,2 +1,9 @@
-﻿  Title.cpp
+﻿  GameObjectManager.cpp
+  Play.cpp
+  Player.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(189,22): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(194,33): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(223,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
+  コードを生成中...
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

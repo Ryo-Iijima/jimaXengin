@@ -9,10 +9,11 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <string>
+#include "../general/Input.h"
 
 class DirectXCommon;
 class WinApp;
-class Input;
+//class Input;
 class Object3d
 {
 private:	// エイリアス

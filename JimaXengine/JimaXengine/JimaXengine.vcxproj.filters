@@ -75,6 +75,12 @@
     <Filter Include="シェーダーファイル\Sprite">
       <UniqueIdentifier>{978919eb-8857-4d4a-b2ca-9e6c3ee07634}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\app\Particle">
+      <UniqueIdentifier>{894f276a-1abd-4661-afd3-74db0cd4a48a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\app\Particle">
+      <UniqueIdentifier>{d704e6a2-06ab-4406-96af-eaae5097f3d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -175,6 +181,36 @@
     </ClCompile>
     <ClCompile Include="general\General.cpp">
       <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="Target.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameObject.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameObjectManager.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\ParticleEmitter.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\ParticleManager.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\ParticleObj.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="general\Random.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\DefaultGeometryParticle.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\HomingGeometryParticle.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\GeometoryObject3D.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -282,6 +318,42 @@
     </ClInclude>
     <ClInclude Include="general\General.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Target.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObject.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObjectManager.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleEmitter.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleManager.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleObj.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleParam.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="general\Random.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\DefaultGeometryParticle.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleBase.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\HomingGeometryParticle.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\GeometoryObject3D.h">
+      <Filter>ソース ファイル\app\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

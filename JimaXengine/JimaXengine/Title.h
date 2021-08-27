@@ -8,10 +8,6 @@ class Object2d;
 class Title : public Scene
 {
 private:
-
-	Model* model = nullptr;
-	Object3d* object = nullptr;
-
 	Object2d* pushStartTex = nullptr;
 	Vector2 pushStartTexPos;
 
