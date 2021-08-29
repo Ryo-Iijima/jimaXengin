@@ -151,7 +151,7 @@ public:		// ŠÖ”
 	void SetRotation(Vector3& rotation) { this->rotation = rotation; }
 	void SetPosition(Vector3& position) { this->position = position; }
 
-
+	void SetCamera(Camera* camera) { this->camera = camera; }
 	void SetInput(Input* input) { this->input = input; }
 };
 

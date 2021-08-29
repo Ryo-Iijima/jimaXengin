@@ -10,16 +10,31 @@ Play::Play(WinApp* winapp)
 
 Play::~Play()
 {
+	delete oManager;
 }
 
 void Play::Initialize()
 {
+	Vector3 eye, target, up;
+
+	eye = { 0, 0, -20 };
+	target = { 0, 0, 0 };
+	up = { 0, 1, 0 };
+
+	camera = new Camera();
+	camera->SetViewMatrix(eye, target, up);
+	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+
+	oManager = new GameObjectManager();
+	oManager->Initialize();
+	oManager->Add(new Player(camera));
+
 	isEnd = false;
 	nowScene = "Play";
 	nextScene = "Title";
 
-	player = new Player();
-	player->Initialize();
+	//player = new Player();
+	//player->Initialize();
 
 	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
 	floor = new Object3d();
@@ -33,7 +48,10 @@ void Play::Initialize()
 
 void Play::Update()
 {
-	player->Update();
+	//player->Update();
+	oManager->Update();
+
+	floor->SetCamera(camera);
 	floor->Update();
 
 	if (Input::KeyTrigger(DIK_1))
@@ -48,6 +66,8 @@ void Play::Draw()
 	object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f,
 		Vector2(1.0f, 1.0f), "ALPHA");
 
-	player->Draw();
+	//player->Draw();
+	oManager->Draw();
+
 	floor->Draw();
 }

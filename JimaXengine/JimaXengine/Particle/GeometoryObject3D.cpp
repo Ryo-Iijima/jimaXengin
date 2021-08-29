@@ -18,10 +18,10 @@ bool GeometoryObject3D::PreInitialize(DirectXCommon* dxcommon)
 	InitializeDescriptorHeap();
 	InitializeRootSignature();
 
-	pipelines.emplace("quad_alpha", InitializeGraphicsPipeline(ALPHA, "ParticleVS.hlsl", "QuadPS.hlsl", "QuadGS.hlsl", false));
-	pipelines.emplace("quad_add", InitializeGraphicsPipeline(ADD, "ParticleVS.hlsl", "QuadPS.hlsl", "QuadGS.hlsl", false));
-	pipelines.emplace("cube_alpha", InitializeGraphicsPipeline(ALPHA, "ParticleVS.hlsl", "CubePS.hlsl", "CubeGS.hlsl", true));
-	pipelines.emplace("cube_add", InitializeGraphicsPipeline(ADD, "ParticleVS.hlsl", "CubePS.hlsl", "CubeGS.hlsl", true));
+	pipelines.emplace("quad_alpha", InitializeGraphicsPipeline(ALPHA, "Geometory/ParticleVS.hlsl", "Geometory/QuadPS.hlsl", "Geometory/QuadGS.hlsl", false));
+	pipelines.emplace("quad_add", InitializeGraphicsPipeline(ADD, "Geometory/ParticleVS.hlsl", "Geometory/QuadPS.hlsl", "Geometory/QuadGS.hlsl", false));
+	pipelines.emplace("cube_alpha", InitializeGraphicsPipeline(ALPHA, "Geometory/ParticleVS.hlsl", "Geometory/CubePS.hlsl", "Geometory/CubeGS.hlsl", true));
+	pipelines.emplace("cube_add", InitializeGraphicsPipeline(ADD, "Geometory/ParticleVS.hlsl", "Geometory/CubePS.hlsl", "Geometory/CubeGS.hlsl", true));
 
 	return true;
 }

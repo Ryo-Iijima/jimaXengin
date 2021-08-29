@@ -209,9 +209,9 @@ void Player::Move()
     pos += vel;
 }
 
-Player::Player()
+Player::Player(Camera* camera)
 {
-
+    pCamera = camera;
 }
 
 Player::~Player()
@@ -244,6 +244,7 @@ void Player::Update()
     Move();
 
     object->SetPosition(pos);
+    object->SetCamera(pCamera);
     object->Update();
 
 }
@@ -251,6 +252,26 @@ void Player::Update()
 void Player::Draw()
 {
 	object->Draw();
+}
+
+void Player::SilhouetteDraw()
+{
+}
+
+GameObject::TYPE Player::GetType()
+{
+    return GameObject::TYPE::PLAYER;
+}
+
+void Player::DrawImGui()
+{
+    //ImGui::Begin("PlayerInfomation");
+    //ImGui::End();
+}
+
+Camera* Player::GetCamera()
+{
+    return pCamera;
 }
 
 void Player::DrawAlphaObj()

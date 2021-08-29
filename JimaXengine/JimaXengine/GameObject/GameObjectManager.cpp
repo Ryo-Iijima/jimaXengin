@@ -4,7 +4,7 @@
 
 GameObjectManager::GameObjectManager()
 {
-	//pManager = new ParticleManager();
+	pManager = new ParticleManager();
 }
 
 GameObjectManager::~GameObjectManager()

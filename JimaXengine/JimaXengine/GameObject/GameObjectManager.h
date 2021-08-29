@@ -1,16 +1,8 @@
 #pragma once
 #include"GameObject.h"
 #include "../Player.h"
-//#include "MobiusParts.h"
-//#include "MobiusRing.h"
-//#include "MobiusRingManager.h"
-//#include "EnemyManager.h"
-//#include "Enemy.h"
-//#include "ChargingItem.h"
-//#include "ItemManager.h"
-//#include "FloorClearItem.h"
-//#include "PowerUpItem.h"
-//#include "ScoreManager.h"
+#include "../Target.h"
+
 #include "../Particle/ParticleManager.h"
 
 class GameObjectManager

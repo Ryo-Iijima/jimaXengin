@@ -1,20 +1,20 @@
 #pragma once
 #include "hidapi/hidapi.h"
-#include "math/Vector3.h"
+#include "GameObject/GameObject.h"
 
 class Camera;
 class Model;
 class Object3d;
-class Player
+class Player : public GameObject
 {
 private:
 	Model* model = nullptr;
 	Object3d* object = nullptr;
-	Camera* camera = nullptr;
+	//Camera* camera = nullptr;
 
-	Vector3 pos;
-	Vector3 vel;
-	Vector3 rot;
+	//Vector3 pos;
+	//Vector3 vel;
+	//Vector3 rot;
 
 	hid_device_info* device = nullptr;
 	hid_device* dev = nullptr;
@@ -31,13 +31,17 @@ private:
 	void JoyConUpdate();
 	void Move();
 public:
-	Player();
+	Player(Camera* camera);
 	~Player();
 
-	void Initialize();
-	void Update();
-	void Draw();
+	void Initialize()override;
+	void Update()override;
+	void Draw()override;
+	void SilhouetteDraw() override;
+	GameObject::TYPE GetType()override;
+	void DrawImGui()override;
 
-	Camera* GetCamera() { return camera; }
+	void SetCamera(Camera* camera) { pCamera = camera; }
+	Camera* GetCamera();
 	void DrawAlphaObj();
 };

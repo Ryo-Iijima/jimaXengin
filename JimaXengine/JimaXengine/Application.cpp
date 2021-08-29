@@ -25,6 +25,11 @@ void Application::Initialize()
 
 	ResourceShader::CompileShader("Sprite/SpritePixelShader.hlsl", "main", "ps_5_0");
 	ResourceShader::CompileShader("Sprite/SpriteVertexShader.hlsl", "main", "vs_5_0");
+	ResourceShader::CompileShader("Geometory/ParticleVS.hlsl", "main", "vs_5_0");
+	ResourceShader::CompileShader("Geometory/CubePS.hlsl", "main", "ps_5_0");
+	ResourceShader::CompileShader("Geometory/CubeGS.hlsl", "main", "gs_5_0");
+	ResourceShader::CompileShader("Geometory/QuadPS.hlsl", "main", "ps_5_0");
+	ResourceShader::CompileShader("Geometory/QuadGS.hlsl", "main", "gs_5_0");
 
 	// FPSŠÇ—
 	fpsManager = new FPSManager();
@@ -40,6 +45,10 @@ void Application::Initialize()
 	Object2d::Initialize(dxCommon, winApp);
 	//
 	Texture::Initialize(dxCommon);
+	//
+	GeometoryObject3D::PreInitialize(dxCommon);
+	//
+	ParticleManager::StaticInitialize();
 
 	// “ü—Í
 	input = new Input();
@@ -66,8 +75,8 @@ void Application::Initialize()
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
 
-	sceneManager->Change("Title");
-	//sceneManager->Change("Play");
+	//sceneManager->Change("Title");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev = new ImGuiDevice();

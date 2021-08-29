@@ -228,11 +228,11 @@ void Object3d::Initialize()
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 
-	camera = new Camera();
-	// 平行移動行列の計算
-	camera->SetViewMatrix(eye, target, up);
-	// プロジェクション行列の計算
-	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+	//camera = new Camera();
+	//// 平行移動行列の計算
+	//camera->SetViewMatrix(eye, target, up);
+	//// プロジェクション行列の計算
+	//camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 
 	// 1フレーム分の時間を60FPSに設定
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
@@ -243,7 +243,7 @@ void Object3d::Update()
 	////////////////////////////
 	/// トランスフォームの転送
 	////////////////////////////
-	CameraMove();
+	//CameraMove();
 
 	XMMATRIX matScale, matRot, matTrans;
 

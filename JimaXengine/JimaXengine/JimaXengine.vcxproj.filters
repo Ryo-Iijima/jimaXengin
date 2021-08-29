@@ -81,6 +81,9 @@
     <Filter Include="ヘッダー ファイル\app\Particle">
       <UniqueIdentifier>{d704e6a2-06ab-4406-96af-eaae5097f3d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\Geometory">
+      <UniqueIdentifier>{dbc80a87-8d0f-4890-8303-b861b3a862c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -182,9 +185,6 @@
     <ClCompile Include="general\General.cpp">
       <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
-    <ClCompile Include="Target.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\GameObject.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
@@ -211,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="Particle\GeometoryObject3D.cpp">
       <Filter>ソース ファイル\app\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Target.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,9 +322,6 @@
     <ClInclude Include="general\General.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
-    <ClInclude Include="Target.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject\GameObject.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
@@ -355,6 +355,9 @@
     <ClInclude Include="Particle\GeometoryObject3D.h">
       <Filter>ソース ファイル\app\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="Target.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
@@ -375,6 +378,21 @@
     <FxCompile Include="Resources\shader\Sprite\SpriteVertexShader.hlsl">
       <Filter>シェーダーファイル\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\Geometory\CubeGS.hlsl">
+      <Filter>シェーダーファイル\Geometory</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Geometory\CubePS.hlsl">
+      <Filter>シェーダーファイル\Geometory</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Geometory\ParticleVS.hlsl">
+      <Filter>シェーダーファイル\Geometory</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Geometory\QuadGS.hlsl">
+      <Filter>シェーダーファイル\Geometory</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\Geometory\QuadPS.hlsl">
+      <Filter>シェーダーファイル\Geometory</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX\FBXShader.hlsli">
@@ -385,6 +403,9 @@
     </None>
     <None Include="Resources\shader\Sprite\SpriteShaderHeader.hlsli">
       <Filter>シェーダーファイル\Sprite</Filter>
+    </None>
+    <None Include="Resources\shader\Geometory\Particle.hlsli">
+      <Filter>シェーダーファイル\Geometory</Filter>
     </None>
   </ItemGroup>
 </Project>
