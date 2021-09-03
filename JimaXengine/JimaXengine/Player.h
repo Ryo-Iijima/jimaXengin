@@ -26,6 +26,8 @@ private:
 	int gyro_x;
 	Vector3 accel, gyro;
 
+	Vector3 eye, target;
+
 private:
 	void JoyConInitialize();
 	void JoyConUpdate();

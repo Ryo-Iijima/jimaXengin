@@ -28,6 +28,7 @@ void Play::Initialize()
 	oManager = new GameObjectManager();
 	oManager->Initialize();
 	oManager->Add(new Player(camera));
+	oManager->Add(new Target(camera));
 
 	isEnd = false;
 	nowScene = "Play";
@@ -63,8 +64,7 @@ void Play::Update()
 
 void Play::Draw()
 {
-	object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f,
-		Vector2(1.0f, 1.0f), "ALPHA");
+	//object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f, Vector2(1.0f, 1.0f), "ALPHA");
 
 	//player->Draw();
 	oManager->Draw();

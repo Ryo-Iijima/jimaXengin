@@ -9,6 +9,7 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <string>
+#include "../math/Vector4.h"
 #include "../general/Input.h"
 
 class DirectXCommon;
@@ -43,6 +44,7 @@ public:		// サブクラス
 	// 座標変換行列(CB)用構造体
 	struct TransformData
 	{
+		Vector4 color;
 		XMMATRIX viewproj;
 		XMMATRIX world;
 		XMFLOAT3 cameraPos;
@@ -54,6 +56,8 @@ public:		// サブクラス
 	};
 protected:
 
+	// 色
+	Vector4 color = { 1,1,1,1 };
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
 	// ローカル回転角
@@ -147,6 +151,7 @@ public:		// 関数
 	// setter
 	void SetModel(Model* model) { this->model = model; }
 
+	void SetColor(Vector4& color) { this->color = color; }
 	void SetScale(Vector3& scale) { this->scale = scale; }
 	void SetRotation(Vector3& rotation) { this->rotation = rotation; }
 	void SetPosition(Vector3& position) { this->position = position; }

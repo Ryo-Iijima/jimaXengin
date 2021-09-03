@@ -30,18 +30,8 @@ public:
 	{
 		NONE,
 		PLAYER,
-		////MOBIUS_MANAGER,
-		//MOBIUS_PARTS,
-		//MOBIUS_RING,
-		////ENEMY_MANAGER,
-		//ENEMY,
-		//ENEMY_MINION,
-		////ITEM_MANAGER,
-		//ITEM_CHARGING,
-		//ITEM_FLOORCLEAR,
-		//ITEM_POWERUP,
-		////SCORE_MANAGER,
 	};
+
 	// èÉêàâºëzä÷êî
 	GameObject();
 	virtual ~GameObject();
@@ -60,8 +50,10 @@ public:
 	Vector3 GetPos() { return pos; }
 	Vector3 GetScale() { return scale; }
 	Vector3 GetRotation() { return rotation; }
+	
 	bool GetIsDead() { return isDead; }
 	bool GetIsDelete() { return isDelete; }
+
 	Sphere GetSphereCol() { return sphereCol; }
 	Plane GetPlaneCol() { return planeCol; }
 	Triangle GetTriangleCol() { return triangleCol; }

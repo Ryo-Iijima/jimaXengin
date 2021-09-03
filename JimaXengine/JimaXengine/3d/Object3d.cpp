@@ -274,6 +274,7 @@ void Object3d::Update()
 	result = constBufferTranceform->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
+		constMap->color = color;
 		constMap->viewproj = matViewProjection;
 		//constMap->world = matWorld * modelTransform;
 		constMap->world = matWorld;

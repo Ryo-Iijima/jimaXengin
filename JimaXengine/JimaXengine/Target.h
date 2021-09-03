@@ -1,28 +1,29 @@
 #pragma once
-#include "math/Vector3.h"
+#include "GameObject/GameObject.h"
 
 class Model;
 class Object3d;
-class Target
+class Target : public GameObject
 {
 private:
 	Model* model = nullptr;
 	Object3d* object = nullptr;
 
-	Vector3 pos;
-	Vector3 vel;
-	Vector3 rot;
-
+	
 private:
 	void Move();
+	void HitCheck();
 
 public:
-	Target();
+	Target(Camera* camera);
 	~Target();
 
-	void Initialize();
-	void Update();
-	void Draw();
+	void Initialize()override;
+	void Update()override;
+	void Draw()override;
+	void SilhouetteDraw() override;
+	GameObject::TYPE GetType()override;
+	void DrawImGui()override;
 
 };
 

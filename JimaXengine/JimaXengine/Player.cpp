@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "3d/Object3d.h"
 #include "3d/FbxLoader.h"
 #include "general/Input.h"
 
@@ -225,13 +224,17 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
+	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
 	object = new Object3d;
 	object->Initialize();
 	object->SetModel(model);
 
-	object->SetPosition(Vector3(10, 0, 0));
+    pos = Vector3(5, 0, 0);
+	object->SetPosition(pos);
 
+    eye = { 0,20,-20 };
+    target = { 0,0,0 };
+    pCamera->SetViewMatrix(eye, target);
 
     //JoyConInitialize();
 
@@ -244,8 +247,11 @@ void Player::Update()
     Move();
 
     object->SetPosition(pos);
+    //pCamera->SetViewMatrix(eye, pos);
     object->SetCamera(pCamera);
     object->Update();
+
+    sphereCol.center = pos.ConvertXMVECTOR();
 
 }
 
