@@ -2,6 +2,7 @@
 #include"GameObject.h"
 #include "../Player.h"
 #include "../Target.h"
+#include "../BackGround.h"
 
 #include "../Particle/ParticleManager.h"
 

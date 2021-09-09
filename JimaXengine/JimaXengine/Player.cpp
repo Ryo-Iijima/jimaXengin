@@ -136,64 +136,41 @@ void Player::JoyConUpdate()
     {
         int ret = hid_read(dev, buff, size);
 
-        // input report の id が 0x3F のものに絞る。
-        //if (*buff != 0x3F)
-        //{
-        //    continue;
-        //}
-
-        // input report の id が 0x30 のものに絞る。
-        //if (*buff != 0x30)
-        //{
-        //    continue;
-        //}
-
-        // input report の id　を表示。
-        printf("\ninput report id: %d\n", *buff);
-        //// ボタンのビットビットフィールドを表示。
-        //printf("button byte 1: %d\n", buff[1]);
-        //printf("button byte 2: %d\n", buff[2]);
-        //// スティックの状態を表示。
-        //printf("stick  byte 3: %d\n", buff[3]);
-        //for (int i = 1; i <= 15; i++)
-        //{
-        //    printf("data byte %d: %d\n", i, buff[i]);
-
-        //}
-
-        accel.x = buff[13];
-        accel.y = buff[15];
-        accel.z = buff[17];
+        accel.x = buff[13] | buff[14] << 8;
+        accel.y = buff[15] | buff[16] << 8;
+        accel.z = buff[17] | buff[18] << 8;
         //accel.x = buff[14];
         //accel.y = buff[16];
         //accel.z = buff[18];
 
-        gyro.x = buff[19];
-        gyro.y = buff[21];
-        gyro.z = buff[23];
-        //gyro.x = buff[20];
-        //gyro.y = buff[22];
-        //gyro.z = buff[24];
+        {
+            short test1 = (short)(buff[19] | buff[20] << 8);
+            // ポインタでデータの解釈を変えた版
+            short* test2 = (short*)&test1;
+            short test3 = *test2;
 
-        //printf("accel: %f, %f, %f\n", accel.x, accel.y, accel.z);
-        //printf("gyro: %f, %f, %f\n", gyro.x, gyro.y, gyro.z);
+            // 普通にキャストした版
+            short test4 = (short)test1;
+        }
 
-        printf("%f\n", gyro.x);
+        gyro.x = buff[19] | buff[20] << 8;
+        gyro.y = buff[21] | buff[22] << 8;
+        gyro.z = buff[23] | buff[24] << 8;
 
-        //Sleep(500);
+        float cal_gyro_coeff = 350.0f;
+        float cal_gyro_offset = 24.0f;
+        float gyro_cal_coeff = (936.0f / (cal_gyro_coeff - cal_gyro_offset));
 
+        float gyro_raw_component = gyro.x;
+        float gyro_vector_component = (gyro_raw_component - cal_gyro_offset) * gyro_cal_coeff;
+
+        printf("%f\n", gyro_vector_component);
+
+        Sleep(500);
     }
 
-
-    cur_gyro_x = gyro.x;
-
-    //gyro_x += (pre_gyro_x - cur_gyro_x);
-    gyro_x = cur_gyro_x;
-
-    object->SetRotation(Vector3(gyro_x, 0, 0));
-
-    pre_gyro_x = cur_gyro_x;
-
+    //object->SetRotation(Vector3(gyro_x, 0, 0));
+    object->SetPosition(Vector3(0, 0, 0));
 }
 
 void Player::Move()
@@ -232,17 +209,17 @@ void Player::Initialize()
     pos = Vector3(5, 0, 0);
 	object->SetPosition(pos);
 
-    eye = { 0,20,-20 };
+    eye = { 0,5,-20 };
     target = { 0,0,0 };
     pCamera->SetViewMatrix(eye, target);
 
-    //JoyConInitialize();
+    JoyConInitialize();
 
 }
 
 void Player::Update()
 {
-    //JoyConUpdate();
+    JoyConUpdate();
     
     Move();
 

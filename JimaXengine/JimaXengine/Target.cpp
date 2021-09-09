@@ -72,7 +72,7 @@ void Target::SilhouetteDraw()
 
 GameObject::TYPE Target::GetType()
 {
-	return GameObject::TYPE();
+	return GameObject::TYPE::TARGET;
 }
 
 void Target::DrawImGui()

@@ -29,6 +29,7 @@ void Play::Initialize()
 	oManager->Initialize();
 	oManager->Add(new Player(camera));
 	oManager->Add(new Target(camera));
+	oManager->Add(new BackGround(camera));
 
 	isEnd = false;
 	nowScene = "Play";
@@ -69,5 +70,5 @@ void Play::Draw()
 	//player->Draw();
 	oManager->Draw();
 
-	floor->Draw();
+	//floor->Draw();
 }

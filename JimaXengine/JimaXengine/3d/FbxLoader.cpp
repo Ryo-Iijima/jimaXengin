@@ -150,7 +150,7 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
                 if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, pUnmappedUV))
                 {
                     vertex.uv.x = (float)uvs[0];
-                    vertex.uv.y = (float)uvs[1];
+                    vertex.uv.y = 1 - (float)uvs[1];    // Mayaの出力に合わせて反転してます
                 }
             }
             // 頂点インデックス追加

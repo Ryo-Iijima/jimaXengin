@@ -215,6 +215,9 @@
     <ClCompile Include="Target.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
+    <ClCompile Include="BackGround.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -356,6 +359,9 @@
       <Filter>ソース ファイル\app\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Target.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="BackGround.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
   </ItemGroup>

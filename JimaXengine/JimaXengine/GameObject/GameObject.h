@@ -30,6 +30,7 @@ public:
 	{
 		NONE,
 		PLAYER,
+		TARGET,
 	};
 
 	// ƒˆ‰¼‘zŠÖ”
