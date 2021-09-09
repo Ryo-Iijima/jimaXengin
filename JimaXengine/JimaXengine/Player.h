@@ -16,8 +16,15 @@ private:
 	hid_device* dev = nullptr;
 	uint8_t buff[0x40];
 	size_t size;
+	
+	struct Int3
+	{
+		short x;
+		short y;
+		short z;
+	};
 
-	Vector3 accel, gyro;
+	Int3 accel, gyro;
 
 	Vector3 eye, target;
 

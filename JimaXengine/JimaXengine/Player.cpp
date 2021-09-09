@@ -136,41 +136,41 @@ void Player::JoyConUpdate()
     {
         int ret = hid_read(dev, buff, size);
 
+        // accel
         accel.x = buff[13] | buff[14] << 8;
         accel.y = buff[15] | buff[16] << 8;
         accel.z = buff[17] | buff[18] << 8;
-        //accel.x = buff[14];
-        //accel.y = buff[16];
-        //accel.z = buff[18];
 
-        {
-            short test1 = (short)(buff[19] | buff[20] << 8);
-            // ポインタでデータの解釈を変えた版
-            short* test2 = (short*)&test1;
-            short test3 = *test2;
 
-            // 普通にキャストした版
-            short test4 = (short)test1;
-        }
-
+        // gyro
         gyro.x = buff[19] | buff[20] << 8;
         gyro.y = buff[21] | buff[22] << 8;
         gyro.z = buff[23] | buff[24] << 8;
 
-        float cal_gyro_coeff = 350.0f;
-        float cal_gyro_offset = 24.0f;
-        float gyro_cal_coeff = (936.0f / (cal_gyro_coeff - cal_gyro_offset));
+        Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量　軸ごとに違う
+        Vector3 cal_gyro_offset = { 24,-19,-27 };     // コントローラー水平時のセンサーの値
+        Vector3 gyro_cal_coeff;
+        gyro_cal_coeff.x = (936.0f / (cal_gyro_coeff.x - cal_gyro_offset.x));
+        gyro_cal_coeff.y = (936.0f / (cal_gyro_coeff.y - cal_gyro_offset.y));
+        gyro_cal_coeff.z = (936.0f / (cal_gyro_coeff.z - cal_gyro_offset.z));
 
-        float gyro_raw_component = gyro.x;
-        float gyro_vector_component = (gyro_raw_component - cal_gyro_offset) * gyro_cal_coeff;
+        Vector3 gyro_raw_component = { (float)gyro.x, (float)gyro.y, (float)gyro.z };
+        Vector3 gyro_vector_component;
+        gyro_vector_component.x = (gyro_raw_component.x - cal_gyro_offset.x) * gyro_cal_coeff.x;
+        gyro_vector_component.y = (gyro_raw_component.y - cal_gyro_offset.y) * gyro_cal_coeff.y;
+        gyro_vector_component.z = (gyro_raw_component.z - cal_gyro_offset.z) * gyro_cal_coeff.z;
 
-        printf("%f\n", gyro_vector_component);
+        //Sleep(500);
 
-        Sleep(500);
+        rotation.x += (gyro_vector_component.x / 500);
+        rotation.y += (gyro_vector_component.y / 5000);
+        rotation.z += (gyro_vector_component.z / -100);
     }
 
-    //object->SetRotation(Vector3(gyro_x, 0, 0));
-    object->SetPosition(Vector3(0, 0, 0));
+
+    //object->SetRotation(Vector3(0, 0,rotation.z));
+    object->SetRotation(Vector3(rotation.x, rotation.z, rotation.y));
+    //object->SetPosition(Vector3(0, 0, 0));
 }
 
 void Player::Move()
