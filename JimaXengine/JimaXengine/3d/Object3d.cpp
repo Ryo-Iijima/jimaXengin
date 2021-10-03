@@ -228,12 +228,6 @@ void Object3d::Initialize()
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 
-	//camera = new Camera();
-	//// 平行移動行列の計算
-	//camera->SetViewMatrix(eye, target, up);
-	//// プロジェクション行列の計算
-	//camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
-
 	// 1フレーム分の時間を60FPSに設定
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
@@ -243,7 +237,6 @@ void Object3d::Update()
 	////////////////////////////
 	/// トランスフォームの転送
 	////////////////////////////
-	//CameraMove();
 
 	XMMATRIX matScale, matRot, matTrans;
 
@@ -338,14 +331,6 @@ void Object3d::Draw()
 	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
 
 	model->Draw(Object3d::dxCommon->GetCommandList());
-
-	//cmdList->SetPipelineState(piplineState.Get());
-	//cmdList->SetGraphicsRootSignature(rootSignature.Get());
-	//cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//cmdList->SetGraphicsRootConstantBufferView(transform, constBufferTranceform->GetGPUVirtualAddress());
-	//cmdList->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
-
-	//model->Draw(cmdList);
 }
 
 void Object3d::PlayAnimation()
@@ -371,78 +356,4 @@ void Object3d::PlayAnimation()
 	currentTime = startTime;
 	// 再生中状態にする
 	isPlay = true;
-}
-
-void Object3d::CameraMove()
-{
-	//Vector2 currentMousePos = input->GetCurrentMousePos();
-	//printf("mousePos:%f \n", currentMousePos.x);
-	float moveAcc = 1;
-	// 左クリックホールドで
-	if (input->MouseButtonPress(0))
-	{
-		// ALT押しながら動かすとtarget固定でeyeを動かす
-		if (input->KeyPress(DIK_LMENU))
-		{
-			// 右
-			if (input->GetPrevMousePos().x < input->GetCurrentMousePos().x)
-			{
-				eye.x += moveAcc;
-			}
-			// 左
-			if (input->GetPrevMousePos().x > input->GetCurrentMousePos().x)
-			{
-				eye.x -= moveAcc;
-			}
-
-			// 上
-			if (input->GetPrevMousePos().y < input->GetCurrentMousePos().y)
-			{
-				eye.y += moveAcc;
-			}
-			// 下
-			if (input->GetPrevMousePos().y > input->GetCurrentMousePos().y)
-			{
-				eye.y -= moveAcc;
-			}
-		}
-		// eye固定でtargetを動かす
-		else
-		{
-			// 右
-			if (input->GetPrevMousePos().x < input->GetCurrentMousePos().x)
-			{
-				target.x += moveAcc;
-			}
-			// 左
-			if (input->GetPrevMousePos().x > input->GetCurrentMousePos().x)
-			{
-				target.x -= moveAcc;
-			}
-
-			// 上
-			if (input->GetPrevMousePos().y < input->GetCurrentMousePos().y)
-			{
-				target.y += moveAcc;
-			}
-			// 下
-			if (input->GetPrevMousePos().y > input->GetCurrentMousePos().y)
-			{
-				target.y -= moveAcc;
-			}
-		}
-	}
-
-	if (input->MouseWheelMove()<0)
-	{
-		target.z -= moveAcc;
-		eye.z -= moveAcc;
-	}
-	else if (input->MouseWheelMove() > 0)
-	{
-		target.z += moveAcc;
-		eye.z += moveAcc;
-	}
-
-	camera->SetViewMatrix(eye, target, up);
 }

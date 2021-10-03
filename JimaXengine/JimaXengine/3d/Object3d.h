@@ -142,11 +142,7 @@ public:		// ŠÖ”
 
 	void Update();
 
-	//void Draw(ID3D12GraphicsCommandList* cmdList);
 	void Draw();
-
-	// ƒJƒƒ‰‘€ìiŽÀŒ±j
-	void CameraMove();
 
 	// setter
 	void SetModel(Model* model) { this->model = model; }

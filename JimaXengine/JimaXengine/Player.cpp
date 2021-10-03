@@ -141,13 +141,32 @@ void Player::JoyConUpdate()
         accel.y = buff[15] | buff[16] << 8;
         accel.z = buff[17] | buff[18] << 8;
 
+        //printf("%d\n", accel.z);
+
+        Vector3 cal_acc_coeff = { 350,0,4081 };       // オフセット量
+        Vector3 cal_acc_origin = { 18,75,4100 };      // コントローラー水平時のセンサーの値
+        Vector3 acc_coeff;
+        acc_coeff.x = (1.0 / (cal_acc_coeff.x - cal_acc_origin.x)) * 4.0f;
+        acc_coeff.y = (1.0 / (cal_acc_coeff.y - cal_acc_origin.y)) * 4.0f;
+        acc_coeff.z = (1.0 / (cal_acc_coeff.z - cal_acc_origin.z)) * 4.0f;
+
+        Vector3 acc_raw_component = { (float)accel.x ,(float)accel.y ,(float)accel.z };
+        Vector3 acc_vector_component;
+        acc_vector_component.x = acc_raw_component.x * acc_coeff.x;
+        acc_vector_component.y = acc_raw_component.y * acc_coeff.y;
+        acc_vector_component.z = acc_raw_component.z * acc_coeff.z;
+
+        //acc.x = acc_vector_component.x/50;
+        //acc.y = acc_vector_component.y/-100;
+        acc.z = acc_vector_component.z/10000;
+
 
         // gyro
         gyro.x = buff[19] | buff[20] << 8;
         gyro.y = buff[21] | buff[22] << 8;
         gyro.z = buff[23] | buff[24] << 8;
 
-        Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量　軸ごとに違う
+        Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量
         Vector3 cal_gyro_offset = { 24,-19,-27 };     // コントローラー水平時のセンサーの値
         Vector3 gyro_cal_coeff;
         gyro_cal_coeff.x = (936.0f / (cal_gyro_coeff.x - cal_gyro_offset.x));
@@ -160,17 +179,16 @@ void Player::JoyConUpdate()
         gyro_vector_component.y = (gyro_raw_component.y - cal_gyro_offset.y) * gyro_cal_coeff.y;
         gyro_vector_component.z = (gyro_raw_component.z - cal_gyro_offset.z) * gyro_cal_coeff.z;
 
-        //Sleep(500);
-
         rotation.x += (gyro_vector_component.x / 500);
         rotation.y += (gyro_vector_component.y / 5000);
         rotation.z += (gyro_vector_component.z / -100);
+
+        //Sleep(500);
     }
-
-
-    //object->SetRotation(Vector3(0, 0,rotation.z));
+    vel += acc;
+    pos += vel;
+    object->SetPosition(Vector3(pos.x, pos.y, pos.z));
     object->SetRotation(Vector3(rotation.x, rotation.z, rotation.y));
-    //object->SetPosition(Vector3(0, 0, 0));
 }
 
 void Player::Move()
@@ -209,7 +227,7 @@ void Player::Initialize()
     pos = Vector3(5, 0, 0);
 	object->SetPosition(pos);
 
-    eye = { 0,5,-20 };
+    eye = { 0,0,-50 };
     target = { 0,0,0 };
     pCamera->SetViewMatrix(eye, target);
 
