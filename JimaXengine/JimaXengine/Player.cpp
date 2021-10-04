@@ -43,8 +43,8 @@ void Player::JoyConInitialize()
             uint8_t data[0x01];
 
             data[0] = 0x01;
-            // 0x30番のサブコマンドに、0x01を送信します。
-            // ランプはビットフラグで、4桁。ランプの一番上から10進数で 1, 2, 4, 8 と対応しています。
+            // 0x30番のサブコマンドに、0x01を送信する。
+            // ランプはビットフラグで、4桁。ランプの一番上から10進数で 1, 2, 4, 8 と対応している。
             SendSubcommand(dev, 0x30, data, 1, &globalCount);
 
             // read input report
@@ -80,42 +80,26 @@ void Player::JoyConInitialize()
             //    int ret = hid_read(dev, buff, size);
 
             //    // input report の id が 0x3F のものに絞る。
-            //    //if (*buff != 0x3F)
-            //    //{
-            //    //    continue;
-            //    //}
-
-            //    // input report の id が 0x30 のものに絞る。
-            //    if (*buff != 0x30)
+            //    if (*buff == 0x3F)
             //    {
-            //        continue;
+            //        // input report の id　を表示。
+            //        printf("\ninput report id: %d\n", *buff);
+            //        // ボタンのビットビットフィールドを表示。
+            //        printf("button byte 1: %d\n", buff[1]);
+            //        printf("button byte 2: %d\n", buff[2]);
+            //        // スティックの状態を表示。
+            //        printf("stick  byte 3: %d\n", buff[3]);
             //    }
 
-            //    // input report の id　を表示。
-            //    printf("\ninput report id: %d\n", *buff);
-            //    //// ボタンのビットビットフィールドを表示。
-            //    //printf("button byte 1: %d\n", buff[1]);
-            //    //printf("button byte 2: %d\n", buff[2]);
-            //    //// スティックの状態を表示。
-            //    //printf("stick  byte 3: %d\n", buff[3]);
-            //    //for (int i = 1; i <= 15; i++)
-            //    //{
-            //    //    printf("data byte %d: %d\n", i, buff[i]);
+            //    //data[0] = 0x30;
+            //    //SendSubcommand(dev, 0x03, data, 1, &globalCount);
 
+            //    //// input report の id が 0x30 のものに絞る。
+            //    //if (*buff == 0x30)
+            //    //{
+            //    //    printf("gyro.x: %d\n", buff[19] | buff[20] << 8);
             //    //}
 
-            //    accel.x = buff[13];
-            //    accel.y = buff[15];
-            //    accel.z = buff[17];
-
-            //    gyro.x = buff[19];
-            //    gyro.y = buff[21];
-            //    gyro.z = buff[23];
-
-            //    //printf("accel: %f, %f, %f\n", accel.x, accel.y, accel.z);
-            //    //printf("gyro: %f, %f, %f\n", gyro.x, gyro.y, gyro.z);
-
-            //    printf("%f\n", accel.x * 0.000244f);
 
             //    Sleep(1000);
 
@@ -135,6 +119,9 @@ void Player::JoyConUpdate()
     if (dev)
     {
         int ret = hid_read(dev, buff, size);
+
+        // ボタン
+        //printf("button byte 1: %d\n", buff[1]);
 
         // accel
         accel.x = buff[13] | buff[14] << 8;
@@ -156,9 +143,9 @@ void Player::JoyConUpdate()
         acc_vector_component.y = acc_raw_component.y * acc_coeff.y;
         acc_vector_component.z = acc_raw_component.z * acc_coeff.z;
 
-        //acc.x = acc_vector_component.x/50;
-        //acc.y = acc_vector_component.y/-100;
-        acc.z = acc_vector_component.z/10000;
+        acc.x = acc_vector_component.x/50;
+        //acc.y = acc_vector_component.z / 10000;
+        acc.z = acc_vector_component.y/-500;
 
 
         // gyro
@@ -185,10 +172,12 @@ void Player::JoyConUpdate()
 
         //Sleep(500);
     }
+
     vel += acc;
     pos += vel;
-    object->SetPosition(Vector3(pos.x, pos.y, pos.z));
     object->SetRotation(Vector3(rotation.x, rotation.z, rotation.y));
+    object->SetPosition(pos);
+
 }
 
 void Player::Move()
@@ -215,6 +204,8 @@ Player::~Player()
 
     delete device;
     delete dev;
+
+    delete swordLay;
 }
 
 void Player::Initialize()
@@ -226,12 +217,23 @@ void Player::Initialize()
 
     pos = Vector3(5, 0, 0);
 	object->SetPosition(pos);
+    object->SetScale(Vector3(4, 0.5, 1));
 
-    eye = { 0,0,-50 };
+    eye = { 0,20,-50 };
     target = { 0,0,0 };
     pCamera->SetViewMatrix(eye, target);
 
     JoyConInitialize();
+
+    model = FbxLoader::GetInstance().LoadModelFromFile("box");
+    layObj = new Object3d;
+    layObj->Initialize();
+    layObj->SetModel(model);
+
+    layObj->SetPosition(pos);
+    layObj->SetScale(Vector3(1, 1, 1));
+    layObj->SetColor(Vector4(1, 0, 0, 1));
+    swordLay = new Lay();
 
 }
 
@@ -241,10 +243,20 @@ void Player::Update()
     
     Move();
 
-    object->SetPosition(pos);
-    //pCamera->SetViewMatrix(eye, pos);
+    XMVECTOR lStart = { pos.x,pos.y,pos.z,1 };
+    XMVECTOR lDir = { 1,rotation.x, rotation.z, rotation.y };
+    swordLay->start = lStart;
+    swordLay->dir = lDir;
+
+
+    //object->SetPosition(pos);
     object->SetCamera(pCamera);
     object->Update();
+
+    layObj->SetPosition(pos);
+    layObj->SetRotation(Vector3(rotation.x, rotation.z, rotation.y));
+    layObj->SetCamera(pCamera);
+    layObj->Update();
 
     sphereCol.center = pos.ConvertXMVECTOR();
 
@@ -253,6 +265,7 @@ void Player::Update()
 void Player::Draw()
 {
 	object->Draw();
+	layObj->Draw();
 }
 
 void Player::SilhouetteDraw()
