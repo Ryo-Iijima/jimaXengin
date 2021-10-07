@@ -144,7 +144,7 @@ void Player::JoyConUpdate()
         acc_vector_component.z = acc_raw_component.z * acc_coeff.z;
 
         acc.x = acc_vector_component.x/50;
-        //acc.y = acc_vector_component.z / 10000;
+        acc.y = acc_vector_component.z / 10000;
         acc.z = acc_vector_component.y/-500;
 
 
@@ -205,7 +205,6 @@ Player::~Player()
     delete device;
     delete dev;
 
-    delete swordLay;
 }
 
 void Player::Initialize()
@@ -233,7 +232,6 @@ void Player::Initialize()
     layObj->SetPosition(pos);
     layObj->SetScale(Vector3(1, 1, 1));
     layObj->SetColor(Vector4(1, 0, 0, 1));
-    swordLay = new Lay();
 
 }
 
@@ -243,11 +241,11 @@ void Player::Update()
     
     Move();
 
-    XMVECTOR lStart = { pos.x,pos.y,pos.z,1 };
-    XMVECTOR lDir = { 1,rotation.x, rotation.z, rotation.y };
-    swordLay->start = lStart;
-    swordLay->dir = lDir;
-
+    float out = 0;
+    if (Collision::LineToAABB3D(&layCol,&aabb3dCol,&pCamera->GetMatView(),out))
+    {
+        layObj->SetColor(Vector4(0, 1, 0, 1));
+    }
 
     //object->SetPosition(pos);
     object->SetCamera(pCamera);

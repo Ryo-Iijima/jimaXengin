@@ -13,7 +13,6 @@ private:
 	Object3d* object = nullptr;
 
 	Object3d* layObj = nullptr;
-	Lay* swordLay = nullptr;
 
 	hid_device_info* device = nullptr;
 	hid_device* dev = nullptr;
