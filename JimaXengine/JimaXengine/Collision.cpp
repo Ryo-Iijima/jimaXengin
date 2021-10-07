@@ -477,7 +477,7 @@ bool Collision::LineToAABB3D(struct Lay* lay, AABB3D* aabb, XMMATRIX* mat,float&
 	// 交差している
 	if (colPos) 
 	{
-		//*colPos = lay->start + (lay->dir) * t;
+		XMStoreFloat3(colPos, lay->start + (lay->dir) * t);
 	}
 
 	return true;

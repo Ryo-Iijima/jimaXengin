@@ -18,7 +18,7 @@ private:
 	Input* input = nullptr;
 	Sound* sound = nullptr;
 	SceneManager* sceneManager = nullptr;
-	ImGuiDevice* imguiDev = nullptr;
+	ImGuiDevice imguiDev;
 
 private:
 

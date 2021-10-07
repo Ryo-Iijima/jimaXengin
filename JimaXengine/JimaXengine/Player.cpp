@@ -277,8 +277,8 @@ GameObject::TYPE Player::GetType()
 
 void Player::DrawImGui()
 {
-    //ImGui::Begin("PlayerInfomation");
-    //ImGui::End();
+    ImGui::Begin("PlayerInfomation");
+    ImGui::End();
 }
 
 Camera* Player::GetCamera()

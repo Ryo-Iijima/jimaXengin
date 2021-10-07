@@ -13,18 +13,12 @@ void ImGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 	this->winApp = winApp;
 	this->dxCommon = dxCommon;
 
-	if (ImGui::CreateContext() == nullptr)
-	{
-		assert(0);
-	}
+	if (ImGui::CreateContext() == nullptr) assert(0);
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 
 	bool blnResult = ImGui_ImplWin32_Init(this->winApp->GetHwnd());
-	if (!blnResult)
-	{
-		assert(0);
-	}
+	if (!blnResult) assert(0);
 	
 	blnResult = ImGui_ImplDX12_Init
 	(

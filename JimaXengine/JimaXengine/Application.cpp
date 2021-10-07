@@ -79,8 +79,7 @@ void Application::Initialize()
 	sceneManager->Change("Play");
 
 	// imgui
-	imguiDev = new ImGuiDevice();
-	imguiDev->Initialize(winApp, dxCommon);
+	imguiDev.Initialize(winApp, dxCommon);
 	
 }
 
@@ -115,22 +114,22 @@ void Application::Run()
 
 		sceneManager->Update();
 
-		//imguiDev->Update();
+		imguiDev.Update();
 
 		// 描画前処理
 		dxCommon->PreDraw();
 
-		// imgui描画
-		//{
-		//	ImGui::Begin("Test Window");	// ウィンドウの名前
-		//	float slider = fpsManager->GetFPS();
-		//	ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
-		//	ImGui::End();
-
-		//	imguiDev->Draw();
-		//}
-
 		sceneManager->Draw();
+
+		// imgui描画
+		{
+			ImGui::Begin("Test Window");	// ウィンドウの名前
+			float slider = fpsManager->GetFPS();
+			ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
+			ImGui::End();
+
+			imguiDev.Draw();
+		}
 
 		// 描画後処理
 		dxCommon->PostDraw();
