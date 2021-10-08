@@ -202,6 +202,7 @@ Player::~Player()
 void Player::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
+	//model = FbxLoader::GetInstance().LoadModelFromFile("Stand");
 	object = new Object3d;
 	object->Initialize();
 	object->SetModel(model);

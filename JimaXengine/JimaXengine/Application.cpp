@@ -60,6 +60,7 @@ void Application::Initialize()
 	Texture::LoadTexture("test_256x256.png");
 	Texture::LoadTexture("pushstart.png");
 	Texture::LoadTexture("title.png");
+	Texture::LoadTexture("Stand_Tex.png");
 
 
 	//object->SetInput(input);
