@@ -1,4 +1,5 @@
 ﻿#include "Collision.h"
+#include <string.h>
 
 using namespace DirectX;
 
@@ -408,6 +409,78 @@ float Collision::SqDistanceSegmentToSegment(const Vector3 & p1, const Vector3 & 
 	Vector3 tmp = c1 - c2;
 
 	return (tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
+}
+
+
+/**
+* @brief 光線と境界ボックスとの交差判定
+* @param pos ワールド空間での光線の基点
+* @param dir_w ワールド空間での光線の方向
+* @param aabb 境界ボックス（ローカル）
+* @param mat 境界ボックスのワールド変換行列
+* @param t 衝突間隔（出力）
+* @param colPos 衝突位置
+* @return 衝突していればtrue
+*/
+bool Collision::LineToAABB3D(struct Lay* lay, AABB3D* aabb, XMMATRIX* mat,float& t, Vector3* colPos)
+{
+	// 光線を境界ボックスの空間へ移動
+	XMMATRIX invMat;
+	invMat = XMMatrixInverse(nullptr, *mat);	// 逆行列
+	XMVECTOR p_l, dir_l;
+	p_l = XMVector3TransformCoord(lay->start, invMat); // 指定した行列によって 3D ベクターを変換し、結果を w = 1 に投影する
+
+	invMat.r[4].m128_f32[1] = 0.0f;
+	invMat.r[4].m128_f32[2] = 0.0f;
+	invMat.r[4].m128_f32[3] = 0.0f;
+
+	dir_l = XMVector3TransformCoord(lay->dir, invMat);
+
+	// 交差判定
+	float p[3], d[3], min[3], max[3];
+	memcpy(p, &p_l, sizeof(p));
+	memcpy(d, &dir_l, sizeof(d));
+	memcpy(min, &aabb->minPos, sizeof(Vector3));
+	memcpy(max, &aabb->maxPos, sizeof(Vector3));
+
+	t = -FLT_MAX;
+	float t_max = FLT_MAX;
+
+	for (int i = 0; i < 3; ++i) 
+	{
+		if (fabs(d[i]) < FLT_EPSILON) 
+		{
+			if (p[i] < min[i] || p[i] > max[i])
+				return false; // 交差していない
+		}
+		else 
+		{
+			// スラブとの距離を算出
+			// t1が近スラブ、t2が遠スラブとの距離
+			float odd = 1.0f / d[i];
+			float t1 = (min[i] - p[i]) * odd;
+			float t2 = (max[i] - p[i]) * odd;
+			if (t1 > t2) 
+			{
+				float tmp = t1; t1 = t2; t2 = tmp;
+			}
+
+			if (t1 > t) t = t1;
+			if (t2 < t_max) t_max = t2;
+
+			// スラブ交差チェック
+			if (t >= t_max)
+				return false;
+		}
+	}
+
+	// 交差している
+	if (colPos) 
+	{
+		XMStoreFloat3(colPos, lay->start + (lay->dir) * t);
+	}
+
+	return true;
 }
 
 float Collision::Clamp(float x, float low, float high)

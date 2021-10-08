@@ -54,34 +54,6 @@ void GameObjectManager::Update()
 
 void GameObjectManager::Draw()
 {
-	//メビウスリング
-	{
-		auto end = gameObjects.end();
-		for (auto it = gameObjects.begin(); it != end; ++it)
-		{
-			if ((*it)->GetIsDead())
-			{
-				continue;
-			}
-			if ((*it)->GetRenderType() == GameObject::RENDER_TYPE::RENDER_TYPE_BACKGROUND)
-			{
-				(*it)->Draw();
-			}
-		}
-	}
-	//シルエット
-	{
-		auto end = gameObjects.end();
-		for (auto it = gameObjects.begin(); it != end; ++it)
-		{
-			if ((*it)->GetIsDead())
-			{
-				continue;
-			}
-			(*it)->SilhouetteDraw();
-		}
-	}
-
 	//深度テストありパーティクル
 	pManager->DrawDepth(GetPlayer()->GetCamera());
 
@@ -131,22 +103,6 @@ Player* GameObjectManager::GetPlayer()
 	}
 	return nullptr;
 }
-
-//std::vector<MobiusParts*> GameObjectManager::GetMobiusParts()
-//{
-//	std::vector<MobiusParts*> mobiusParts;
-//	mobiusParts.reserve(MobiusRing::divisionNum);
-//	auto end = gameObjects.end();
-//	for (auto itr = gameObjects.begin(); itr != end; ++itr)
-//	{
-//		if ((*itr)->GetType() == GameObject::TYPE::MOBIUS_PARTS)
-//		{
-//			MobiusParts* b = static_cast<MobiusParts*>(static_cast<void*>((*itr)));
-//			mobiusParts.push_back(b);
-//		}
-//	}
-//	return mobiusParts;
-//}
 
 void GameObjectManager::SortRenderType()
 {

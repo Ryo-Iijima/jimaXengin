@@ -12,6 +12,8 @@ private:
 	Model* model = nullptr;
 	Object3d* object = nullptr;
 
+	Object3d* layObj = nullptr;
+
 	hid_device_info* device = nullptr;
 	hid_device* dev = nullptr;
 	uint8_t buff[0x40];

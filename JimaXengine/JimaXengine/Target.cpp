@@ -77,4 +77,7 @@ GameObject::TYPE Target::GetType()
 
 void Target::DrawImGui()
 {
+	ImGui::Begin("TargetInfomation");
+	ImGui::End();
+
 }

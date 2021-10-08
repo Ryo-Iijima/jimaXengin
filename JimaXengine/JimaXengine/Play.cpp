@@ -17,7 +17,7 @@ void Play::Initialize()
 {
 	Vector3 eye, target, up;
 
-	eye = { 0, 0, -20 };
+	eye = { 0, 20, -20 };
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 
@@ -47,7 +47,6 @@ void Play::Initialize()
 
 void Play::Update()
 {
-	//player->Update();
 	oManager->Update();
 
 	floor->SetCamera(camera);
@@ -57,14 +56,12 @@ void Play::Update()
 	{
 		ShutDown();
 	}
-
 }
 
 void Play::Draw()
 {
 	//object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f, Vector2(1.0f, 1.0f), "ALPHA");
 
-	//player->Draw();
 	oManager->Draw();
 
 	//floor->Draw();
