@@ -170,15 +170,6 @@
     <ClCompile Include="hidapi\hid.c">
       <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
     </ClCompile>
-    <ClCompile Include="Object2d.cpp">
-      <Filter>ソース ファイル\engin</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceShader.cpp">
-      <Filter>ソース ファイル\engin</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>ソース ファイル\engin</Filter>
-    </ClCompile>
     <ClCompile Include="math\Vector4.cpp">
       <Filter>ソース ファイル\engin\math</Filter>
     </ClCompile>
@@ -217,6 +208,21 @@
     </ClCompile>
     <ClCompile Include="BackGround.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Object2d.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceShader.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="Joycon.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
+    <ClCompile Include="JoyconManager.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,15 +316,6 @@
     <ClInclude Include="hidapi\hidapi.h">
       <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
     </ClInclude>
-    <ClInclude Include="Object2d.h">
-      <Filter>ヘッダー ファイル\engin</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceShader.h">
-      <Filter>ヘッダー ファイル\engin</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>ヘッダー ファイル\engin</Filter>
-    </ClInclude>
     <ClInclude Include="math\Vector4.h">
       <Filter>ヘッダー ファイル\engin\math</Filter>
     </ClInclude>
@@ -363,6 +360,24 @@
     </ClInclude>
     <ClInclude Include="BackGround.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceShader.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Object2d.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Joycon.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="JoyconManager.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="Joycon_support.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
