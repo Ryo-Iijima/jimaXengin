@@ -16,20 +16,20 @@ class Input
 private:
 	static WinApp* pWindow;
 
-	//キーボード
+	// キーボード
 	static BYTE currentKey[256];
 	static BYTE prevKey[256];
 	static IDirectInput8* dinput;
 	static IDirectInputDevice8* devkeyboard;
 
-	//マウス
+	// マウス
 	static DIMOUSESTATE currentMouse;
 	static DIMOUSESTATE prevMouse;
 	static IDirectInputDevice8* devmouse;
 	static Vector2 currentMousePos;
 	static Vector2 prevMousePos;
 
-	//パッド
+	// パッド
 	static XINPUT_STATE xinputCurrent;
 	static XINPUT_STATE xinputPrev;
 	static int leftDeadZone;
@@ -40,12 +40,12 @@ public:
 	static void SetDeadZone(int lDeadZone, int rDeadZone);
 	static void Finalize();
 
-	//キーボード
+	// キーボード
 	static bool KeyPress(const int& keys);
 	static bool KeyTrigger(const int& keys);
 	static bool KeyRelease(const int& keys);
 
-	//マウス
+	// マウス
 	static bool MouseButtonPress(const int& keys);
 	static bool MouseButtonTrigger(const int& keys);
 	static bool MouseButtonHold(const int& keys);
@@ -59,52 +59,52 @@ public:
 	static Vector2 GetCurrentMousePos();
 	static Vector2 GetPrevMousePos();
 
-	//PAD(XInput)
-	//ボタン(キー指定)
+	// PAD(XInput)
+	// ボタン(キー指定)
 	static bool PadButtonPress(const int& keys);
 	static bool PadButtonTrigger(const int& keys);
 	static bool PadButtonRelease(const int& keys);
 
-	//左トリガー
+	// 左トリガー
 	static bool PadLTPress();
 	static bool PadLTTrigger();
 	static bool PadLTRelease();
-	//右トリガー
+	// 右トリガー
 	static bool PadRTPress();
 	static bool PadRTTrigger();
 	static bool PadRTRelease();
 
-	//左スティック(bool)
+	// 左スティック(bool)
 	static bool PadLeftStickRight();
 	static bool PadLeftStickLeft();
 	static bool PadLeftStickUp();
 	static bool PadLeftStickDown();
-	//右スティック(bool)
+	// 右スティック(bool)
 	static bool PadRightStickRight();
 	static bool PadRightStickLeft();
 	static bool PadRightStickUp();
 	static bool PadRightStickDown();
 
-	//左スティックトリガー(bool)
+	// 左スティックトリガー(bool)
 	static bool PadLeftStickRightTrigger();
 	static bool PadLeftStickLeftTrigger();
 	static bool PadLeftStickUpTrigger();
 	static bool PadLeftStickDownTrigger();
-	//右スティックトリガー(bool)
+	// 右スティックトリガー(bool)
 	static bool PadRightStickRightTrigger();
 	static bool PadRightStickLeftTrigger();
 	static bool PadRightStickUpTrigger();
 	static bool PadRightStickDownTrigger();
 
-	//左スティック(float)
+	// 左スティック(float)
 	static float PadLeftStickPercentageX();
 	static float PadLeftStickPercentageY();
-	//右スティック(float)
+	// 右スティック(float)
 	static float PadRightStickPercentageX();
 	static float PadRightStickPercentageY();
 
-	//左スティック(ベクトル)
+	// 左スティック(ベクトル)
 	static Vector2 PadLeftStickVector();
-	//右スティック(ベクトル)
+	// 右スティック(ベクトル)
 	static Vector2 PadRightStickVector();
 };

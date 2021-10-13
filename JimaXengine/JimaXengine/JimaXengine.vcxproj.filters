@@ -328,32 +328,8 @@
     <ClInclude Include="GameObject\GameObjectManager.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
-    <ClInclude Include="Particle\ParticleEmitter.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\ParticleManager.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\ParticleObj.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\ParticleParam.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="general\Random.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\DefaultGeometryParticle.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\ParticleBase.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\HomingGeometryParticle.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\GeometoryObject3D.h">
-      <Filter>ソース ファイル\app\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Target.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
@@ -380,6 +356,30 @@
       <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
     <ClInclude Include="Memo.h" />
+    <ClInclude Include="Particle\DefaultGeometryParticle.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\GeometoryObject3D.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleBase.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\HomingGeometryParticle.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleEmitter.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleManager.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleObj.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\ParticleParam.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">

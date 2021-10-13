@@ -15,7 +15,7 @@ class DirectXCommon;
 class Texture
 {
 public:
-	enum TextureType
+	enum class TextureType
 	{
 		RESOURCE,
 		CREATE,

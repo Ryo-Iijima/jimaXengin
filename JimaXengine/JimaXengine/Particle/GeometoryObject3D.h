@@ -34,13 +34,13 @@ public:
 		XMMATRIX matP;
 		XMMATRIX matBillboard;
 	};
-	enum BILLBOARD
+	enum class BILLBOARD
 	{
 		BILLBOARD_NONE,
 		BILLBOARD_ALL,
 		BILLBOARD_Y,
 	};
-	enum BlendType
+	enum class BlendType
 	{
 		ALPHA,
 		ADD,
@@ -52,7 +52,7 @@ public:
 
 	void Initialize();
 	void Update(std::forward_list<ParticleBase*>& particles);
-	void Draw(Camera* camera, std::forward_list<ParticleBase*>& particles, const std::string& filename, const std::string& pipelinename, BILLBOARD billboardType = BILLBOARD_NONE);
+	void Draw(Camera* camera, std::forward_list<ParticleBase*>& particles, const std::string& filename, const std::string& pipelinename, BILLBOARD billboardType = BILLBOARD::BILLBOARD_NONE);
 
 private:
 	static HRESULT InitializeDescriptorHeap();

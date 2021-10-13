@@ -155,11 +155,11 @@ void Object3d::CreateGraphicsPipline()
 	// ルートパラメータ
 	CD3DX12_ROOT_PARAMETER rootparams[3];
 	// CBV（座標変換行列用）
-	rootparams[transform].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[(int)ViewName::transform].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
-	rootparams[texture].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[(int)ViewName::texture].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 	// CBV（スキニング用）
-	rootparams[skin].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[(int)ViewName::skin].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -327,8 +327,8 @@ void Object3d::Draw()
 	Object3d::dxCommon->GetCommandList()->SetPipelineState(piplineState.Get());
 	Object3d::dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	Object3d::dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(transform, constBufferTranceform->GetGPUVirtualAddress());
-	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(skin, constBufferSkin->GetGPUVirtualAddress());
+	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTranceform->GetGPUVirtualAddress());
+	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
 
 	model->Draw(Object3d::dxCommon->GetCommandList());
 }

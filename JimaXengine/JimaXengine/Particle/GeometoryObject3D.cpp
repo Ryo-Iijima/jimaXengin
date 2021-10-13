@@ -18,10 +18,10 @@ bool GeometoryObject3D::PreInitialize(DirectXCommon* dxcommon)
 	InitializeDescriptorHeap();
 	InitializeRootSignature();
 
-	pipelines.emplace("quad_alpha", InitializeGraphicsPipeline(ALPHA, "Geometory/ParticleVS.hlsl", "Geometory/QuadPS.hlsl", "Geometory/QuadGS.hlsl", false));
-	pipelines.emplace("quad_add", InitializeGraphicsPipeline(ADD, "Geometory/ParticleVS.hlsl", "Geometory/QuadPS.hlsl", "Geometory/QuadGS.hlsl", false));
-	pipelines.emplace("cube_alpha", InitializeGraphicsPipeline(ALPHA, "Geometory/ParticleVS.hlsl", "Geometory/CubePS.hlsl", "Geometory/CubeGS.hlsl", true));
-	pipelines.emplace("cube_add", InitializeGraphicsPipeline(ADD, "Geometory/ParticleVS.hlsl", "Geometory/CubePS.hlsl", "Geometory/CubeGS.hlsl", true));
+	pipelines.emplace("quad_alpha", InitializeGraphicsPipeline(BlendType::ALPHA, "Geometory/ParticleVS.hlsl", "Geometory/QuadPS.hlsl", "Geometory/QuadGS.hlsl", false));
+	pipelines.emplace("quad_add", InitializeGraphicsPipeline(BlendType::ADD, "Geometory/ParticleVS.hlsl", "Geometory/QuadPS.hlsl", "Geometory/QuadGS.hlsl", false));
+	pipelines.emplace("cube_alpha", InitializeGraphicsPipeline(BlendType::ALPHA, "Geometory/ParticleVS.hlsl", "Geometory/CubePS.hlsl", "Geometory/CubeGS.hlsl", true));
+	pipelines.emplace("cube_add", InitializeGraphicsPipeline(BlendType::ADD, "Geometory/ParticleVS.hlsl", "Geometory/CubePS.hlsl", "Geometory/CubeGS.hlsl", true));
 
 	return true;
 }
@@ -140,7 +140,7 @@ void GeometoryObject3D::Draw(Camera * camera, std::forward_list<ParticleBase*>& 
 	}
 	constBuff->Unmap(0, nullptr);
 
-	//描画コマンド
+	// 描画コマンド
 	dxcommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	dxcommon->GetCommandList()->SetGraphicsRootSignature(rootsignature.Get());
 	dxcommon->GetCommandList()->SetPipelineState(pipelines[pipelinename].Get());
@@ -176,7 +176,7 @@ HRESULT GeometoryObject3D::InitializeRootSignature()
 {
 	HRESULT result = S_FALSE;
 
-	//ルートシグネチャ
+	// ルートシグネチャ
 	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 	CD3DX12_ROOT_PARAMETER rootparams[2] = {};
@@ -208,7 +208,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> GeometoryObject3D::InitializeGraphic
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 	};
 
-	//ブレンド設定
+	// ブレンド設定
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	blenddesc.BlendEnable = true;
@@ -217,20 +217,20 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> GeometoryObject3D::InitializeGraphic
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;
 	switch (type)
 	{
-	case GeometoryObject3D::ALPHA:
-		//アルファ
+	case GeometoryObject3D::BlendType::ALPHA:
+		// アルファ
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		break;
-	case GeometoryObject3D::ADD:
-		//加算
+	case GeometoryObject3D::BlendType::ADD:
+		// 加算
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blenddesc.DestBlend = D3D12_BLEND_ONE;
 		break;
 	default:
-		//アルファ
+		// アルファ
 		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
 		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;

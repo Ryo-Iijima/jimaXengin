@@ -14,7 +14,7 @@
 
 class DirectXCommon;
 class WinApp;
-//class Input;
+ 
 class Object3d
 {
 private:	// エイリアス
@@ -34,7 +34,7 @@ private:		// 定数
 	// ボーンの最大数
 	static const int MAX_BONES = 256;
 
-	enum ViewName
+	enum class ViewName
 	{
 		transform,
 		texture,

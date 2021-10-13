@@ -13,7 +13,7 @@
 class Joycon
 {
 private:
-    enum DebugType
+    enum class DebugType
     {
         NONE,
         ALL,
@@ -26,7 +26,7 @@ private:
     bool isLeft;
 
     // JoyconèÛë‘
-    enum state_
+    enum class state_
     {
         NOT_ATTACHED,
         DROPPED,
@@ -38,7 +38,7 @@ private:
     state_ state;
 
     // É{É^Éì
-    enum Button
+    enum class Button
     {
         DPAD_DOWN,
         DPAD_RIGHT,

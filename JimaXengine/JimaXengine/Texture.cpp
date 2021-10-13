@@ -69,24 +69,24 @@ void Texture::LoadTexture(const std::string& filename)
 	TexMetadata metadata;
 	ScratchImage scratchImg;
 
-	//WICテクスチャのロード
+	// WICテクスチャのロード
 	result = LoadFromWICFile(
 		General::StringToWString(Texture::texturepass + filename).c_str(),
 		WIC_FLAGS_NONE,
 		&metadata,
 		scratchImg);
 
-	//ファイルがない場合読み込み中止
+	// ファイルがない場合読み込み中止
 	if (FAILED(result))
 	{
 		DebugLog(filename, false, true);
 		return;
 	}
 
-	//生データ抽出
+	// 生データ抽出
 	const Image* img = scratchImg.GetImage(0, 0, 0);
 
-	//画像に合わせた設定
+	// 画像に合わせた設定
 	CD3DX12_RESOURCE_DESC texResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		metadata.format,
 		metadata.width,
@@ -94,7 +94,7 @@ void Texture::LoadTexture(const std::string& filename)
 		(UINT16)metadata.arraySize,
 		(UINT16)metadata.mipLevels);
 
-	//テクスチャバッファの生成
+	// テクスチャバッファの生成
 	result = Texture::dxCommon->GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
 		D3D12_HEAP_FLAG_NONE,
@@ -108,7 +108,7 @@ void Texture::LoadTexture(const std::string& filename)
 		return;
 	}
 
-	//テクスチャバッファにデータを転送
+	// テクスチャバッファにデータを転送
 	result = texbuff->WriteToSubresource(
 		0,
 		nullptr,
@@ -121,46 +121,46 @@ void Texture::LoadTexture(const std::string& filename)
 		return;
 	}
 
-	//ファイルの読み込みが終わったことを出力
+	// ファイルの読み込みが終わったことを出力
 	DebugLog(filename, true, true);
 
 	texBuffers.emplace(filename, texbuff);
 	metadataMap.emplace(filename, metadata);
-	types.emplace(filename, RESOURCE);
+	types.emplace(filename, TextureType::RESOURCE);
 
 	Object2d::LoadTexture(filename);
-	//Object3d::LoadResourceTexture(filename);
+	// Object3d::LoadResourceTexture(filename);
 }
 
 void Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, int texWidth, int texHeight)
 {
 	HRESULT result;
 	ComPtr<ID3D12Resource> texbuff;
-	const int texDataCount = texWidth * texHeight; //配列の要素数
+	const int texDataCount = texWidth * texHeight; // 配列の要素数
 
-	Vector4* texturedata = new Vector4[texDataCount]; //必ず後で開放する
+	Vector4* texturedata = new Vector4[texDataCount]; // 必ず後で開放する
 
-	//全ピクセルの色を初期化
+	// 全ピクセルの色を初期化
 	for (int i = 0; i < texDataCount; i++)
 	{
 		texturedata[i] = color;
 	}
 
-	D3D12_HEAP_PROPERTIES texHeapProp{}; //テクスチャヒープ設定
+	D3D12_HEAP_PROPERTIES texHeapProp{}; // テクスチャヒープ設定
 	texHeapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
 	texHeapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	texHeapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 
-	D3D12_RESOURCE_DESC texResDesc{}; //リソース設定
-	texResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; //2Dテクスチャ用
-	texResDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; //RGBAフォーマット
+	D3D12_RESOURCE_DESC texResDesc{}; // リソース設定
+	texResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D; // 2Dテクスチャ用
+	texResDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // RGBAフォーマット
 	texResDesc.Width = texWidth;
 	texResDesc.Height = texHeight;
 	texResDesc.DepthOrArraySize = 1;
 	texResDesc.MipLevels = 1;
 	texResDesc.SampleDesc.Count = 1;
 
-	//GPUリソースの生成
+	// GPUリソースの生成
 	result = Texture::dxCommon->GetDevice()->CreateCommittedResource(
 		&texHeapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -174,24 +174,24 @@ void Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, in
 		return;
 	}
 
-	//テクスチャバッファにデータ転送
+	// テクスチャバッファにデータ転送
 	result = texbuff->WriteToSubresource(
 		0,
-		nullptr, //全領域へコピー
-		texturedata, //元データアドレス
-		sizeof(Vector4) * texWidth, //1ラインサイズ
-		sizeof(Vector4) * texDataCount); //全サイズ
+		nullptr,							// 全領域へコピー
+		texturedata,						// 元データアドレス
+		sizeof(Vector4) * texWidth,			// 1ラインサイズ
+		sizeof(Vector4) * texDataCount);	// 全サイズ
 	if (FAILED(result))
 	{
 		DebugLog(filename, false, false);
 		return;
 	}
 
-	//読み込み成功
+	// 読み込み成功
 	DebugLog(filename, true, false);
 
 	texBuffers.emplace(filename, texbuff);
-	types.emplace(filename, CREATE);
+	types.emplace(filename, TextureType::CREATE);
 
 	Object2d::LoadTexture(filename);
 	//Object3d::LoadResourceTexture(filename);
