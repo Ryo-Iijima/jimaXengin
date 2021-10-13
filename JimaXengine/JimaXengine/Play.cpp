@@ -29,7 +29,7 @@ void Play::Initialize()
 	oManager->Initialize();
 	oManager->Add(new Player(camera));
 	oManager->Add(new Target(camera));
-	//oManager->Add(new BackGround(camera));
+	oManager->Add(new BackGround(camera));
 
 	isEnd = false;
 	nowScene = "Play";

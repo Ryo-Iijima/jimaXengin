@@ -8,6 +8,7 @@
 #include <string>
 #include "math/Vector2.h"
 #include "math/Vector4.h"
+#include <thread>
 
 class Joycon
 {
@@ -94,7 +95,7 @@ private:
     uint8_t ts_de;
     long ts_prev;
 
-    Thread PollThreadObj;
+    //Thread PollThreadObj;
 
     Vector3 max = { 0, 0, 0 };
     Vector3 sum = { 0, 0, 0 };

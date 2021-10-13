@@ -34,10 +34,6 @@ void GameObject::DrawImGui()
 {
 }
 
-void GameObject::SilhouetteDraw()
-{
-}
-
 void GameObject::InitializeParticleEmitter(ParticleManager* pManager)
 {
 	pEmitter->Initialize(pManager);

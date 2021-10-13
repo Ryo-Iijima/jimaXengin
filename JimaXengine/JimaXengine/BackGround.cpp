@@ -9,30 +9,25 @@ BackGround::BackGround(Camera* camera)
 
 BackGround::~BackGround()
 {
-	delete top;
-	delete bottom;
-	delete left;
-	delete right;
-
 	delete model;
 }
 
 void BackGround::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
-	top = new Object3d;
+	top = std::make_unique<Object3d>();
 	top->Initialize();
 	top->SetModel(model);
 
-	bottom = new Object3d;
+	bottom = std::make_unique<Object3d>();
 	bottom->Initialize();
 	bottom->SetModel(model);
 	
-	left = new Object3d;
+	left = std::make_unique<Object3d>();
 	left->Initialize();
 	left->SetModel(model);
 	
-	right = new Object3d;
+	right = std::make_unique<Object3d>();
 	right->Initialize();
 	right->SetModel(model);
 
@@ -74,10 +69,6 @@ void BackGround::Draw()
 	bottom->Draw();
 	//left->Draw();
 	//right->Draw();
-}
-
-void BackGround::SilhouetteDraw()
-{
 }
 
 GameObject::TYPE BackGround::GetType()

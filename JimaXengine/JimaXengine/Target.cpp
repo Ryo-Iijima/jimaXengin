@@ -66,10 +66,6 @@ void Target::Draw()
 	object->Draw();
 }
 
-void Target::SilhouetteDraw()
-{
-}
-
 GameObject::TYPE Target::GetType()
 {
 	return GameObject::TYPE::TARGET;

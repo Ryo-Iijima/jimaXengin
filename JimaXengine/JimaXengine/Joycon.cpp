@@ -1,4 +1,5 @@
 //#include "Joycon.h"
+//#include <array>
 //
 //Joycon::Joycon(hid_device handle_, bool imu, bool localize, float alpha, bool left)
 //{
@@ -77,7 +78,7 @@
 //{
 //    if (handle == nullptr) return -2;
 //    hid_set_nonblocking(handle, 0);
-//    byte[] raw_buf = new byte[report_len];
+//    uint8_t *raw_buf = new uint8_t[report_len];
 //    int ret = hid_read(handle, raw_buf, new UIntPtr(report_len));    // HID‚Ì’l‚ð“Ç‚ÝŽæ‚é
 //    if (ret > 0)
 //    {
@@ -353,8 +354,8 @@
 //
 //uint8_t* Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool print = true)
 //{
-//    uint8_t buf_[] = new uint8_t[report_len];
-//    uint8_t response[] = new byte[report_len];
+//    uint8_t *buf_ = new uint8_t[report_len];
+//    uint8_t *response = new uint8_t[report_len];
 //    Array.Copy(default_buf, 0, buf_, 2, 8);
 //    Array.Copy(buf, 0, buf_, 11, len);
 //    buf_[10] = sc;
@@ -368,12 +369,11 @@
 //    if (res < 1) DebugPrint("No response.", DebugType::COMMS);
 //    else if (print) { PrintArray(response, DebugType::COMMS, report_len - 1, 1, "Response ID 0x" + string.Format("{0:X2}", response[0]) + ". Data: 0x{0:S}"); }
 //    return response;
-//
 //}
 //
 //void Joycon::dump_calibration_data()
 //{
-//    byte[] buf_ = ReadSPI(0x80, (isLeft ? (byte)0x12 : (byte)0x1d), 9); // get user calibration data if possible
+//    uint8_t *buf_ = ReadSPI(0x80, (isLeft ? (uint8_t)0x12 : (uint8_t)0x1d), 9); // get user calibration data if possible
 //    bool found = false;
 //    for (int i = 0; i < 9; ++i)
 //    {
@@ -421,9 +421,9 @@
 //
 //uint8_t* Joycon::ReadSPI(uint8_t addr1, uint8_t addr2, unsigned int len, bool print)
 //{
-//    byte[] buf = { addr2, addr1, 0x00, 0x00, (byte)len };
-//    byte[] read_buf = new byte[len];
-//    byte[] buf_ = new byte[len + 20];
+//    uint8_t buf[] = { addr2, addr1, 0x00, 0x00, (uint8_t)len };
+//    uint8_t *read_buf = new uint8_t[len];
+//    uint8_t *buf_ = new uint8_t[len + 20];
 //
 //    for (int i = 0; i < 100; ++i)
 //    {
@@ -453,5 +453,13 @@
 //
 //template<class T> void Joycon::PrintArray(T* arr, DebugType d, uint8_t len, uint8_t star, std::string format)
 //{
+//    if (d != debug_type && debug_type != DebugType.ALL) return;
+//    if (len == 0) len = (uint)arr.Length;
+//    string tostr = "";
+//    for (int i = 0; i < len; ++i)
+//    {
+//        tostr += string.Format((arr[0] is byte) ? "{0:X2} " : ((arr[0] is float) ? "{0:F} " : "{0:D} "), arr[i + start]);
+//    }
+//    DebugPrint(string.Format(format, tostr), d);
 //
 //}

@@ -17,7 +17,7 @@ class GameObject
 {
 public:
 	//
-	enum RENDER_TYPE
+	enum class RENDER_TYPE
 	{
 		RENDER_TYPE_BACKGROUND = 1000,
 		RENDER_TYPE_GEOMETRY = 2000,
@@ -26,7 +26,7 @@ public:
 		RENDER_TYPE_OVERLAY = 4000,
 	};
 	// オブジェクトタイプ
-	enum TYPE
+	enum class TYPE
 	{
 		NONE,
 		PLAYER,
@@ -45,7 +45,6 @@ public:
 	virtual TYPE GetType();
 	virtual RENDER_TYPE GetRenderType();
 	virtual void DrawImGui();
-	virtual void SilhouetteDraw();
 	
 	// Getter
 	Vector3 GetPos() { return pos; }
@@ -90,5 +89,5 @@ protected:
 	Lay layCol;
 	AABB3D aabb3dCol;
 
-	RENDER_TYPE renderType = RENDER_TYPE_GEOMETRY;
+	RENDER_TYPE renderType = RENDER_TYPE::RENDER_TYPE_GEOMETRY;
 };

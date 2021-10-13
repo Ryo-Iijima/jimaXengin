@@ -41,7 +41,6 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
-	void SilhouetteDraw() override;
 	GameObject::TYPE GetType()override;
 	void DrawImGui()override;
 

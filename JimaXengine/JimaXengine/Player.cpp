@@ -267,10 +267,6 @@ void Player::Draw()
 	layObj->Draw();
 }
 
-void Player::SilhouetteDraw()
-{
-}
-
 GameObject::TYPE Player::GetType()
 {
     return GameObject::TYPE::PLAYER;

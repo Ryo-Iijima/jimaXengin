@@ -257,6 +257,7 @@
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="Memo.h" />
     <ClInclude Include="Object2d.h" />
     <ClInclude Include="Particle\DefaultGeometryParticle.h" />
     <ClInclude Include="Particle\GeometoryObject3D.h" />

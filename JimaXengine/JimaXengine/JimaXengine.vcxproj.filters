@@ -379,6 +379,7 @@
     <ClInclude Include="Joycon_support.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
+    <ClInclude Include="Memo.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">
