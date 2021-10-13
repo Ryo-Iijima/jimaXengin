@@ -1,6 +1,4 @@
-  Play.cpp
-  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
-
-﻿  Target.cpp
-  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
-
+﻿  Joycon.cpp
+  JoyconManager.cpp
+  コードを生成中...
+LINK : fatal error LNK1209: プログラム データベース 'C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.pdb' が以前のリンクと異なります。再リンクまたは再度ビルドしてください。
