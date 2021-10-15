@@ -9,7 +9,7 @@ void SendSubcommand(hid_device* dev, uint8_t command, uint8_t subcommand[], int 
 {
     uint8_t buf[0x40];
     memset(buf, 0x0, size_t(0x40));
-
+    
     buf[0] = 1; // 0x10 for rumble only
     buf[1] = *globalCount; // Increment by 1 for each packet sent. It loops in 0x0 - 0xF range.
 

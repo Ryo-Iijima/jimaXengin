@@ -126,3 +126,27 @@ Vector3 Vector3::operator/=(float s)
 	z /= s;
 	return *this;
 }
+
+bool Vector3::operator==(const Vector3& v)
+{
+	if (x == v.x && y == v.y && z == v.z)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Vector3::operator!=(const Vector3& v)
+{
+	if (!(*this == v))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
