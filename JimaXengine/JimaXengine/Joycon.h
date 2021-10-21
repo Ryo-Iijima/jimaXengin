@@ -3,17 +3,15 @@
 #include "hidapi/hidapi.h"
 #include <cstddef>
 #include <cstdint>
-#include "math/Vector3.h"
 #include <vector>
 #include <string>
 #include "math/Vector2.h"
+#include "math/Vector3.h"
 #include "math/Vector4.h"
 #include <thread>
+#include <queue>
+#include <mutex>
 
-namespace JimaXengin
-{
-
-}
 class Joycon
 {
 private:
@@ -88,18 +86,16 @@ private:
 
     bool do_localize;
     float filterweight;                             // フィルター係数（なんのフィルターかはまだ不明、おそらくセンサーの値の調整に使用）
-    const unsigned int report_len = 49;             // レポートのデータ長？
+    static const unsigned int report_len = 49;      // レポートのデータ長？
 
     // 入力レポート構造体
     struct Report
     {
-        uint8_t r[1];               // レポート保持用
+        uint8_t* r;               // レポート保持用
         time_t dataTime;            // データタイム
 
-        const int report_len = 49;  // データ長
-
         // コンストラクタ
-        Report(uint8_t report[], long time)
+        Report(uint8_t* report, long time)
         {
             *r = *report;
             dataTime = time;
@@ -223,7 +219,7 @@ private:
         }
     };
 
-    std::vector<Report> reports;        // レポート配列
+    std::queue<Report*> reports;        // レポート配列
     Rumble* rumble_obj;                 // 振動データオブジェクト
 
     uint8_t global_count = 0;           // 
@@ -233,7 +229,9 @@ private:
     uint8_t ts_de;
     long ts_prev;
 
-    std::thread PollThreadObj;
+    std::mutex _lockReport;            // lock用オブジェクト
+    std::mutex _lockButton,  _lockButtonDown,  _lockButtonUP;
+    std::thread* PollThreadObj;
 
     Vector3 max = { 0, 0, 0 };
     Vector3 sum = { 0, 0, 0 };
@@ -274,9 +272,9 @@ public:
     int ProcessButtonsAndStick(uint8_t* report_buf);        // ボタンとスティックの状態を取る
     void ExtractIMUValues(uint8_t* report_buf, int n = 0);  // IMUの値を引き抜く
     int ProcessIMU(uint8_t* report_buf);                    // IMUの状態を取る
-    void Begin();
-    void Recenter();
-    Vector2 CenterSticks(uint16_t vals);                    // 直訳->スティック中心
+    void Begin();                                           // 前処理
+    void Recenter();                                        // 
+    Vector2 CenterSticks(uint16_t* vals);                   // 直訳->スティック中心
     void SetRumble(float low_freq, float high_freq, float amp, int time = 0);     // 振動
     void SendRumble(uint8_t* buf);                                                // Setしたものを送る？2つは抱き合わせ？
 
@@ -285,6 +283,15 @@ public:
 
     uint8_t* ReadSPI(uint8_t addr1, uint8_t addr2, unsigned int len, bool print = false);
 
+    /// <summary>
+    /// n型の配列を受け取ってコンソール出力する
+    /// </summary>
+    /// <typeparam name="T">  </typeparam>
+    /// <param name="arr"> 配列 </param>
+    /// <param name="d"> デバッグタイプ </param>
+    /// <param name="len"> 配列のデータ長 </param>
+    /// <param name="start"> 開始位置 </param>
+    /// <param name="format"> 出力書式 </param>
     //void PrintArray<T>(T[] arr, DebugType d = DebugType::NONE, uint len = 0, uint start = 0, string format = "{0:S}");     // 構文が分からん、テンプレート的なこと？
     template<class T> void PrintArray(T* arr, DebugType d = DebugType::NONE, uint8_t len = 0, uint8_t start = 0, std::string format = "{0:S}");     // これでいいのか？
 };

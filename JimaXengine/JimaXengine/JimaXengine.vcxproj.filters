@@ -224,6 +224,9 @@
     <ClCompile Include="JoyconManager.cpp">
       <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
+    <ClCompile Include="_StringFormat.cpp">
+      <Filter>ソース ファイル\engin\general</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Particle\ParticleParam.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="_StringFormat.h">
+      <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

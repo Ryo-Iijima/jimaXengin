@@ -1,6 +1,9 @@
 #include "Player.h"
 #include "3d/FbxLoader.h"
 #include "general/Input.h"
+#include <typeinfo>
+
+#include "_StringFormat.h"
 
 #define JOYCON_L_PRODUCT_ID 8198
 #define JOYCON_R_PRODUCT_ID 8199
@@ -236,8 +239,58 @@ void Player::Initialize()
 
 }
 
+enum class DebugType
+{
+    NONE,
+    ALL,
+    COMMS,
+    THREADING,
+    IMU,
+    RUMBLE,
+};
+
+void DebugPrint(std::string s, DebugType d)
+{
+    printf("%s\n", s.c_str());
+}
+
 void Player::Update()
 {
+    //{   // ポインターテスト
+    //    uint8_t* buf_ = new uint8_t[5]{ 0,1,2,3,4 };
+    //   
+    //    printf("buf   : %d\n", buf_);
+    //    printf("buf+1 : %d\n", (buf_ + 1));
+    //    printf("buf+2 : %d\n", (buf_ + 2));
+    //    printf("buf+3 : %d\n", (buf_ + 3));
+    //    printf("buf+4 : %d\n", (buf_ + 4));
+    //    printf("sizeof(buf) : %d\n", sizeof(buf_));
+
+    //}
+
+    //{   // 変数の型の比較
+    //    int a = 0;
+    //    if (typeid(a)==typeid(int))
+    //    {
+    //        printf("int is : %s\n", typeid(int).name());
+    //    }
+    //}
+
+    {
+        DebugType debug_type = DebugType::NONE;
+        const unsigned int len = 5;
+        int arr[len]{ 0,1,2,3,4 };
+        std::string format = "%s";
+
+        std::string tostr = "";
+        for (int i = 0; i < len; ++i)
+        {
+            tostr += _StringFormat::Format((typeid(arr[0]) == typeid(int)) ? ((std::string)"%d") : ((typeid(arr[0]) == typeid(float)) ? ((std::string)"%f") : ((std::string)"%s")), arr[i]);
+        }
+        DebugPrint(_StringFormat::Format(format, tostr), debug_type);
+
+    }
+
     JoyConUpdate();
     
     Move();

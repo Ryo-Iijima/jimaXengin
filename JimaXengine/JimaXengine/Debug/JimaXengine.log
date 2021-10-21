@@ -2,15 +2,26 @@
   compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\BasicVS.cso
   compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\FBXPS.cso
   compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\FBXVS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\CubeGS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\CubePS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\ParticleVS.cso
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Resources\shader\Geometory\QuadGS.hlsl(30,2-40): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll
+  
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\QuadGS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\QuadPS.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\SpritePixelShader.cso
+  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\Debug\SpriteVertexShader.cso
   FbxLoader.cpp
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\FbxLoader.cpp(283,27): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\FbxLoader.cpp(369,23): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
   Model.cpp
   Object3d.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\Object3d.cpp(231,23): warning C4316: 'Camera': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\Object3d.cpp(310,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\Object3d.cpp(304,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
   Application.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Application.cpp(20,32): warning C4316: 'DirectXCommon': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Application.cpp(23,32): warning C4316: 'DirectXCommon': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  BackGround.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\memory(3580,1): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\BackGround.cpp(18): message : コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Object3d,std::default_delete<Object3d>> std::make_unique<Object3d,,0>(void)' のリファレンスを確認してください
   Camera.cpp
   Collision.cpp
   CollisionPrimitive.cpp
@@ -20,29 +31,93 @@ C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(441,
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(633,50): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(636,43): warning C4267: '=': 'size_t' から 'UINT16' に変換しました。データが失われているかもしれません。
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\DirectXCommon.cpp(867,44): warning C4244: '=': 'UINT64' から 'UINT' への変換です。データが失われる可能性があります。
+  GameObject.cpp
+  GameObjectManager.cpp
   FPSManager.cpp
+  General.cpp
   imGuiDevice.cpp
   Input.cpp
+  Random.cpp
   Sound.cpp
   XAudio2VoiceCallBack.cpp
   imgui.cpp
   imgui_demo.cpp
+  コードを生成中...
+  コンパイル中...
   imgui_draw.cpp
   imgui_impl_dx12.cpp
 C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\imgui\imgui_impl_dx12.cpp(396,39): error C2338: Can't pack descriptor handle into TexID, 32-bit not supported yet.
   imgui_impl_win32.cpp
   imgui_widgets.cpp
+  Joycon.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(28,10): warning C4477: 'printf' : 書式文字列 '%c' には、型 'int' の引数が必要ですが、可変個引数 1 は型 'std::string' です
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(114,9): error C2039: 'scoped_lock': 'std' のメンバーではありません
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\array(20): message : 'std' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(114,20): error C2065: 'scoped_lock': 定義されていない識別子です。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(114,32): error C2059: 構文エラー: '>'
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(130,51): warning C4554: '&': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(166,10): error C2039: 'scoped_lock': 'std' のメンバーではありません
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\array(20): message : 'std' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(166,21): error C2065: 'scoped_lock': 定義されていない識別子です。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(166,33): error C2059: 構文エラー: '>'
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(198,26): warning C4244: '=': 'time_t' から 'long' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(224,8): error C2039: 'scoped_lock': 'std' のメンバーではありません
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\array(20): message : 'std' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(224,19): error C2065: 'scoped_lock': 定義されていない識別子です。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(224,31): error C2059: 構文エラー: '>'
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(226,9): error C2039: 'scoped_lock': 'std' のメンバーではありません
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\array(20): message : 'std' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(226,20): error C2065: 'scoped_lock': 定義されていない識別子です。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(226,32): error C2059: 構文エラー: '>'
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(247,9): error C2039: 'scoped_lock': 'std' のメンバーではありません
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\array(20): message : 'std' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(247,20): error C2065: 'scoped_lock': 定義されていない識別子です。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(247,32): error C2059: 構文エラー: '>'
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(250,10): error C2039: 'scoped_lock': 'std' のメンバーではありません
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\array(20): message : 'std' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(250,21): error C2065: 'scoped_lock': 定義されていない識別子です。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(250,33): error C2059: 構文エラー: '>'
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(316,48): warning C4554: '|': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon.cpp(390,14): warning C4244: '初期化中': 'int' から 'float' への変換です。データが失われる可能性があります。
+  JoyconManager.cpp
   main.cpp
-  コードを生成中...
-  コンパイル中...
   Vector2.cpp
   Vector3.cpp
+  Vector4.cpp
+  Object2d.cpp
+  DefaultGeometryParticle.cpp
+  GeometoryObject3D.cpp
+  HomingGeometryParticle.cpp
+  ParticleEmitter.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Particle\ParticleEmitter.cpp(66,37): warning C4316: 'ParticleObj': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Particle\ParticleEmitter.cpp(449,37): warning C4316: 'ParticleObj': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  ParticleManager.cpp
+  ParticleObj.cpp
   Play.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Play.cpp(24,23): warning C4316: 'Camera': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Play.cpp(30,34): warning C4316: 'Player': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Play.cpp(31,34): warning C4316: 'Target': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Play.cpp(32,38): warning C4316: 'BackGround': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Play.cpp(39,24): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Play.cpp(44,27): warning C4316: 'Object2d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
   Player.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(20,23): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(136,68): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(137,68): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(138,68): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(206,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(214,23): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Player.cpp(229,26): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  ResourceShader.cpp
+  コードを生成中...
+  コンパイル中...
   SceneManager.cpp
+  Target.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Target.cpp(44,23): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  Texture.cpp
   Title.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(21,23): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(24,24): warning C4316: 'Object3d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(23,19): warning C4316: 'Object2d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(28,29): warning C4316: 'Object2d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Title.cpp(33,25): warning C4316: 'Object2d': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
   WinApp.cpp
   コードを生成中...
