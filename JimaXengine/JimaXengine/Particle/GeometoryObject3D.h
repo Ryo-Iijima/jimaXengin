@@ -10,7 +10,7 @@
 #include "../math/Vector2.h"
 #include "../math/Vector3.h"
 #include "../math/Vector4.h"
-#include "../Camera.h"
+#include "../camera/Camera.h"
 #include "ParticleParam.h"
 #include "../DirectXCommon.h"
 #include "ParticleBase.h"

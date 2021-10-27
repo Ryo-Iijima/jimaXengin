@@ -1,6 +1,6 @@
 #include "ResourceShader.h"
 #include "general/General.h"
-#include "ConsoleOutput.h"
+#include "general/ConsoleOutput.h"
 
 using namespace std;
 using namespace Microsoft::WRL;

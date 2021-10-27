@@ -25,7 +25,7 @@ using namespace DirectX;
 
 #include "math/Vector2.h"
 #include "math/Vector3.h"
-#include "Camera.h"
+#include "camera/Camera.h"
 
 
 class DirectXCommon

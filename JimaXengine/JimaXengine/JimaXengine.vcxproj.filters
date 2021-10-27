@@ -84,6 +84,21 @@
     <Filter Include="シェーダーファイル\Geometory">
       <UniqueIdentifier>{dbc80a87-8d0f-4890-8303-b861b3a862c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Joycon">
+      <UniqueIdentifier>{7ffb388c-2d18-4bd0-b17f-4bfe2c9b8aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engin\collision">
+      <UniqueIdentifier>{0b9f3cbf-7cf5-463b-bf21-ed8b39cc9e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\engin\collision">
+      <UniqueIdentifier>{f364e646-214f-4619-a7bb-d5deea1bbc7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\engin\2DObject">
+      <UniqueIdentifier>{21764e2d-b619-4e8f-80b1-abbe48204c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\engin\2DObject">
+      <UniqueIdentifier>{c4328cd1-ca71-4ba8-8360-f2e226b7d5e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -146,26 +161,8 @@
     <ClCompile Include="math\Vector3.cpp">
       <Filter>ソース ファイル\engin\math</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル\engin\3DObject</Filter>
-    </ClCompile>
     <ClCompile Include="scene\SceneManager.cpp">
       <Filter>ソース ファイル\app\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Title.cpp">
-      <Filter>ソース ファイル\app\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>ソース ファイル\engin\general</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionPrimitive.cpp">
-      <Filter>ソース ファイル\engin\general</Filter>
-    </ClCompile>
-    <ClCompile Include="Play.cpp">
-      <Filter>ソース ファイル\app\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
     <ClCompile Include="hidapi\hid.c">
       <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
@@ -197,35 +194,56 @@
     <ClCompile Include="Particle\DefaultGeometryParticle.cpp">
       <Filter>ソース ファイル\app\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Particle\HomingGeometryParticle.cpp">
-      <Filter>ソース ファイル\app\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="Particle\GeometoryObject3D.cpp">
       <Filter>ソース ファイル\app\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Target.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="BackGround.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Object2d.cpp">
-      <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
     <ClCompile Include="ResourceShader.cpp">
       <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
+    <ClCompile Include="actor\BackGround.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\Player.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\Target.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Title.cpp">
+      <Filter>ソース ファイル\app\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\Play.cpp">
+      <Filter>ソース ファイル\app\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\Camera.cpp">
+      <Filter>ソース ファイル\engin\3DObject</Filter>
+    </ClCompile>
+    <ClCompile Include="general\_StringFormat.cpp">
       <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
-    <ClCompile Include="Joycon.cpp">
-      <Filter>ソース ファイル\engin\general</Filter>
+    <ClCompile Include="collision\Collision.cpp">
+      <Filter>ソース ファイル\engin\collision</Filter>
     </ClCompile>
-    <ClCompile Include="JoyconManager.cpp">
-      <Filter>ソース ファイル\engin\general</Filter>
+    <ClCompile Include="collision\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\engin\collision</Filter>
     </ClCompile>
-    <ClCompile Include="_StringFormat.cpp">
-      <Filter>ソース ファイル\engin\general</Filter>
+    <ClCompile Include="2d\Object2d.cpp">
+      <Filter>ソース ファイル\engin\2DObject</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Texture.cpp">
+      <Filter>ソース ファイル\engin\2DObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Joycon\Joycon.cpp">
+      <Filter>ソース ファイル\Joycon</Filter>
+    </ClCompile>
+    <ClCompile Include="Joycon\JoyconManager.cpp">
+      <Filter>ソース ファイル\Joycon</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\JoyconTest.cpp">
+      <Filter>ソース ファイル\Joycon</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle\HomingGeometryParticle.cpp">
+      <Filter>ソース ファイル\app\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,29 +310,11 @@
     <ClInclude Include="math\Vector3.h">
       <Filter>ヘッダー ファイル\engin\math</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
-    </ClInclude>
     <ClInclude Include="scene\Scene.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
     <ClInclude Include="scene\SceneManager.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Title.h">
-      <Filter>ヘッダー ファイル\app\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionPrimitive.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Play.h">
-      <Filter>ヘッダー ファイル\app\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
     <ClInclude Include="hidapi\hidapi.h">
       <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
@@ -334,31 +334,9 @@
     <ClInclude Include="general\Random.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
-    <ClInclude Include="Target.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
-    </ClInclude>
-    <ClInclude Include="BackGround.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceShader.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Object2d.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Joycon.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="JoyconManager.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Joycon_support.h">
-      <Filter>ヘッダー ファイル\engin\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Memo.h" />
     <ClInclude Include="Particle\DefaultGeometryParticle.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
@@ -366,9 +344,6 @@
       <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Particle\ParticleBase.h">
-      <Filter>ヘッダー ファイル\app\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle\HomingGeometryParticle.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Particle\ParticleEmitter.h">
@@ -383,8 +358,53 @@
     <ClInclude Include="Particle\ParticleParam.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="_StringFormat.h">
+    <ClInclude Include="actor\BackGround.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\Player.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\Target.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Play.h">
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Title.h">
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\Camera.h">
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="general\Memo.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="general\_StringFormat.h">
       <Filter>ヘッダー ファイル\engin\general</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\Collision.h">
+      <Filter>ヘッダー ファイル\engin\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\CollisionPrimitive.h">
+      <Filter>ヘッダー ファイル\engin\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Object2d.h">
+      <Filter>ヘッダー ファイル\engin\2DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\Texture.h">
+      <Filter>ヘッダー ファイル\engin\2DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Joycon\Joycon.h">
+      <Filter>ソース ファイル\Joycon</Filter>
+    </ClInclude>
+    <ClInclude Include="Joycon\JoyconManager.h">
+      <Filter>ソース ファイル\Joycon</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\JoyconTest.h">
+      <Filter>ソース ファイル\Joycon</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle\HomingGeometryParticle.h">
+      <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

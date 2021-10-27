@@ -1,10 +1,10 @@
 #include "Application.h"
 #include "3d/FbxLoader.h"
 #include "3d/Object3d.h"
-#include "Object2d.h"
-#include "Title.h"
-#include "Play.h"
-#include "Texture.h"
+#include "2d/Object2d.h"
+#include "scene/Title.h"
+#include "scene/Play.h"
+#include "2d/Texture.h"
 #include "ResourceShader.h"
 
 Application& Application::GetInstance()
@@ -122,15 +122,15 @@ void Application::Run()
 
 		sceneManager->Draw();
 
-		// imgui描画
-		{
-			ImGui::Begin("Test Window");	// ウィンドウの名前
-			float slider = fpsManager->GetFPS();
-			ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
-			ImGui::End();
+		//// imgui描画
+		//{
+		//	ImGui::Begin("Test Window");	// ウィンドウの名前
+		//	float slider = fpsManager->GetFPS();
+		//	ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
+		//	ImGui::End();
+		//}
 
-			imguiDev.Draw();
-		}
+		imguiDev.Draw();
 
 		// 描画後処理
 		dxCommon->PostDraw();

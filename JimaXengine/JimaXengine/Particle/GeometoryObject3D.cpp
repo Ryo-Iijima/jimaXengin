@@ -1,7 +1,7 @@
 ﻿#include "GeometoryObject3D.h"
 #include <DirectXTex.h>
 #include "../ResourceShader.h"
-#include "../Texture.h"
+#include "../2d/Texture.h"
 #include "../general/General.h"
 
 DirectXCommon* GeometoryObject3D::dxcommon = nullptr;

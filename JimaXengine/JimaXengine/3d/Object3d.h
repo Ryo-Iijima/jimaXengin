@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Model.h"
-#include "../Camera.h"
+#include "../camera/Camera.h"
 
 #include <Windows.h>
 #include <wrl.h>

@@ -1,8 +1,8 @@
 #pragma once
 #include"GameObject.h"
-#include "../Player.h"
-#include "../Target.h"
-#include "../BackGround.h"
+#include "../actor/Player.h"
+#include "../actor/Target.h"
+#include "../actor/BackGround.h"
 
 #include "../Particle/ParticleManager.h"
 

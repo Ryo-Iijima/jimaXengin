@@ -173,14 +173,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2d\Object2d.cpp" />
+    <ClCompile Include="2d\Texture.cpp" />
     <ClCompile Include="3d\FbxLoader.cpp" />
     <ClCompile Include="3d\Model.cpp" />
     <ClCompile Include="3d\Object3d.cpp" />
+    <ClCompile Include="actor\BackGround.cpp" />
+    <ClCompile Include="actor\JoyconTest.cpp" />
+    <ClCompile Include="actor\Player.cpp" />
+    <ClCompile Include="actor\Target.cpp" />
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="BackGround.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CollisionPrimitive.cpp" />
+    <ClCompile Include="camera\Camera.cpp" />
+    <ClCompile Include="collision\Collision.cpp" />
+    <ClCompile Include="collision\CollisionPrimitive.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="GameObject\GameObjectManager.cpp" />
@@ -191,6 +196,7 @@
     <ClCompile Include="general\Random.cpp" />
     <ClCompile Include="general\Sound.cpp" />
     <ClCompile Include="general\XAudio2VoiceCallBack.cpp" />
+    <ClCompile Include="general\_StringFormat.cpp" />
     <ClCompile Include="hidapi\hid.c">
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExceptionHandling>
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExceptionHandling>
@@ -203,38 +209,38 @@
     <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Joycon.cpp" />
-    <ClCompile Include="JoyconManager.cpp" />
+    <ClCompile Include="Joycon\Joycon.cpp" />
+    <ClCompile Include="Joycon\JoyconManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Vector2.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
     <ClCompile Include="math\Vector4.cpp" />
-    <ClCompile Include="Object2d.cpp" />
     <ClCompile Include="Particle\DefaultGeometryParticle.cpp" />
     <ClCompile Include="Particle\GeometoryObject3D.cpp" />
     <ClCompile Include="Particle\HomingGeometryParticle.cpp" />
     <ClCompile Include="Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Particle\ParticleManager.cpp" />
     <ClCompile Include="Particle\ParticleObj.cpp" />
-    <ClCompile Include="Play.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceShader.cpp" />
+    <ClCompile Include="scene\Play.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
-    <ClCompile Include="Target.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="scene\Title.cpp" />
     <ClCompile Include="WinApp.cpp" />
-    <ClCompile Include="_StringFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="2d\Object2d.h" />
+    <ClInclude Include="2d\Texture.h" />
     <ClInclude Include="3d\FbxLoader.h" />
     <ClInclude Include="3d\Model.h" />
     <ClInclude Include="3d\Object3d.h" />
+    <ClInclude Include="actor\BackGround.h" />
+    <ClInclude Include="actor\JoyconTest.h" />
+    <ClInclude Include="actor\Player.h" />
+    <ClInclude Include="actor\Target.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="BackGround.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionPrimitive.h" />
+    <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="collision\Collision.h" />
+    <ClInclude Include="collision\CollisionPrimitive.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameObjectManager.h" />
@@ -242,9 +248,11 @@
     <ClInclude Include="general\General.h" />
     <ClInclude Include="general\imGuiDevice.h" />
     <ClInclude Include="general\Input.h" />
+    <ClInclude Include="general\Memo.h" />
     <ClInclude Include="general\Random.h" />
     <ClInclude Include="general\Sound.h" />
     <ClInclude Include="general\XAudio2VoiceCallBack.h" />
+    <ClInclude Include="general\_StringFormat.h" />
     <ClInclude Include="hidapi\hidapi.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -254,14 +262,11 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="Joycon.h" />
-    <ClInclude Include="JoyconManager.h" />
-    <ClInclude Include="Joycon_support.h" />
+    <ClInclude Include="Joycon\Joycon.h" />
+    <ClInclude Include="Joycon\JoyconManager.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
-    <ClInclude Include="Memo.h" />
-    <ClInclude Include="Object2d.h" />
     <ClInclude Include="Particle\DefaultGeometryParticle.h" />
     <ClInclude Include="Particle\GeometoryObject3D.h" />
     <ClInclude Include="Particle\HomingGeometryParticle.h" />
@@ -270,16 +275,12 @@
     <ClInclude Include="Particle\ParticleManager.h" />
     <ClInclude Include="Particle\ParticleObj.h" />
     <ClInclude Include="Particle\ParticleParam.h" />
-    <ClInclude Include="Play.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceShader.h" />
+    <ClInclude Include="scene\Play.h" />
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />
-    <ClInclude Include="Target.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Title.h" />
+    <ClInclude Include="scene\Title.h" />
     <ClInclude Include="WinApp.h" />
-    <ClInclude Include="_StringFormat.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Basic\BasicPS.hlsl">

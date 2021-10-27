@@ -1,5 +1,5 @@
 #include "GameObjectManager.h"
-#include "../Camera.h"
+#include "../camera/Camera.h"
 #include <algorithm>
 
 GameObjectManager::GameObjectManager()

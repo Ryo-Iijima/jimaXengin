@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../Camera.h"
+#include "../camera/Camera.h"
 #include "GeometoryObject3D.h"
 #include "ParticleObj.h"
 #include "DefaultGeometryParticle.h"

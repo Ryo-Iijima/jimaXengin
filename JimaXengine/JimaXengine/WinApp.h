@@ -1,5 +1,4 @@
 // WindowAppŠÖ˜A‚ÌƒNƒ‰ƒX
-
 #pragma once
 #include <Windows.h>
 
