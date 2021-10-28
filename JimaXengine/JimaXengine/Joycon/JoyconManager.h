@@ -8,10 +8,10 @@ private:
 	bool EnableIMU = true;
 	bool EnableLocalize = true;
 
-	const unsigned short vendor_id = 0x57e;
-	const unsigned short vendor_id_ = 0x057e;
-	const unsigned short product_l = 0x2006;
-	const unsigned short product_r = 0x2007;
+	static const unsigned short vendor_id = 0x57e;
+	static const unsigned short vendor_id_ = 0x057e;
+	static const unsigned short product_l = 0x2006;
+	static const unsigned short product_r = 0x2007;
 
 	static JoyconManager* instance;
 
