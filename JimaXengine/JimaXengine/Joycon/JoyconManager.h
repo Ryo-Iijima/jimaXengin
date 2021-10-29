@@ -16,7 +16,7 @@ private:
 	static JoyconManager* instance;
 
 public:
-	std::vector<Joycon*> j; // Array of all connected Joy-Cons
+	std::vector<Joycon*> j = {}; // Array of all connected Joy-Cons
 
 public:
 	static JoyconManager* Instance();

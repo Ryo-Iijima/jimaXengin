@@ -10,17 +10,15 @@ JoyconManager* JoyconManager::Instance()
 
 void JoyconManager::Awake()
 {
-	if (instance != nullptr) delete this;
-	instance = this;
+	//if (instance != nullptr) delete this;
+	//instance = this;
 	int i = 0;
 
 	//j = new std::vector<Joycon>();
 	bool isLeft = false;
 	hid_init();
 
-	hid_device_info* pEnumrate = hid_enumerate(vendor_id, 0x0);		// ŽÀsŽž‚É’l‚ª•Ï‚í‚é‚Ì‚È‚ñ‚ÅH
-
-	//hid_device_info* pEnumrate = hid_enumerate(0, 0x0);
+	hid_device_info* pEnumrate = hid_enumerate(vendor_id, 0x0);
 	hid_device_info* top_ptr = pEnumrate;
 
 	if (pEnumrate == 0)
@@ -32,7 +30,7 @@ void JoyconManager::Awake()
 			printf("No Joy-Cons found!\n");
 		}
 	}
-	//hid_device_info enumerate;
+
 	while (pEnumrate != 0)
 	{
 		printf("productID:%d\n", pEnumrate->product_id);
@@ -50,6 +48,7 @@ void JoyconManager::Awake()
 			}
 			hid_device* handle = hid_open_path(pEnumrate->path);
 			hid_set_nonblocking(handle, 1);
+			//j.push_back(nullptr);
 			j.push_back(new Joycon(handle, EnableIMU, EnableLocalize & EnableIMU, 0.05f, isLeft));
 			++i;
 		}

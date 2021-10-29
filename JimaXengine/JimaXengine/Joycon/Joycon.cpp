@@ -47,7 +47,8 @@ int Joycon::Attach(uint8_t leds_)
 	state = state_::ATTACHED;
 	uint8_t* a = { 0x0 };
 	// Input report mode
-	Subcommand(0x3, (uint8_t*)0x3f, 1, false);
+	uint8_t arr[] = { 0x3f };
+	Subcommand(0x3, arr, 1, false);
 	a[0] = 0x1;
 	dump_calibration_data();
 	// Connect
@@ -434,10 +435,16 @@ uint8_t* Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool pri
 {
 	uint8_t* buf_ = new uint8_t[report_len];
 	uint8_t* response = new uint8_t[report_len];
+
 	//Array.Copy(default_buf, 0, buf_, 2, 8);
 	//Array.Copy(buf, 0, buf_, 11, len);
-	std::copy(default_buf, (default_buf + 8), buf_);
-	std::copy(buf, (buf + len), buf_);
+
+	//std::copy(default_buf, (default_buf + 8), buf_ + 2);
+	//std::copy(buf, (buf + len), buf_ + 11);
+
+	memcpy(buf_ + 2, default_buf, 8);
+	memcpy(buf_ + 11, buf, len);
+
 	buf_[10] = sc;
 	buf_[1] = global_count;
 	buf_[0] = 0x1;
