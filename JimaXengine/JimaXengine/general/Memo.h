@@ -8,3 +8,5 @@
 
 // static const unsigned short vendor_id = 0x57e;
 // JoyconManager.hでvendor_idを初期化していないのにビルドが通るのがおかしい
+
+// jopyconのpoll実行確認

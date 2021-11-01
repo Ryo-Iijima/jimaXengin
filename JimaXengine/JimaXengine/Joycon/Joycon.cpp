@@ -3,6 +3,36 @@
 #include <array>
 #include "../general/_StringFormat.h"
 
+void Joycon::Poll(Joycon* j)
+{
+	int attempts = 0;
+	while (!j->stop_polling & j->state > state_::NO_JOYCONS)
+	{
+		j->SendRumble(j->rumble_obj->GetData());
+		int a = j->ReceiveRaw();
+		a = j->ReceiveRaw();
+		if (a > 0)
+		{
+			j->state = state_::IMU_DATA_OK;
+			attempts = 0;
+		}
+		else if (attempts > 1000)
+		{
+			j->state = state_::DROPPED;
+			//DebugPrint("Connection lost. Is the Joy-Con connected?", DebugType::ALL);
+			break;
+		}
+		else
+		{
+			//DebugPrint("Pause 5ms", DebugType::THREADING);
+			//_sleep(5);
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		}
+		++attempts;
+	}
+	//DebugPrint("End poll loop.", DebugType::THREADING);
+}
+
 Joycon::Joycon(hid_device* handle_, bool imu, bool localize, float alpha, bool left)
 {
 	handle = handle_;
@@ -45,7 +75,7 @@ Vector4 Joycon::GetVector()
 int Joycon::Attach(uint8_t leds_)
 {
 	state = state_::ATTACHED;
-	uint8_t* a = { 0x0 };
+	uint8_t a[] = { 0x0 };
 	// Input report mode
 	uint8_t arr[] = { 0x3f };
 	Subcommand(0x3, arr, 1, false);
@@ -60,9 +90,19 @@ int Joycon::Attach(uint8_t leds_)
 	Subcommand(0x1, a, 1);
 	a[0] = leds_;
 	Subcommand(0x30, a, 1);
-	Subcommand(0x40, { (uint8_t*)(imu_enabled ? (uint8_t)0x1 : (uint8_t)0x0) }, 1, true);
-	Subcommand(0x3, { (uint8_t*)0x30 }, 1, true);
-	Subcommand(0x48, { (uint8_t*)0x1 }, 1, true);
+
+	arr[0] = { (imu_enabled ? (uint8_t)0x1 : (uint8_t)0x0) };
+	Subcommand(0x40, arr, 1, true);
+	//Subcommand(0x40, { (uint8_t*)(imu_enabled ? (uint8_t)0x1 : (uint8_t)0x0) }, 1, true);
+
+	arr[0] = { 0x30 };
+	Subcommand(0x3, arr, 1, true);
+	//Subcommand(0x3, { (uint8_t*)0x30 }, 1, true);
+
+	arr[0] = { 0x1 };
+	Subcommand(0x48, arr, 1, true);
+	//Subcommand(0x48, { (uint8_t*)0x1 }, 1, true);
+	
 	DebugPrint("Done with init.", DebugType::COMMS);
 	return 0;
 }
@@ -124,35 +164,35 @@ int Joycon::ReceiveRaw()
 	return ret;
 }
 
-void Joycon::Poll()
-{
-	int attempts = 0;
-	while (!stop_polling & state > state_::NO_JOYCONS)
-	{
-		SendRumble(rumble_obj->GetData());
-		int a = ReceiveRaw();
-		a = ReceiveRaw();
-		if (a > 0)
-		{
-			state = state_::IMU_DATA_OK;
-			attempts = 0;
-		}
-		else if (attempts > 1000)
-		{
-			state = state_::DROPPED;
-			DebugPrint("Connection lost. Is the Joy-Con connected?", DebugType::ALL);
-			break;
-		}
-		else
-		{
-			DebugPrint("Pause 5ms", DebugType::THREADING);
-			//_sleep(5);
-			std::this_thread::sleep_for(std::chrono::milliseconds(5));
-		}
-		++attempts;
-	}
-	DebugPrint("End poll loop.", DebugType::THREADING);
-}
+//void Joycon::Poll()
+//{
+//	int attempts = 0;
+//	while (!stop_polling & state > state_::NO_JOYCONS)
+//	{
+//		SendRumble(rumble_obj->GetData());
+//		int a = ReceiveRaw();
+//		a = ReceiveRaw();
+//		if (a > 0)
+//		{
+//			state = state_::IMU_DATA_OK;
+//			attempts = 0;
+//		}
+//		else if (attempts > 1000)
+//		{
+//			state = state_::DROPPED;
+//			DebugPrint("Connection lost. Is the Joy-Con connected?", DebugType::ALL);
+//			break;
+//		}
+//		else
+//		{
+//			DebugPrint("Pause 5ms", DebugType::THREADING);
+//			//_sleep(5);
+//			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+//		}
+//		++attempts;
+//	}
+//	DebugPrint("End poll loop.", DebugType::THREADING);
+//}
 
 void Joycon::Update()
 {
@@ -371,9 +411,11 @@ int Joycon::ProcessIMU(uint8_t* report_buf)
 
 void Joycon::Begin()
 {
+	// NULLなら
 	if (PollThreadObj == NULL)
 	{
-		PollThreadObj = new std::thread();
+		// newしてスレッドが終了するまで待機
+		PollThreadObj = new std::thread(Poll, this);
 		PollThreadObj->join();
 	}
 }
@@ -438,9 +480,6 @@ uint8_t* Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool pri
 
 	//Array.Copy(default_buf, 0, buf_, 2, 8);
 	//Array.Copy(buf, 0, buf_, 11, len);
-
-	//std::copy(default_buf, (default_buf + 8), buf_ + 2);
-	//std::copy(buf, (buf + len), buf_ + 11);
 
 	memcpy(buf_ + 2, default_buf, 8);
 	memcpy(buf_ + 11, buf, len);

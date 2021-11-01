@@ -10,11 +10,8 @@ JoyconManager* JoyconManager::Instance()
 
 void JoyconManager::Awake()
 {
-	//if (instance != nullptr) delete this;
-	//instance = this;
 	int i = 0;
 
-	//j = new std::vector<Joycon>();
 	bool isLeft = false;
 	hid_init();
 

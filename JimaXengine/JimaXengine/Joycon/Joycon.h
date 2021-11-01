@@ -268,7 +268,7 @@ public:
     void SetFilterCoeff(float a) { filterweight = a; }
     void Detach();                          // Œãˆ—
     int ReceiveRaw();                       // ’¼–ó->¶Aó‚¯æ‚é
-    void Poll();                            // ’¼–ó->“Š•[ABegin‚ÅŒÄ‚Î‚ê‚Ä‚é
+    static void Poll(Joycon* j);                            // ’¼–ó->“Š•[ABegin‚ÅŒÄ‚Î‚ê‚Ä‚é
 
     void Update();
 

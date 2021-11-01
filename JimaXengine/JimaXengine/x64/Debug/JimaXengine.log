@@ -1,7 +1,7 @@
 ﻿  Joycon.cpp
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(130,51): warning C4554: '&': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(199,26): warning C4244: '=': 'time_t' から 'long' への変換です。データが失われる可能性があります。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(317,48): warning C4554: '|': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(391,14): warning C4244: '初期化中': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.h(220): warning C4172: ローカル変数またはテンポラリのアドレスを返します: rumble_data
-  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(140,51): warning C4554: '&': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(209,26): warning C4244: '=': 'time_t' から 'long' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(327,48): warning C4554: '|': 演算子の優先順位に問題があります。かっこを使用して優先順位を明確にしてください
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.cpp(403,14): warning C4244: '初期化中': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Joycon\Joycon.h(220): warning C4172: ローカル変数またはテンポラリのアドレスを返します: rumble_data
+  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

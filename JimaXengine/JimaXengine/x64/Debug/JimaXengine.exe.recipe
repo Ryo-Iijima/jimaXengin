@@ -2,42 +2,42 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicPS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicVS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\BasicVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXPS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXVS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\CubeGS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\CubeGS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\CubePS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\CubePS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\ParticleVS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\ParticleVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\QuadGS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\QuadGS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\QuadPS.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\QuadPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\SpritePixelShader.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\SpritePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\SpriteVertexShader.cso</FullPath>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\SpriteVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
