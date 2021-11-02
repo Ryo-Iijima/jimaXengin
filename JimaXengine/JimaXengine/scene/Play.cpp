@@ -1,35 +1,38 @@
 #include "Play.h"
-#include "../actor/Player.h"
 #include "../3d/Object3d.h"
 #include "../3d/FbxLoader.h"
 #include "../2d/Object2d.h"
-#include "../actor/JoyconTest.h"
 
-Play::Play(WinApp* winapp)
+JimaXengine::Play::Play(WinApp* winapp)
 {
 }
 
-Play::~Play()
+JimaXengine::Play::~Play()
 {
 	delete oManager;
 }
 
-void Play::Initialize()
+void JimaXengine::Play::Initialize()
 {
 	Vector3 eye, target, up;
 
-	eye = { 0, 20, -20 };
+	eye = { 0, 0, -20 };
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 
 	camera = new Camera();
 	camera->SetViewMatrix(eye, target, up);
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
-
+	
 	oManager = new GameObjectManager();
 	oManager->Initialize();
 	oManager->Add(new Player(camera));
 	oManager->Add(new Target(camera));
+	oManager->Add(new Target(camera, Vector3(5, 5, 10)));
+	oManager->Add(new Target(camera, Vector3(5, -5, 20)));
+	oManager->Add(new Target(camera, Vector3(-5, -5, 20)));
+	oManager->Add(new Target(camera, Vector3(-5, 5, 30)));
+	//oManager->Add(new Boss());
 	oManager->Add(new BackGround(camera));
 	oManager->Add(new JoyconTest());
 
@@ -47,7 +50,7 @@ void Play::Initialize()
 	object2d->CreateSprite();
 }
 
-void Play::Update()
+void JimaXengine::Play::Update()
 {
 	oManager->Update();
 
@@ -60,7 +63,7 @@ void Play::Update()
 	}
 }
 
-void Play::Draw()
+void JimaXengine::Play::Draw()
 {
 	//object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f, Vector2(1.0f, 1.0f), "ALPHA");
 

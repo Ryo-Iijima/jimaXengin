@@ -6,16 +6,16 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 using namespace std;
 
-DirectXCommon* Object2d::dxCommon = nullptr;
-const int Object2d::spriteSRVCount = 512;
-XMMATRIX Object2d::spriteMatProjection = {};
-UINT Object2d::texNumber = 0;
-ComPtr<ID3D12RootSignature> Object2d::spriteRootSignature = {};
-map<string, ComPtr<ID3D12PipelineState>> Object2d::pipelines;
-ComPtr<ID3D12DescriptorHeap> Object2d::spriteDescHeap = {};
-map<string, UINT> Object2d::textureMap = {};
+JimaXengine::DirectXCommon* JimaXengine::Object2d::dxCommon = nullptr;
+const int JimaXengine::Object2d::spriteSRVCount = 512;
+XMMATRIX JimaXengine::Object2d::spriteMatProjection = {};
+UINT JimaXengine::Object2d::texNumber = 0;
+ComPtr<ID3D12RootSignature> JimaXengine::Object2d::spriteRootSignature = {};
+map<string, ComPtr<ID3D12PipelineState>> JimaXengine::Object2d::pipelines;
+ComPtr<ID3D12DescriptorHeap> JimaXengine::Object2d::spriteDescHeap = {};
+map<string, UINT> JimaXengine::Object2d::textureMap = {};
 
-HRESULT Object2d::CreateDescriptorHeap()
+HRESULT JimaXengine::Object2d::CreateDescriptorHeap()
 {
 	HRESULT result;
 
@@ -29,7 +29,7 @@ HRESULT Object2d::CreateDescriptorHeap()
 	return result;
 }
 
-HRESULT Object2d::CreateRootSignature()
+HRESULT JimaXengine::Object2d::CreateRootSignature()
 {
 	HRESULT result;
 
@@ -66,7 +66,7 @@ HRESULT Object2d::CreateRootSignature()
 	return result;
 }
 
-HRESULT Object2d::CreatePipeline(const std::string& vsfilename, const std::string& psfilename, const std::string& registername)
+HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, const std::string& psfilename, const std::string& registername)
 {
 	HRESULT result;
 
@@ -175,15 +175,15 @@ HRESULT Object2d::CreatePipeline(const std::string& vsfilename, const std::strin
 	return result;
 }
 
-Object2d::Object2d()
+JimaXengine::Object2d::Object2d()
 {
 }
 
-Object2d::~Object2d()
+JimaXengine::Object2d::~Object2d()
 {
 }
 
-void Object2d::Initialize(DirectXCommon* dxcommon, WinApp* winapp)
+void JimaXengine::Object2d::Initialize(DirectXCommon* dxcommon, WinApp* winapp)
 {
 	Object2d::dxCommon = dxcommon;
 
@@ -206,7 +206,7 @@ void Object2d::Initialize(DirectXCommon* dxcommon, WinApp* winapp)
 
 }
 
-void Object2d::LoadTexture(const std::string& filename)
+void JimaXengine::Object2d::LoadTexture(const std::string& filename)
 {
 	//シェーダーリソースビュー作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -238,7 +238,7 @@ void Object2d::LoadTexture(const std::string& filename)
 	texNumber++;
 }
 
-void Object2d::CreateSprite()
+void JimaXengine::Object2d::CreateSprite()
 {
 	HRESULT result;
 
@@ -268,7 +268,7 @@ void Object2d::CreateSprite()
 		IID_PPV_ARGS(&spriteConstBuff));
 }
 
-void Object2d::DrawOriginal(const std::string& filename, Vector2 position, float angle, Vector2 scale, string blendtype, Vector2 anchor, Vector4 color)
+void JimaXengine::Object2d::DrawOriginal(const std::string& filename, Vector2 position, float angle, Vector2 scale, string blendtype, Vector2 anchor, Vector4 color)
 {
 	D3D12_RESOURCE_DESC resDesc = Texture::GetTexture(filename)->GetDesc();
 	float width = (float)resDesc.Width;
@@ -299,7 +299,7 @@ void Object2d::DrawOriginal(const std::string& filename, Vector2 position, float
 	DrawCommands(filename, "Basic2D", blendtype);
 }
 
-void Object2d::DrawRect(const std::string& filename, Vector2 position, Vector2 texpos, Vector2 texlength, Vector2 size, float angle, string blendtype, Vector2 anchor, Vector4 color)
+void JimaXengine::Object2d::DrawRect(const std::string& filename, Vector2 position, Vector2 texpos, Vector2 texlength, Vector2 size, float angle, string blendtype, Vector2 anchor, Vector4 color)
 {
 	D3D12_RESOURCE_DESC resDesc = Texture::GetTexture(filename)->GetDesc();
 	float width = (float)resDesc.Width;
@@ -337,7 +337,7 @@ void Object2d::DrawRect(const std::string& filename, Vector2 position, Vector2 t
 	DrawCommands(filename, "Basic2D", blendtype);
 }
 
-void Object2d::MatrixUpdate(Vector2 position, float angle, Vector2 scale)
+void JimaXengine::Object2d::MatrixUpdate(Vector2 position, float angle, Vector2 scale)
 {
 	matWorld = XMMatrixIdentity();
 	matWorld *= XMMatrixScaling(scale.x, scale.y, 1.0f);
@@ -345,7 +345,7 @@ void Object2d::MatrixUpdate(Vector2 position, float angle, Vector2 scale)
 	matWorld *= XMMatrixTranslation(position.x, position.y, 0.0f);
 }
 
-void Object2d::TransferConstBuffer(Vector4 color)
+void JimaXengine::Object2d::TransferConstBuffer(Vector4 color)
 {
 	//定数バッファにデータ転送
 	SpriteConstBufferData* constMap = nullptr;
@@ -355,7 +355,7 @@ void Object2d::TransferConstBuffer(Vector4 color)
 	spriteConstBuff->Unmap(0, nullptr);
 }
 
-void Object2d::DrawCommands(const std::string& filename, const std::string& registername, const std::string& blendtype)
+void JimaXengine::Object2d::DrawCommands(const std::string& filename, const std::string& registername, const std::string& blendtype)
 {
 	Object2d::dxCommon->GetCommandList()->SetPipelineState(pipelines[registername + blendtype].Get());
 	Object2d::dxCommon->GetCommandList()->SetGraphicsRootSignature(spriteRootSignature.Get());

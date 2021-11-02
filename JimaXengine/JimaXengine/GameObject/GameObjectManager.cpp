@@ -2,24 +2,24 @@
 #include "../camera/Camera.h"
 #include <algorithm>
 
-GameObjectManager::GameObjectManager()
+JimaXengine::GameObjectManager::GameObjectManager()
 {
 	pManager = new ParticleManager();
 }
 
-GameObjectManager::~GameObjectManager()
+JimaXengine::GameObjectManager::~GameObjectManager()
 {
 	RemoveAll();
 	delete pManager;
 }
 
-void GameObjectManager::Initialize()
+void JimaXengine::GameObjectManager::Initialize()
 {
 	RemoveAll();
 	pManager->Initialize();
 }
 
-void GameObjectManager::Add(GameObject* obj)
+void JimaXengine::GameObjectManager::Add(GameObject* obj)
 {
 	obj->SetGameObjectManager(this);
 	obj->Initialize();
@@ -28,7 +28,7 @@ void GameObjectManager::Add(GameObject* obj)
 	SortRenderType();
 }
 
-void GameObjectManager::Insert(GameObject * obj)
+void JimaXengine::GameObjectManager::Insert(GameObject * obj)
 {
 	obj->SetGameObjectManager(this);
 	obj->Initialize();
@@ -36,7 +36,7 @@ void GameObjectManager::Insert(GameObject * obj)
 	insertObjects.push_back(obj);
 }
 
-void GameObjectManager::Update()
+void JimaXengine::GameObjectManager::Update()
 {
 	for (auto it = gameObjects.begin(); it != gameObjects.end(); ++it)
 	{
@@ -52,7 +52,7 @@ void GameObjectManager::Update()
 	InsertAll();
 }
 
-void GameObjectManager::Draw()
+void JimaXengine::GameObjectManager::Draw()
 {
 	//深度テストありパーティクル
 	pManager->DrawDepth(GetPlayer()->GetCamera());
@@ -82,7 +82,7 @@ void GameObjectManager::Draw()
 	pManager->DrawDepthNone(GetPlayer()->GetCamera());
 }
 
-void GameObjectManager::ResetObject()
+void JimaXengine::GameObjectManager::ResetObject()
 {
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -91,7 +91,7 @@ void GameObjectManager::ResetObject()
 	}
 }
 
-Player* GameObjectManager::GetPlayer()
+JimaXengine::Player* JimaXengine::GameObjectManager::GetPlayer()
 {
 	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)
 	{
@@ -104,12 +104,12 @@ Player* GameObjectManager::GetPlayer()
 	return nullptr;
 }
 
-void GameObjectManager::SortRenderType()
+void JimaXengine::GameObjectManager::SortRenderType()
 {
 	std::sort(gameObjects.begin(), gameObjects.end(), [](GameObject* obj1, GameObject* obj2) { return obj1->GetRenderType() < obj2->GetRenderType(); });
 }
 
-void GameObjectManager::Remove()
+void JimaXengine::GameObjectManager::Remove()
 {
 	for (auto it = gameObjects.begin(); it != gameObjects.end();)
 	{
@@ -119,7 +119,7 @@ void GameObjectManager::Remove()
 	}
 }
 
-void GameObjectManager::RemoveAll()
+void JimaXengine::GameObjectManager::RemoveAll()
 {
 	auto end = gameObjects.end();
 	for (auto it = gameObjects.begin(); it != end; ++it)
@@ -129,7 +129,7 @@ void GameObjectManager::RemoveAll()
 	gameObjects.clear();
 }
 
-void GameObjectManager::InsertAll()
+void JimaXengine::GameObjectManager::InsertAll()
 {
 	if (insertObjects.empty())
 		return;

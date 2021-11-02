@@ -1,14 +1,14 @@
 #include "JoyconManager.h"
 
-JoyconManager* JoyconManager::instance = new JoyconManager();
+JimaXengine::JoyconManager* JimaXengine::JoyconManager::instance = new JoyconManager();
 
-JoyconManager* JoyconManager::Instance()
+JimaXengine::JoyconManager* JimaXengine::JoyconManager::Instance()
 {
 	//instance = new JoyconManager();
     return instance;
 }
 
-void JoyconManager::Awake()
+void JimaXengine::JoyconManager::Awake()
 {
 	int i = 0;
 
@@ -54,7 +54,7 @@ void JoyconManager::Awake()
 	hid_free_enumeration(top_ptr);
 }
 
-void JoyconManager::Start()
+void JimaXengine::JoyconManager::Start()
 {
 	for (int i = 0; i < j.size(); ++i)
 	{
@@ -67,7 +67,7 @@ void JoyconManager::Start()
 	}
 }
 
-void JoyconManager::Update()
+void JimaXengine::JoyconManager::Update()
 {
 	for (int i = 0; i < j.size(); ++i)
 	{
@@ -75,7 +75,7 @@ void JoyconManager::Update()
 	}
 }
 
-void JoyconManager::OnApplicationQuit()
+void JimaXengine::JoyconManager::OnApplicationQuit()
 {
 	for (int i = 0; i < j.size(); ++i)
 	{

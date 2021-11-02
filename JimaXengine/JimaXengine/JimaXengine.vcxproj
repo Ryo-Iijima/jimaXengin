@@ -183,6 +183,7 @@
     <ClCompile Include="actor\Player.cpp" />
     <ClCompile Include="actor\Target.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="collision\Collision.cpp" />
     <ClCompile Include="collision\CollisionPrimitive.cpp" />
@@ -225,6 +226,7 @@
     <ClCompile Include="scene\Play.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
     <ClCompile Include="scene\Title.cpp" />
+    <ClCompile Include="TargetManager.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +240,7 @@
     <ClInclude Include="actor\Player.h" />
     <ClInclude Include="actor\Target.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="collision\Collision.h" />
     <ClInclude Include="collision\CollisionPrimitive.h" />
@@ -280,6 +283,7 @@
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />
     <ClInclude Include="scene\Title.h" />
+    <ClInclude Include="TargetManager.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>

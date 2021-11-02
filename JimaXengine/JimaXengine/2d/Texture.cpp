@@ -10,17 +10,17 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 using namespace std;
 
-DirectXCommon* Texture::dxCommon = nullptr;
-string Texture::texturepass = "Resources/texture/";
-unordered_map<string, ComPtr<ID3D12Resource>> Texture::texBuffers;
-unordered_map<string, TexMetadata> Texture::metadataMap;
-unordered_map<string, Texture::TextureType> Texture::types;
+JimaXengine::DirectXCommon* JimaXengine::Texture::dxCommon = nullptr;
+string JimaXengine::Texture::texturepass = "Resources/texture/";
+unordered_map<string, ComPtr<ID3D12Resource>> JimaXengine::Texture::texBuffers;
+unordered_map<string, TexMetadata> JimaXengine::Texture::metadataMap;
+unordered_map<string, JimaXengine::Texture::TextureType> JimaXengine::Texture::types;
 
-Texture::Texture()
+JimaXengine::Texture::Texture()
 {
 }
 
-void Texture::DebugLog(const std::string& filename, bool isSuccess, bool isLoadTex)
+void JimaXengine::Texture::DebugLog(const std::string& filename, bool isSuccess, bool isLoadTex)
 {
 #ifdef _DEBUG
 	string tmpFilename = "";
@@ -51,18 +51,18 @@ void Texture::DebugLog(const std::string& filename, bool isSuccess, bool isLoadT
 #endif // _DEBUG
 }
 
-Texture::~Texture()
+JimaXengine::Texture::~Texture()
 {
 }
 
-void Texture::Initialize(DirectXCommon* dxCommon)
+void JimaXengine::Texture::Initialize(DirectXCommon* dxCommon)
 {
 	Texture::dxCommon = dxCommon;
 
 	CreateSimpleTexture("white", { 1,1,1,1 });
 }
 
-void Texture::LoadTexture(const std::string& filename)
+void JimaXengine::Texture::LoadTexture(const std::string& filename)
 {
 	HRESULT result;
 	ComPtr<ID3D12Resource> texbuff;
@@ -132,7 +132,7 @@ void Texture::LoadTexture(const std::string& filename)
 	// Object3d::LoadResourceTexture(filename);
 }
 
-void Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, int texWidth, int texHeight)
+void JimaXengine::Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, int texWidth, int texHeight)
 {
 	HRESULT result;
 	ComPtr<ID3D12Resource> texbuff;
@@ -199,7 +199,7 @@ void Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, in
 	delete[] texturedata;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> Texture::GetTexture(const std::string& filename)
+Microsoft::WRL::ComPtr<ID3D12Resource> JimaXengine::Texture::GetTexture(const std::string& filename)
 {
 	if (texBuffers.find(filename) == texBuffers.end())
 	{
@@ -209,7 +209,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Texture::GetTexture(const std::string& fi
 	return texBuffers[filename];
 }
 
-DirectX::TexMetadata Texture::GetMetadata(const std::string& filename)
+DirectX::TexMetadata JimaXengine::Texture::GetMetadata(const std::string& filename)
 {
 	if (metadataMap.find(filename) == metadataMap.end())
 	{
@@ -219,7 +219,7 @@ DirectX::TexMetadata Texture::GetMetadata(const std::string& filename)
 	return metadataMap[filename];
 }
 
-Texture::TextureType Texture::GetTextureType(const std::string& filename)
+JimaXengine::Texture::TextureType JimaXengine::Texture::GetTextureType(const std::string& filename)
 {
 	if (types.find(filename) == types.end())
 	{

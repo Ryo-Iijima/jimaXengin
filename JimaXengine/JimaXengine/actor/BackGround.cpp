@@ -1,18 +1,18 @@
 #include "background.h"
 #include "../3d/FbxLoader.h"
 
-BackGround::BackGround(Camera* camera)
+JimaXengine::BackGround::BackGround(Camera* camera)
 {
 	pCamera = camera;
 
 }
 
-BackGround::~BackGround()
+JimaXengine::BackGround::~BackGround()
 {
 	delete model;
 }
 
-void BackGround::Initialize()
+void JimaXengine::BackGround::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
 	top = std::make_unique<Object3d>();
@@ -39,7 +39,7 @@ void BackGround::Initialize()
 
 	bottom->SetPosition(pos + Vector3(0, -20, 0));
 	bottom->SetScale(Vector3(100, 0.01f, 100));
-	bottom->SetColor(Vector4(0, 0, 0, 1));
+	bottom->SetColor(Vector4(0.3f, 0.3f, 0.3f, 1));
 
 	left->SetPosition(pos + Vector3(-20, 0, 0));
 	left->SetScale(Vector3(0.01f, 20, 100));
@@ -51,7 +51,7 @@ void BackGround::Initialize()
 
 }
 
-void BackGround::Update()
+void JimaXengine::BackGround::Update()
 {
 	top->SetCamera(pCamera);
 	top->Update();
@@ -63,7 +63,7 @@ void BackGround::Update()
 	right->Update();
 }
 
-void BackGround::Draw()
+void JimaXengine::BackGround::Draw()
 {
 	//top->Draw();
 	bottom->Draw();
@@ -71,11 +71,11 @@ void BackGround::Draw()
 	//right->Draw();
 }
 
-GameObject::TYPE BackGround::GetType()
+JimaXengine::GameObject::TYPE JimaXengine::BackGround::GetType()
 {
 	return GameObject::TYPE::NONE;
 }
 
-void BackGround::DrawImGui()
+void JimaXengine::BackGround::DrawImGui()
 {
 }

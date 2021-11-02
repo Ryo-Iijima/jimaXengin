@@ -1,21 +1,21 @@
 #include "HomingGeometryParticle.h"
 
-HomingGeometryParticle::HomingGeometryParticle(const ParticleParam& arg_param, GameObject* arg_gameObj)
+JimaXengine::HomingGeometryParticle::HomingGeometryParticle(const ParticleParam& arg_param, GameObject* arg_gameObj)
 {
 	param = arg_param;
 	gameObject = arg_gameObj;
 	time = 0;
 }
 
-HomingGeometryParticle::~HomingGeometryParticle()
+JimaXengine::HomingGeometryParticle::~HomingGeometryParticle()
 {
 }
 
-void HomingGeometryParticle::Initialize()
+void JimaXengine::HomingGeometryParticle::Initialize()
 {
 }
 
-void HomingGeometryParticle::Update()
+void JimaXengine::HomingGeometryParticle::Update()
 {
 	const int CLASH_TIME = 45;
 

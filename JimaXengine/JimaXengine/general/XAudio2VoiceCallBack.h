@@ -1,5 +1,7 @@
 #pragma once
-class XAudio2VoiceCallBack
+namespace JimaXengine
 {
-};
-
+	class XAudio2VoiceCallBack
+	{
+	};
+}

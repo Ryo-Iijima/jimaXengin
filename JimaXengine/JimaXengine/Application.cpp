@@ -7,13 +7,13 @@
 #include "2d/Texture.h"
 #include "ResourceShader.h"
 
-Application& Application::GetInstance()
+JimaXengine::Application& JimaXengine::Application::GetInstance()
 {
 	static Application instance;
 	return instance;
 }
 
-void Application::Initialize()
+void JimaXengine::Application::Initialize()
 {
 	// ゲームウィンドウの作成
 	winApp = new WinApp();
@@ -53,7 +53,7 @@ void Application::Initialize()
 	// 入力
 	input = new Input();
 	input->Initialize(winApp);
-
+	//input->SetDeadZone(0, 0);
 
 	Texture::LoadTexture("white1x1.png");
 	Texture::LoadTexture("colorGrid.png");
@@ -84,7 +84,7 @@ void Application::Initialize()
 	
 }
 
-void Application::Finalize()
+void JimaXengine::Application::Finalize()
 {
 	// 各種解放処理
 	input->Finalize();
@@ -98,7 +98,7 @@ void Application::Finalize()
 	delete winApp;
 }
 
-void Application::Run()
+void JimaXengine::Application::Run()
 {
 	while (true)
 	{

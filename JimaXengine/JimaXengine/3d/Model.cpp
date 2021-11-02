@@ -1,12 +1,12 @@
 #include "Model.h"
 
-Model::~Model()
+JimaXengine::Model::~Model()
 {
 	// FBXシーンの解放
 	//fbxScene->Destroy();
 }
 
-void Model::CreateBuffers(ID3D12Device* _dev)
+void JimaXengine::Model::CreateBuffers(ID3D12Device* _dev)
 {
 	HRESULT result;
 	// 頂点データ全体のサイズ
@@ -121,7 +121,7 @@ void Model::CreateBuffers(ID3D12Device* _dev)
 	);
 }
 
-void Model::Draw(ID3D12GraphicsCommandList* cmdList)
+void JimaXengine::Model::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
 	cmdList->IASetIndexBuffer(&ibView);

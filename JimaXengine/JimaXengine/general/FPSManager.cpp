@@ -1,7 +1,7 @@
 #include "FPSManager.h"
 #include <iostream>
 
-void FPSManager::Initialize(const float maxfps)
+void JimaXengine::FPSManager::Initialize(const float maxfps)
 {
 	timeStart = {};
 	timeEnd = {};
@@ -23,7 +23,7 @@ void FPSManager::Initialize(const float maxfps)
 
 }
 
-void FPSManager::Update()
+void JimaXengine::FPSManager::Update()
 {
 	if (debugCount == maxFps)
 	{

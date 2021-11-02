@@ -3,17 +3,17 @@
 #include "../3d/FbxLoader.h"
 #include "../2d/Object2d.h"
 
-Title::Title(WinApp* winapp)
+JimaXengine::Title::Title(WinApp* winapp)
 {
 }
 
-Title::~Title()
+JimaXengine::Title::~Title()
 {
 	delete titleTex;
 	delete pushStartTex;
 }
 
-void Title::Initialize()
+void JimaXengine::Title::Initialize()
 {
 	isEnd = false;
 	nowScene = "Title";
@@ -25,18 +25,18 @@ void Title::Initialize()
 	bgPos = { 0,0 };
 	
 	
-	pushStartTex = new Object2d;
+	pushStartTex = new JimaXengine::Object2d;
 	pushStartTex->CreateSprite();
 	pushStartTexPos = { WinApp::WINDOW_WIDTH / 2,WinApp::WINDOW_HEIGHT / 4 * 3 };
 
 
-	titleTex = new Object2d;
+	titleTex = new JimaXengine::Object2d;
 	titleTex->CreateSprite();
 	titleTexPos = { WinApp::WINDOW_WIDTH / 2,WinApp::WINDOW_HEIGHT / 4 };
 	
 }
 
-void Title::Update()
+void JimaXengine::Title::Update()
 {
 
 	if (Input::KeyTrigger(DIK_1))
@@ -45,7 +45,7 @@ void Title::Update()
 	}
 }
 
-void Title::Draw()
+void JimaXengine::Title::Draw()
 {
 	bg->DrawOriginal("white1x1.png", bgPos, 0.0f, Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT), "ALPHA", Vector2(0.0f, 0.0f), Vector4(0.3f, 0.3f, 0.3f, 1));
 

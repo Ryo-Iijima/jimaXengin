@@ -1,11 +1,13 @@
 #pragma once
 #include <random>
 
-class Random
+namespace JimaXengine
 {
-private:
-	Random();
-public:
-	static float GetRandom(float minValue, float maxValue);
-};
-
+	class Random
+	{
+	private:
+		Random();
+	public:
+		static float GetRandom(float minValue, float maxValue);
+	};
+}

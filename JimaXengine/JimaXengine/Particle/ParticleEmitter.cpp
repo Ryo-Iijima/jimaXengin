@@ -6,20 +6,20 @@
 #include "HomingGeometryParticle.h"
 //#include "GameObjectManager.h"
 
-ParticleEmitter::ParticleEmitter()
+JimaXengine::ParticleEmitter::ParticleEmitter()
 {
 }
 
-ParticleEmitter::~ParticleEmitter()
+JimaXengine::ParticleEmitter::~ParticleEmitter()
 {
 }
 
-void ParticleEmitter::Initialize(ParticleManager * manager)
+void JimaXengine::ParticleEmitter::Initialize(ParticleManager * manager)
 {
 	this->manager = manager;
 }
 
-void ParticleEmitter::TempleteGeo(const Vector3& pos)
+void JimaXengine::ParticleEmitter::TempleteGeo(const Vector3& pos)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 10; i++)
@@ -57,7 +57,7 @@ void ParticleEmitter::TempleteGeo(const Vector3& pos)
 	}
 }
 
-void ParticleEmitter::TempleteObj(const Vector3& pos)
+void JimaXengine::ParticleEmitter::TempleteObj(const Vector3& pos)
 {
 	ParticleParam param = {};
 
@@ -97,7 +97,7 @@ void ParticleEmitter::TempleteObj(const Vector3& pos)
 	}
 }
 
-void ParticleEmitter::CrashBlock(const Vector3& pos)
+void JimaXengine::ParticleEmitter::CrashBlock(const Vector3& pos)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 10; i++)
@@ -135,7 +135,7 @@ void ParticleEmitter::CrashBlock(const Vector3& pos)
 	}
 }
 
-void ParticleEmitter::Drift(const Vector3& pos, const Vector3& vec)
+void JimaXengine::ParticleEmitter::Drift(const Vector3& pos, const Vector3& vec)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 1; i++)
@@ -175,7 +175,7 @@ void ParticleEmitter::Drift(const Vector3& pos, const Vector3& vec)
 	}
 }
 
-void ParticleEmitter::RandomEffect(const Vector3& pos)
+void JimaXengine::ParticleEmitter::RandomEffect(const Vector3& pos)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 5; i++)
@@ -212,7 +212,7 @@ void ParticleEmitter::RandomEffect(const Vector3& pos)
 	}
 }
 
-void ParticleEmitter::Moya(const Vector3& pos, const Vector3& color)
+void JimaXengine::ParticleEmitter::Moya(const Vector3& pos, const Vector3& color)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 1; i++)
@@ -251,7 +251,7 @@ void ParticleEmitter::Moya(const Vector3& pos, const Vector3& color)
 	}
 }
 
-void ParticleEmitter::SphereEffect(const Vector3& pos, const Vector3& color)
+void JimaXengine::ParticleEmitter::SphereEffect(const Vector3& pos, const Vector3& color)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 100; i++)
@@ -287,7 +287,7 @@ void ParticleEmitter::SphereEffect(const Vector3& pos, const Vector3& color)
 	}
 }
 
-void ParticleEmitter::PreSphereEffect(const Vector3& pos, const Vector3& color)
+void JimaXengine::ParticleEmitter::PreSphereEffect(const Vector3& pos, const Vector3& color)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 100; i++)
@@ -323,7 +323,7 @@ void ParticleEmitter::PreSphereEffect(const Vector3& pos, const Vector3& color)
 	}
 }
 
-void ParticleEmitter::RandomCube(const Vector3& pos)
+void JimaXengine::ParticleEmitter::RandomCube(const Vector3& pos)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 7; i++)
@@ -363,7 +363,7 @@ void ParticleEmitter::RandomCube(const Vector3& pos)
 	}
 }
 
-void ParticleEmitter::RandomCubeHoming(const Vector3& pos, GameObject* gameObj)
+void JimaXengine::ParticleEmitter::RandomCubeHoming(const Vector3& pos, GameObject* gameObj)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 7; i++)
@@ -403,7 +403,7 @@ void ParticleEmitter::RandomCubeHoming(const Vector3& pos, GameObject* gameObj)
 	}
 }
 
-void ParticleEmitter::Homing(const Vector3& pos, GameObject* gameObj)
+void JimaXengine::ParticleEmitter::Homing(const Vector3& pos, GameObject* gameObj)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 10; i++)
@@ -441,7 +441,7 @@ void ParticleEmitter::Homing(const Vector3& pos, GameObject* gameObj)
 	}
 }
 
-void ParticleEmitter::AwayDrill(const Vector3& pos)
+void JimaXengine::ParticleEmitter::AwayDrill(const Vector3& pos)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 1; i++)
@@ -481,7 +481,7 @@ void ParticleEmitter::AwayDrill(const Vector3& pos)
 	}
 }
 
-void ParticleEmitter::InvincibleEffect(const Vector3& pos)
+void JimaXengine::ParticleEmitter::InvincibleEffect(const Vector3& pos)
 {
 	ParticleParam param = {};
 	for (int i = 0; i < 5; i++)

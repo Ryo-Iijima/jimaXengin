@@ -29,7 +29,7 @@ void SendSubcommand(hid_device* dev, uint8_t command, uint8_t subcommand[], int 
     hid_write(dev, buf, 0x40);
 }
 
-void Player::JoyConInitialize()
+void JimaXengine::Player::JoyConInitialize()
 {
     int globalCount = 0;
     device = hid_enumerate(0, 0);
@@ -116,7 +116,7 @@ void Player::JoyConInitialize()
 
 }
 
-void Player::JoyConUpdate()
+void JimaXengine::Player::JoyConUpdate()
 {
     // input report を受けとる。
     if (dev)
@@ -136,9 +136,9 @@ void Player::JoyConUpdate()
         Vector3 cal_acc_coeff = { 350,0,4081 };       // オフセット量
         Vector3 cal_acc_origin = { 18,75,4100 };      // コントローラー水平時のセンサーの値
         Vector3 acc_coeff;
-        acc_coeff.x = (1.0 / (cal_acc_coeff.x - cal_acc_origin.x)) * 4.0f;
-        acc_coeff.y = (1.0 / (cal_acc_coeff.y - cal_acc_origin.y)) * 4.0f;
-        acc_coeff.z = (1.0 / (cal_acc_coeff.z - cal_acc_origin.z)) * 4.0f;
+        acc_coeff.x = (float)((1.0 / (cal_acc_coeff.x - cal_acc_origin.x)) * 4.0f);
+        acc_coeff.y = (float)((1.0 / (cal_acc_coeff.y - cal_acc_origin.y)) * 4.0f);
+        acc_coeff.z = (float)((1.0 / (cal_acc_coeff.z - cal_acc_origin.z)) * 4.0f);
 
         Vector3 acc_raw_component = { (float)accel.x ,(float)accel.y ,(float)accel.z };
         Vector3 acc_vector_component;
@@ -183,34 +183,51 @@ void Player::JoyConUpdate()
 
 }
 
-void Player::Move()
+void JimaXengine::Player::Move()
 {
     vel = { 0,0,0 };
 
-    if (Input::KeyPress(DIK_W)) vel.z = 1;
-    if (Input::KeyPress(DIK_S)) vel.z = -1;
-    if (Input::KeyPress(DIK_A)) vel.x = -1;
-    if (Input::KeyPress(DIK_D)) vel.x = 1;
+    //if (Input::KeyPress(DIK_W)) vel.z = 1;
+    //if (Input::KeyPress(DIK_S)) vel.z = -1;
+    //if (Input::KeyPress(DIK_A)) vel.x = -1;
+    //if (Input::KeyPress(DIK_D)) vel.x = 1;
 
     pos += vel;
+
+#pragma region Stick
+    // 左
+    leftRacket->vel = Vector3(0, 0, 0);
+    if (Input::KeyPress(DIK_W) || Input::PadLeftStickUp()) leftRacket->vel.y = 1;
+    if (Input::KeyPress(DIK_S) || Input::PadLeftStickDown()) leftRacket->vel.y = -1;
+    if (Input::KeyPress(DIK_A) || Input::PadLeftStickLeft()) leftRacket->vel.x = -1;
+    if (Input::KeyPress(DIK_D) || Input::PadLeftStickRight()) leftRacket->vel.x = 1;
+    leftRacket->pos += leftRacket->vel;
+    // 右
+    rightRacket->vel = Vector3(0, 0, 0);
+    if (Input::KeyPress(DIK_I) || Input::PadRightStickUp()) rightRacket->vel.y = 1;
+    if (Input::KeyPress(DIK_K) || Input::PadRightStickDown()) rightRacket->vel.y = -1;
+    if (Input::KeyPress(DIK_J) || Input::PadRightStickLeft()) rightRacket->vel.x = -1;
+    if (Input::KeyPress(DIK_L) || Input::PadRightStickRight()) rightRacket->vel.x = 1;
+    rightRacket->pos += rightRacket->vel;
+#pragma endregion
 }
 
-Player::Player(Camera* camera)
+JimaXengine::Player::Player(Camera* camera)
 {
     pCamera = camera;
 }
 
-Player::~Player()
+JimaXengine::Player::~Player()
 {
 	delete object;
 	delete model;
 
     delete device;
-    delete dev;
+    //delete dev;
 
 }
 
-void Player::Initialize()
+void JimaXengine::Player::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
 	//model = FbxLoader::GetInstance().LoadModelFromFile("Stand");
@@ -222,11 +239,41 @@ void Player::Initialize()
 	object->SetPosition(pos);
     object->SetScale(Vector3(4, 0.5, 1));
 
-    eye = { 0,20,-50 };
-    target = { 0,0,0 };
+    eye = { 0,0,-10 };
+    target = { 0,0,100 };
     pCamera->SetViewMatrix(eye, target);
 
     //JoyConInitialize();
+
+#pragma region Stick初期化
+
+    leftRacket = std::make_unique<Racket>();
+
+    leftRacket->pos = Vector3(-5, 0, 0);
+
+    leftRacket->object = std::make_unique<Object3d>();
+    leftRacket->object->Initialize();
+    leftRacket->object->SetModel(model);
+    leftRacket->object->SetColor(Vector4(0, 0, 1, 1));
+
+    leftRacket->col.minPos = Vector3(leftRacket->pos.x - 1, leftRacket->pos.y - 1, leftRacket->pos.z - 1);
+    leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
+
+
+    rightRacket = std::make_unique<Racket>();
+
+    rightRacket->pos = Vector3(5, 0, 0);
+
+    rightRacket->object = std::make_unique<Object3d>();
+    rightRacket->object->Initialize();
+    rightRacket->object->SetModel(model);
+    rightRacket->object->SetColor(Vector4(1, 0, 0, 1));
+
+    rightRacket->col.minPos = Vector3(rightRacket->pos.x - 1, rightRacket->pos.y - 1, rightRacket->pos.z - 1);
+    rightRacket->col.maxPos = Vector3(rightRacket->pos.x + 1, rightRacket->pos.y + 1, rightRacket->pos.z + 1);
+
+#pragma endregion
+
 
     model = FbxLoader::GetInstance().LoadModelFromFile("box");
     layObj = new Object3d;
@@ -236,7 +283,6 @@ void Player::Initialize()
     layObj->SetPosition(pos);
     layObj->SetScale(Vector3(1, 1, 1));
     layObj->SetColor(Vector4(1, 0, 0, 1));
-
 }
 
 enum class DebugType
@@ -254,54 +300,51 @@ void DebugPrint(std::string s, DebugType d)
     printf("%s\n", s.c_str());
 }
 
-void Player::Update()
+void JimaXengine::Player::Update()
 {
-    //{   // ポインターテスト
-    //    uint8_t* buf_ = new uint8_t[5]{ 0,1,2,3,4 };
-    //   
-    //    printf("buf   : %d\n", buf_);
-    //    printf("buf+1 : %d\n", (buf_ + 1));
-    //    printf("buf+2 : %d\n", (buf_ + 2));
-    //    printf("buf+3 : %d\n", (buf_ + 3));
-    //    printf("buf+4 : %d\n", (buf_ + 4));
-    //    printf("sizeof(buf) : %d\n", sizeof(buf_));
+    {
+        //{   // ポインターテスト
+//    uint8_t* buf_ = new uint8_t[5]{ 0,1,2,3,4 };
+//   
+//    printf("buf   : %d\n", buf_);
+//    printf("buf+1 : %d\n", (buf_ + 1));
+//    printf("buf+2 : %d\n", (buf_ + 2));
+//    printf("buf+3 : %d\n", (buf_ + 3));
+//    printf("buf+4 : %d\n", (buf_ + 4));
+//    printf("sizeof(buf) : %d\n", sizeof(buf_));
 
-    //}
+//}
 
-    //{   // 変数の型の比較
-    //    int a = 0;
-    //    if (typeid(a)==typeid(int))
-    //    {
-    //        printf("int is : %s\n", typeid(int).name());
-    //    }
-    //}
+//{   // 変数の型の比較
+//    int a = 0;
+//    if (typeid(a)==typeid(int))
+//    {
+//        printf("int is : %s\n", typeid(int).name());
+//    }
+//}
 
-    //{
-    //    DebugType debug_type = DebugType::NONE;
-    //    const unsigned int len = 5;
-    //    int arr[len]{ 0,1,2,3,4 };
-    //    std::string format = "%s";
+//{
+//    DebugType debug_type = DebugType::NONE;
+//    const unsigned int len = 5;
+//    int arr[len]{ 0,1,2,3,4 };
+//    std::string format = "%s";
 
-    //    std::string tostr = "";
-    //    for (int i = 0; i < len; ++i)
-    //    {
-    //        tostr += _StringFormat::Format((typeid(arr[0]) == typeid(int)) ? ((std::string)"%d") : ((typeid(arr[0]) == typeid(float)) ? ((std::string)"%f") : ((std::string)"%s")), arr[i]);
-    //    }
-    //    DebugPrint(_StringFormat::Format(format, tostr), debug_type);
+//    std::string tostr = "";
+//    for (int i = 0; i < len; ++i)
+//    {
+//        tostr += _StringFormat::Format((typeid(arr[0]) == typeid(int)) ? ((std::string)"%d") : ((typeid(arr[0]) == typeid(float)) ? ((std::string)"%f") : ((std::string)"%s")), arr[i]);
+//    }
+//    DebugPrint(_StringFormat::Format(format, tostr), debug_type);
 
-    //}
+//}
 
-    //JoyConUpdate();
+//JoyConUpdate();
+
+    }
     
     Move();
 
-    float out = 0;
-    if (Collision::LineToAABB3D(&layCol,&aabb3dCol,&pCamera->GetMatView(),out))
-    {
-        layObj->SetColor(Vector4(0, 1, 0, 1));
-    }
-
-    //object->SetPosition(pos);
+    object->SetPosition(pos);
     object->SetCamera(pCamera);
     object->Update();
 
@@ -312,30 +355,52 @@ void Player::Update()
 
     sphereCol.center = pos.ConvertXMVECTOR();
 
+#pragma region Stick
+    // left
+    leftRacket->object->SetPosition(leftRacket->pos);
+    leftRacket->object->SetCamera(pCamera);
+    leftRacket->object->Update();
+
+    leftRacket->col.minPos = Vector3(leftRacket->pos.x - 1, leftRacket->pos.y - 1, leftRacket->pos.z - 1);
+    leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
+    // right
+    rightRacket->object->SetPosition(rightRacket->pos);
+    rightRacket->object->SetCamera(pCamera);
+    rightRacket->object->Update();
+
+    rightRacket->col.minPos = Vector3(rightRacket->pos.x - 1, rightRacket->pos.y - 1, rightRacket->pos.z - 1);
+    rightRacket->col.maxPos = Vector3(rightRacket->pos.x + 1, rightRacket->pos.y + 1, rightRacket->pos.z + 1);
+#pragma endregion
 }
 
-void Player::Draw()
+void JimaXengine::Player::Draw()
 {
-	object->Draw();
-	layObj->Draw();
+	//object->Draw();
+	//layObj->Draw();
+
+#pragma region Stick
+    leftRacket->object->Draw();
+    rightRacket->object->Draw();
+#pragma endregion
+
 }
 
-GameObject::TYPE Player::GetType()
+JimaXengine::GameObject::TYPE JimaXengine::Player::GetType()
 {
     return GameObject::TYPE::PLAYER;
 }
 
-void Player::DrawImGui()
+void JimaXengine::Player::DrawImGui()
 {
     //ImGui::Begin("PlayerInfomation");
     //ImGui::End();
 }
 
-Camera* Player::GetCamera()
+JimaXengine::Camera* JimaXengine::Player::GetCamera()
 {
     return pCamera;
 }
 
-void Player::DrawAlphaObj()
+void JimaXengine::Player::DrawAlphaObj()
 {
 }

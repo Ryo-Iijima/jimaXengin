@@ -2,17 +2,19 @@
 #include "ParticleBase.h"
 #include "../GameObject/GameObject.h"
 
-class HomingGeometryParticle : public ParticleBase
+namespace JimaXengine
 {
-public:
-	HomingGeometryParticle(const ParticleParam& arg_param, GameObject* arg_gameObj);
-	~HomingGeometryParticle();
-	void Initialize() override;
-	void Update() override;
+	class HomingGeometryParticle : public ParticleBase
+	{
+	public:
+		HomingGeometryParticle(const ParticleParam& arg_param, GameObject* arg_gameObj);
+		~HomingGeometryParticle();
+		void Initialize() override;
+		void Update() override;
 
-private:
-	GameObject* gameObject;
+	private:
+		GameObject* gameObject;
 
-	int time;
-};
-
+		int time;
+	};
+}

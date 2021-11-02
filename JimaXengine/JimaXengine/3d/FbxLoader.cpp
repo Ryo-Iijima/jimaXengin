@@ -3,11 +3,11 @@
 
 using namespace DirectX;
 
-const std::string FbxLoader::BASE_DIRECTORY_MODEL = "Resources/model/";
-const std::string FbxLoader::BASE_DIRECTORY_TEX = "Resources/texture/";
-const std::string FbxLoader::DEFAULT_TEXTURE_FILENAME = "white1x1.png";
+const std::string JimaXengine::FbxLoader::BASE_DIRECTORY_MODEL = "Resources/model/";
+const std::string JimaXengine::FbxLoader::BASE_DIRECTORY_TEX = "Resources/texture/";
+const std::string JimaXengine::FbxLoader::DEFAULT_TEXTURE_FILENAME = "white1x1.png";
 
-void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
+void JimaXengine::FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
 {
     // ノード名を取得
     string neme = fbxNode->GetName();
@@ -67,7 +67,7 @@ void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
     }
 }
 
-void FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode)
+void JimaXengine::FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode)
 {
     // ノードのメッシュを取得
     FbxMesh* fbxMesh = fbxNode->GetMesh();
@@ -82,7 +82,7 @@ void FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode)
     ParseSkin(model, fbxMesh);
 }
 
-void FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
+void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
 {
     auto& vertices = model->vertices;
 
@@ -103,7 +103,7 @@ void FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
     }
 }
 
-void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
+void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 {
     auto& vertices = model->vertices;
     auto& indices = model->indices;
@@ -176,7 +176,7 @@ void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     
 }
 
-void FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
+void JimaXengine::FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
 {
     const int materialCount = fbxNode->GetMaterialCount();
     // 複数マテリアルに対応してないので0番決め打ち
@@ -233,7 +233,7 @@ void FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
     }
 }
 
-std::string FbxLoader::ExtractFileName(const std::string& path)
+std::string JimaXengine::FbxLoader::ExtractFileName(const std::string& path)
 {
     size_t pos1;
     // '\\'が出てくる市場最後の部分を検索
@@ -252,7 +252,7 @@ std::string FbxLoader::ExtractFileName(const std::string& path)
     return path;
 }
 
-void FbxLoader::LoadTexture(Model* model, const std::string& fullpath)
+void JimaXengine::FbxLoader::LoadTexture(Model* model, const std::string& fullpath)
 {
     HRESULT result = S_FALSE;
     // WICテクスチャのロード
@@ -268,7 +268,7 @@ void FbxLoader::LoadTexture(Model* model, const std::string& fullpath)
     }
 }
 
-void FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
+void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
 {
     //////////////////////////////
     // スキニング情報読み取り
@@ -399,7 +399,7 @@ void FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
     }
 }
 
-void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, FbxAMatrix& src)
+void JimaXengine::FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, FbxAMatrix& src)
 {
     for (int i = 0; i < 4; i++)
     {
@@ -410,13 +410,13 @@ void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, FbxAMatrix& src)
     }
 }
 
-FbxLoader& FbxLoader::GetInstance()
+JimaXengine::FbxLoader& JimaXengine::FbxLoader::GetInstance()
 {
     static FbxLoader instance;
     return instance;
 }
 
-void FbxLoader::Initialize(ID3D12Device* device)
+void JimaXengine::FbxLoader::Initialize(ID3D12Device* device)
 {
     assert(fbxmanager == nullptr);
     this->device = device;
@@ -429,13 +429,13 @@ void FbxLoader::Initialize(ID3D12Device* device)
     fbxImporter = FbxImporter::Create(fbxmanager, "");
 }
 
-void FbxLoader::Finalize()
+void JimaXengine::FbxLoader::Finalize()
 {
     fbxImporter->Destroy();
     fbxmanager->Destroy();
 }
 
-Model* FbxLoader::LoadModelFromFile(const string& modelName)
+JimaXengine::Model* JimaXengine::FbxLoader::LoadModelFromFile(const string& modelName)
 {
     const string directorypath = BASE_DIRECTORY_MODEL + modelName + "/";
     const string fileName = modelName + ".fbx";

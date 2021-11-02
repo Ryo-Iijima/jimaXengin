@@ -1,27 +1,31 @@
 #pragma once
 #include "Scene.h"
 
-class Model;
-class Object3d;
-class Object2d;
 
-class Title : public Scene
+namespace JimaXengine
 {
-private:
-	Object2d* pushStartTex = nullptr;
-	Vector2 pushStartTexPos;
+	class Model;
+	class Object3d;
+	class Object2d;
 
-	Object2d* titleTex = nullptr;
-	Vector2 titleTexPos;
+	class Title : public Scene
+	{
+	private:
+		Object2d* pushStartTex = nullptr;
+		Vector2 pushStartTexPos;
 
-	Object2d* bg = nullptr;
-	Vector2 bgPos;
+		Object2d* titleTex = nullptr;
+		Vector2 titleTexPos;
 
-public:
-	Title(WinApp* winapp);
-	~Title();
-	void Initialize() override;
-	void Update() override;
-	void Draw() override;
+		Object2d* bg = nullptr;
+		Vector2 bgPos;
 
-};
+	public:
+		Title(WinApp* winapp);
+		~Title();
+		void Initialize() override;
+		void Update() override;
+		void Draw() override;
+
+	};
+}

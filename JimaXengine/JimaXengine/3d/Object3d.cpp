@@ -5,25 +5,22 @@
 
 #include "../general/Input.h"
 #include "FbxLoader.h"
-#include "../DirectXCommon.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
 // static変数の実体
-DirectXCommon* Object3d::dxCommon = nullptr;;
-ID3D12Device* Object3d::_dev = nullptr;
-ComPtr<ID3D12RootSignature> Object3d::rootSignature;
-ComPtr<ID3D12PipelineState> Object3d::piplineState;
+JimaXengine::DirectXCommon* JimaXengine::Object3d::dxCommon = nullptr;
+ID3D12Device* JimaXengine::Object3d::_dev = nullptr;
+ComPtr<ID3D12RootSignature> JimaXengine::Object3d::rootSignature;
+ComPtr<ID3D12PipelineState> JimaXengine::Object3d::piplineState;
 
-
-
-void Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp)
+void  JimaXengine::Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp)
 {
 	Object3d::dxCommon = dxcommon;
 }
 
-void Object3d::CreateGraphicsPipline()
+void  JimaXengine::Object3d::CreateGraphicsPipline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -188,7 +185,7 @@ void Object3d::CreateGraphicsPipline()
 	}
 }
 
-void Object3d::Initialize()
+void JimaXengine::Object3d::Initialize()
 {
 	HRESULT result;
 	// 定数バッファの生成
@@ -232,7 +229,7 @@ void Object3d::Initialize()
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
 
-void Object3d::Update()
+void JimaXengine::Object3d::Update()
 {
 	////////////////////////////
 	/// トランスフォームの転送
@@ -296,7 +293,7 @@ void Object3d::Update()
 	}
 
 	// ボーン配列
-	std::vector<Model::Bone>& bones = model->GetBonse();
+	std::vector<JimaXengine::Model::Bone>& bones = model->GetBonse();
 
 	// 定数バッファへデータ転送
 	SkinData* constMapSkin = nullptr;
@@ -315,8 +312,7 @@ void Object3d::Update()
 	constBufferSkin->Unmap(0, nullptr);
 }
 
-//void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
-void Object3d::Draw()
+void JimaXengine::Object3d::Draw()
 {
 	// モデルがなければ描画しない
 	if (model == nullptr)
@@ -333,7 +329,7 @@ void Object3d::Draw()
 	model->Draw(Object3d::dxCommon->GetCommandList());
 }
 
-void Object3d::PlayAnimation()
+void JimaXengine::Object3d::PlayAnimation()
 {
 	FbxScene* fbxScene = model->GetFbxScene();
 	// 0番のアニメーション取得

@@ -1,14 +1,14 @@
 #include "imGuiDevice.h"
 
-ImGuiDevice::ImGuiDevice()
+JimaXengine::ImGuiDevice::ImGuiDevice()
 {
 }
 
-ImGuiDevice::~ImGuiDevice()
+JimaXengine::ImGuiDevice::~ImGuiDevice()
 {
 }
 
-void ImGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
+void JimaXengine::ImGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 {
 	this->winApp = winApp;
 	this->dxCommon = dxCommon;
@@ -31,14 +31,14 @@ void ImGuiDevice::Initialize(WinApp* winApp, DirectXCommon* dxCommon)
 	);
 }
 
-void ImGuiDevice::Update()
+void JimaXengine::ImGuiDevice::Update()
 {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 }
 
-void ImGuiDevice::Draw()
+void JimaXengine::ImGuiDevice::Draw()
 {
 	ImGui::Render();
 	dxCommon->GetCommandList()->SetDescriptorHeaps(1, dxCommon->GetHeapForImgui().GetAddressOf());

@@ -10,3 +10,5 @@
 // JoyconManager.hでvendor_idを初期化していないのにビルドが通るのがおかしい
 
 // jopyconのpoll実行確認
+
+// namespace内で宣言された同じ名前のstatic変数があるからダメ説

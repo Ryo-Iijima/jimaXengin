@@ -1,19 +1,19 @@
 #include "DefaultGeometryParticle.h"
 
-DefaultGeometryParticle::DefaultGeometryParticle(const ParticleParam& arg_param)
+JimaXengine::DefaultGeometryParticle::DefaultGeometryParticle(const ParticleParam& arg_param)
 {
 	param = arg_param;
 }
 
-DefaultGeometryParticle::~DefaultGeometryParticle()
+JimaXengine::DefaultGeometryParticle::~DefaultGeometryParticle()
 {
 }
 
-void DefaultGeometryParticle::Initialize()
+void JimaXengine::DefaultGeometryParticle::Initialize()
 {
 }
 
-void DefaultGeometryParticle::Update()
+void JimaXengine::DefaultGeometryParticle::Update()
 {
 	param.vel += param.acc;
 	param.pos += param.vel * param.speed;

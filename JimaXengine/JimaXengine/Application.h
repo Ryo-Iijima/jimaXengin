@@ -8,31 +8,34 @@
 #include "general/Input.h"
 #include "scene/SceneManager.h"
 
-class Application
+namespace JimaXengine
 {
-private:
+	class Application
+	{
+	private:
 
-	WinApp* winApp = nullptr;
-	DirectXCommon* dxCommon = nullptr;
-	FPSManager* fpsManager = nullptr;
-	Input* input = nullptr;
-	Sound* sound = nullptr;
-	SceneManager* sceneManager = nullptr;
-	ImGuiDevice imguiDev;
+		WinApp* winApp = nullptr;
+		DirectXCommon* dxCommon = nullptr;
+		FPSManager* fpsManager = nullptr;
+		Input* input = nullptr;
+		Sound* sound = nullptr;
+		SceneManager* sceneManager = nullptr;
+		ImGuiDevice imguiDev;
 
-private:
+	private:
 
-	Application() = default;
-	~Application() = default;
-	Application(const Application&) = delete;
-	void operator=(const Application&) = delete;
+		Application() = default;
+		~Application() = default;
+		Application(const Application&) = delete;
+		void operator=(const Application&) = delete;
 
-public:	
+	public:
 
-	static Application& GetInstance();
-	void Initialize();	
-	void Finalize();
-	void Run();
+		static Application& GetInstance();
+		void Initialize();
+		void Finalize();
+		void Run();
 
-};
+	};
 
+}

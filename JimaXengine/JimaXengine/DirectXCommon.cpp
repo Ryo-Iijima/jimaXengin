@@ -4,12 +4,12 @@
 #include <DirectXTexWIC.cpp>
 
 
-DirectXCommon::~DirectXCommon()
+JimaXengine::DirectXCommon::~DirectXCommon()
 {
 	Finalize();
 }
 
-void DirectXCommon::Initialize(WinApp* winApp)
+void JimaXengine::DirectXCommon::Initialize(WinApp* winApp)
 {
 	assert(winApp);
 
@@ -134,11 +134,11 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	}
 }
 
-void DirectXCommon::Finalize()
+void JimaXengine::DirectXCommon::Finalize()
 {
 }
 
-void DirectXCommon::PreDraw()
+void JimaXengine::DirectXCommon::PreDraw()
 {
 	//result = _cmdAllocator->Reset();	// コマンドアロケーターのクリア
 	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
@@ -167,7 +167,7 @@ void DirectXCommon::PreDraw()
 #pragma endregion
 }
 
-void DirectXCommon::PostDraw()
+void JimaXengine::DirectXCommon::PostDraw()
 {
 #pragma region リソースバリアを戻す
 	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;		// 描画から
@@ -200,7 +200,7 @@ void DirectXCommon::PostDraw()
 
 }
 
-void DirectXCommon::ClearRenderTarget()
+void JimaXengine::DirectXCommon::ClearRenderTarget()
 {
 	bbIdx = _swapchain->GetCurrentBackBufferIndex();	// 現在のバックバッファのインデックス
 
@@ -237,7 +237,7 @@ void DirectXCommon::ClearRenderTarget()
 
 }
 
-bool DirectXCommon::InitializeDXGIDevice()
+bool JimaXengine::DirectXCommon::InitializeDXGIDevice()
 {
 #ifdef DEBUG
 	// デバッグレイヤーをオンに
@@ -309,7 +309,7 @@ bool DirectXCommon::InitializeDXGIDevice()
 	return true;
 }
 
-bool DirectXCommon::InitializeCommand()
+bool JimaXengine::DirectXCommon::InitializeCommand()
 {
 	result = S_FALSE;
 
@@ -346,7 +346,7 @@ bool DirectXCommon::InitializeCommand()
 	return true;
 }
 
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeapForImgui()
+ComPtr<ID3D12DescriptorHeap> JimaXengine::DirectXCommon::CreateDescriptorHeapForImgui()
 {
 	ComPtr<ID3D12DescriptorHeap> ret;
 
@@ -361,12 +361,12 @@ ComPtr<ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHeapForImgui()
 	return ret;
 }
 
-ComPtr<ID3D12DescriptorHeap> DirectXCommon::GetHeapForImgui()
+ComPtr<ID3D12DescriptorHeap> JimaXengine::DirectXCommon::GetHeapForImgui()
 {
 	return _heapForImgui;
 }
 
-bool DirectXCommon::CreateSwapChain()
+bool JimaXengine::DirectXCommon::CreateSwapChain()
 {
 	result = S_FALSE;
 
@@ -404,7 +404,7 @@ bool DirectXCommon::CreateSwapChain()
 	return true;
 }
 
-bool DirectXCommon::CreateFinalRenderTargets()
+bool JimaXengine::DirectXCommon::CreateFinalRenderTargets()
 {
 	result = S_FALSE;
 
@@ -438,7 +438,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	_backBuffers.resize(swcDesc.BufferCount);
-	for (int i = 0; i < swcDesc.BufferCount; i++)
+	for (unsigned int i = 0; i < swcDesc.BufferCount; i++)
 	{
 		result = _swapchain->GetBuffer(i, IID_PPV_ARGS(&_backBuffers[i]));	// スワップチェインからバッファを取得
 		if (FAILED(result)) {
@@ -454,7 +454,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 	return true;
 }
 
-bool DirectXCommon::CreateFence()
+bool JimaXengine::DirectXCommon::CreateFence()
 {
 	// フェンスの生成
 	_fence = nullptr;
@@ -467,7 +467,7 @@ bool DirectXCommon::CreateFence()
 	return true;
 }
 
-bool DirectXCommon::GenerateVertexBuffer()
+bool JimaXengine::DirectXCommon::GenerateVertexBuffer()
 {
 	// ヒープ設定
 	heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -504,7 +504,7 @@ bool DirectXCommon::GenerateVertexBuffer()
 	return true;
 }
 
-bool DirectXCommon::MapVertexBuffer()
+bool JimaXengine::DirectXCommon::MapVertexBuffer()
 {
 	// 法線の計算
 	for (int i = 0; i < indicesNum / 3; i++)
@@ -546,14 +546,14 @@ bool DirectXCommon::MapVertexBuffer()
 	return true;
 }
 
-void DirectXCommon::CreateVertexBufferView()
+void JimaXengine::DirectXCommon::CreateVertexBufferView()
 {
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();	// バッファの仮想アドレス
 	vbView.SizeInBytes = sizeof(vertices);		// 全バイト数
 	vbView.StrideInBytes = sizeof(vertices[0]);	// 1頂点のバイト数
 }
 
-bool DirectXCommon::GenerateIndexBuffer()
+bool JimaXengine::DirectXCommon::GenerateIndexBuffer()
 {
 	// バッファのサイズ以外の設定を使いまわす
 	resdesc.Width = sizeof(indices);
@@ -575,7 +575,7 @@ bool DirectXCommon::GenerateIndexBuffer()
 	return true;
 }
 
-bool DirectXCommon::MapIndexBuffer()
+bool JimaXengine::DirectXCommon::MapIndexBuffer()
 {
 	unsigned short* mappedIdx = nullptr;
 	result = idxBuff->Map(0, nullptr, (void**)&mappedIdx);
@@ -589,14 +589,14 @@ bool DirectXCommon::MapIndexBuffer()
 	return true;
 }
 
-void DirectXCommon::CreateIndexBufferView()
+void JimaXengine::DirectXCommon::CreateIndexBufferView()
 {
 	ibView.BufferLocation = idxBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeof(indices);
 }
 
-bool DirectXCommon::GenerateTextureBuffer()
+bool JimaXengine::DirectXCommon::GenerateTextureBuffer()
 {
 	//WICテクスチャのロード
 	DirectX::ScratchImage scrachImg = {};
@@ -629,11 +629,11 @@ bool DirectXCommon::GenerateTextureBuffer()
 
 	texResDesc.Format = metadata.format;
 	texResDesc.Width = metadata.width;		// 幅
-	texResDesc.Height = metadata.height;	// 高さ
-	texResDesc.DepthOrArraySize = metadata.arraySize;	// 2D配列じゃないので1
+	texResDesc.Height = (UINT)metadata.height;	// 高さ
+	texResDesc.DepthOrArraySize = (UINT)metadata.arraySize;	// 2D配列じゃないので1
 	texResDesc.SampleDesc.Count = 1;	// アンチエイリアシングしない
 	texResDesc.SampleDesc.Quality = 0;	// 最低クオリティ
-	texResDesc.MipLevels = metadata.mipLevels;	// ミップマップしないので1
+	texResDesc.MipLevels = (UINT)metadata.mipLevels;	// ミップマップしないので1
 	texResDesc.Dimension = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);	// 2Dテクスチャ用
 	texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;	// レイアウトは決定しない
 	texResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;	// 特にフラグなし
@@ -658,11 +658,12 @@ bool DirectXCommon::GenerateTextureBuffer()
 	result = texbuff->WriteToSubresource
 	(
 		0,
-		nullptr,		// 全領域にコピー
-		img->pixels,	// 元データアドレス
-		img->rowPitch,	// 1ラインサイズ
-		img->slicePitch	// 全サイズ
+		nullptr,				// 全領域にコピー
+		img->pixels,			// 元データアドレス
+		(UINT)img->rowPitch,	// 1ラインサイズ
+		(UINT)img->slicePitch	// 全サイズ
 	);
+
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -671,7 +672,7 @@ bool DirectXCommon::GenerateTextureBuffer()
 	return true;
 }
 
-bool DirectXCommon::GenerateConstBufferView()
+bool JimaXengine::DirectXCommon::GenerateConstBufferView()
 {
 	CalculateMat();
 
@@ -717,7 +718,7 @@ bool DirectXCommon::GenerateConstBufferView()
 	return true;
 }
 
-bool DirectXCommon::GenerateDepthBuffer()
+bool JimaXengine::DirectXCommon::GenerateDepthBuffer()
 {
 	// リソース作成
 	D3D12_RESOURCE_DESC depthResDesc = {};
@@ -756,7 +757,7 @@ bool DirectXCommon::GenerateDepthBuffer()
 	return true;
 }
 
-bool DirectXCommon::GenerateDepthBufferView()
+bool JimaXengine::DirectXCommon::GenerateDepthBufferView()
 {
 	// 深度ビュー用デスクリプターヒープ作成
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
@@ -784,7 +785,7 @@ bool DirectXCommon::GenerateDepthBufferView()
 	return true;
 }
 
-void DirectXCommon::CalculateMat()
+void JimaXengine::DirectXCommon::CalculateMat()
 {
 	matWorld = XMMatrixIdentity();
 
@@ -820,7 +821,7 @@ void DirectXCommon::CalculateMat()
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 }
 
-bool DirectXCommon::CreateTextureShaderResourceView()
+bool JimaXengine::DirectXCommon::CreateTextureShaderResourceView()
 {
 	// デスクリプタヒープの作成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
@@ -864,7 +865,7 @@ bool DirectXCommon::CreateTextureShaderResourceView()
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 
 	cbvDesc.BufferLocation = constBuff->GetGPUVirtualAddress();
-	cbvDesc.SizeInBytes = constBuff->GetDesc().Width;
+	cbvDesc.SizeInBytes = (UINT)constBuff->GetDesc().Width;
 
 	// 定数バッファビューの生成
 	_dev->CreateConstantBufferView
@@ -876,7 +877,7 @@ bool DirectXCommon::CreateTextureShaderResourceView()
 	return true;
 }
 
-bool DirectXCommon::LoadShader()
+bool JimaXengine::DirectXCommon::LoadShader()
 {
 
 	result = D3DCompileFromFile
@@ -937,7 +938,7 @@ bool DirectXCommon::LoadShader()
 	return true;
 }
 
-bool DirectXCommon::CreateGPipelineStateObject()
+bool JimaXengine::DirectXCommon::CreateGPipelineStateObject()
 {
 	// 頂点レイアウトの設定
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
@@ -1019,7 +1020,7 @@ bool DirectXCommon::CreateGPipelineStateObject()
 	return true;
 }
 
-void DirectXCommon::SetUpRootParameter()
+void JimaXengine::DirectXCommon::SetUpRootParameter()
 {
 	// デスクリプターレンジの設定
 
@@ -1042,7 +1043,7 @@ void DirectXCommon::SetUpRootParameter()
 	rootparam.DescriptorTable.NumDescriptorRanges = 2;					// デスクリプタレンジ数
 }
 
-void DirectXCommon::SetUpSampler()
+void JimaXengine::DirectXCommon::SetUpSampler()
 {
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 横方向の繰り返し
 	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;	// 縦方向の繰り返し
@@ -1055,7 +1056,7 @@ void DirectXCommon::SetUpSampler()
 	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;	// サンプリングしない
 }
 
-bool DirectXCommon::CreatRootSignature()
+bool JimaXengine::DirectXCommon::CreatRootSignature()
 {
 	// D3D12_ROOT_SIGNAAATURE_DESCの設定
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
@@ -1099,7 +1100,7 @@ bool DirectXCommon::CreatRootSignature()
 	return true;
 }
 
-void DirectXCommon::SetUpViewport()
+void JimaXengine::DirectXCommon::SetUpViewport()
 {
 	// ビューポートの設定
 	viewport.Width = WinApp::WINDOW_WIDTH;
@@ -1110,7 +1111,7 @@ void DirectXCommon::SetUpViewport()
 	viewport.MinDepth = 0.0f;
 }
 
-void DirectXCommon::SetUpScissorrect()
+void JimaXengine::DirectXCommon::SetUpScissorrect()
 {
 	// シザー矩形の設定
 	// 切り抜き座標

@@ -1,11 +1,11 @@
 #include "WinApp.h"
 #include "general/imGuiDevice.h"
 
-const wchar_t WinApp::windowClassName[] = L"DirectXGame";
+const wchar_t JimaXengine::WinApp::windowClassName[] = L"DirectXGame";
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT JimaXengine::WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	// ウィンドウが破棄されたら呼ばれる
 	if (msg == WM_DESTROY)
@@ -17,7 +17,7 @@ LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 	return DefWindowProc(hwnd, msg, wparam, lparam);	// 既定の処理を行う
 }
 
-void WinApp::CreateGameWindow()
+void JimaXengine::WinApp::CreateGameWindow()
 {
 	// ウィンドウクラスの設定
 	wndClass.cbSize = sizeof(WNDCLASSEX);
@@ -52,13 +52,13 @@ void WinApp::CreateGameWindow()
 	ShowWindow(hwnd, SW_SHOW);
 }
 
-void WinApp::DestroyGameWindow()
+void JimaXengine::WinApp::DestroyGameWindow()
 {
 	// もうクラスは使わないので登録解除する
 	UnregisterClass(wndClass.lpszClassName, wndClass.hInstance);
 }
 
-bool WinApp::ProcessMessage()
+bool JimaXengine::WinApp::ProcessMessage()
 {
 	MSG msg = {};
 

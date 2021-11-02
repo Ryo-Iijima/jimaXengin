@@ -5,18 +5,18 @@
 using namespace std;
 using namespace Microsoft::WRL;
 
-string ResourceShader::shaderpass = "Resources/shader/";
-unordered_map<string, ComPtr<ID3DBlob>> ResourceShader::shaders;
+string JimaXengine::ResourceShader::shaderpass = "Resources/shader/";
+unordered_map<string, ComPtr<ID3DBlob>> JimaXengine::ResourceShader::shaders;
 
-ResourceShader::ResourceShader()
+JimaXengine::ResourceShader::ResourceShader()
 {
 }
 
-ResourceShader::~ResourceShader()
+JimaXengine::ResourceShader::~ResourceShader()
 {
 }
 
-HRESULT ResourceShader::CompileShader(const std::string& filename, const std::string& entrypoint, const std::string& shadermodel)
+HRESULT JimaXengine::ResourceShader::CompileShader(const std::string& filename, const std::string& entrypoint, const std::string& shadermodel)
 {
 	HRESULT result;
 	ComPtr<ID3DBlob> shaderBlob;

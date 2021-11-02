@@ -1,11 +1,11 @@
 #include "Sound.h"
 #include <cassert>
 
-Sound::Sound()
+JimaXengine::Sound::Sound()
 {
 }
 
-void Sound::Initialize()
+void JimaXengine::Sound::Initialize()
 {
 	HRESULT result;
 	// インスタンス生成
@@ -23,7 +23,7 @@ void Sound::Initialize()
 
 }
 
-void Sound::LoadFile(const char* filename)
+void JimaXengine::Sound::LoadFile(const char* filename)
 {
 	// ファイルオープン
 	std::ifstream file;
@@ -56,7 +56,7 @@ void Sound::LoadFile(const char* filename)
 	file.close();
 }
 
-void Sound::Play()
+void JimaXengine::Sound::Play()
 {
 	HRESULT result;
 	WAVEFORMATEX wfex{};

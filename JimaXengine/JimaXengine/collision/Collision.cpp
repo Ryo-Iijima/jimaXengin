@@ -3,7 +3,7 @@
 
 using namespace DirectX;
 
-bool Collision::CheckSphereToSphere(const Sphere & sphere1, const Sphere & sphere2)
+bool JimaXengine::Collision::CheckSphereToSphere(const Sphere & sphere1, const Sphere & sphere2)
 {
 	float x = sphere2.center.m128_f32[0] - sphere1.center.m128_f32[0];
 	float y = sphere2.center.m128_f32[1] - sphere1.center.m128_f32[1];
@@ -18,7 +18,7 @@ bool Collision::CheckSphereToSphere(const Sphere & sphere1, const Sphere & spher
 	return true;
 }
 
-bool Collision::CheckSphereToPlane(const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter)
+bool JimaXengine::Collision::CheckSphereToPlane(const Sphere& sphere, const Plane& plane, DirectX::XMVECTOR* inter)
 {
 	// 座標系の原点から球の中心座標への距離
 	XMVECTOR distV = XMVector3Dot(sphere.center, plane.normal);	
@@ -39,7 +39,7 @@ bool Collision::CheckSphereToPlane(const Sphere& sphere, const Plane& plane, Dir
 	return true;
 }
 
-void Collision::ClosestPtPointToTriangle(const DirectX::XMVECTOR & point, const Triangle & triangle, DirectX::XMVECTOR * closest)
+void JimaXengine::Collision::ClosestPtPointToTriangle(const DirectX::XMVECTOR & point, const Triangle & triangle, DirectX::XMVECTOR * closest)
 {
 	// pointがp0の外側の頂点領域の中にあるかどうかチェック
 	XMVECTOR p0_p1 = triangle.p1 - triangle.p0;
@@ -113,7 +113,7 @@ void Collision::ClosestPtPointToTriangle(const DirectX::XMVECTOR & point, const 
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::CheckSphereToTriangle(const Sphere & sphere, const Triangle & triangle, DirectX::XMVECTOR * inter)
+bool JimaXengine::Collision::CheckSphereToTriangle(const Sphere & sphere, const Triangle & triangle, DirectX::XMVECTOR * inter)
 {
 	XMVECTOR p;
 	//弾の中心に対する最近接点である三角形上にある点pを見つける
@@ -138,7 +138,7 @@ bool Collision::CheckSphereToTriangle(const Sphere & sphere, const Triangle & tr
 	return true;
 }
 
-bool Collision::CheckLayToPlane(const Lay & lay, const Plane & plane, float * distance, DirectX::XMVECTOR * inter)
+bool JimaXengine::Collision::CheckLayToPlane(const Lay & lay, const Plane & plane, float * distance, DirectX::XMVECTOR * inter)
 {
 	const float epsilon = 1.0e-5f;	//誤差吸収用の微小な値
 
@@ -170,7 +170,7 @@ bool Collision::CheckLayToPlane(const Lay & lay, const Plane & plane, float * di
 	return true;
 }
 
-bool Collision::CheckLayToTriangle(const Lay & lay, const Triangle & triangle, float * distance, DirectX::XMVECTOR * inter)
+bool JimaXengine::Collision::CheckLayToTriangle(const Lay & lay, const Triangle & triangle, float * distance, DirectX::XMVECTOR * inter)
 {
 	//三角形が乗っている平面を算出
 	Plane plane;
@@ -216,7 +216,7 @@ bool Collision::CheckLayToTriangle(const Lay & lay, const Triangle & triangle, f
 	return true;
 }
 
-bool Collision::CheckLayToSphere(const Lay & lay, const Sphere & sphere, float * distance, DirectX::XMVECTOR * inter)
+bool JimaXengine::Collision::CheckLayToSphere(const Lay & lay, const Sphere & sphere, float * distance, DirectX::XMVECTOR * inter)
 {
 	XMVECTOR m = lay.start - sphere.center;
 	float b = XMVector3Dot(m, lay.dir).m128_f32[0];
@@ -241,7 +241,7 @@ bool Collision::CheckLayToSphere(const Lay & lay, const Sphere & sphere, float *
 	return true;
 }
 
-bool Collision::CheckAABB3DToAABB3D(const AABB3D & box1, const AABB3D & box2)
+bool JimaXengine::Collision::CheckAABB3DToAABB3D(const AABB3D & box1, const AABB3D & box2)
 {
 	//X
 	if (box1.minPos.x > box2.maxPos.x) return false;
@@ -256,7 +256,7 @@ bool Collision::CheckAABB3DToAABB3D(const AABB3D & box1, const AABB3D & box2)
 	return true;
 }
 
-bool Collision::CheckAABB3DToSphere(const AABB3D & box, const Sphere sphere)
+bool JimaXengine::Collision::CheckAABB3DToSphere(const AABB3D & box, const Sphere sphere)
 {
 	float distance = 0.0f;
 	float d;
@@ -294,7 +294,7 @@ bool Collision::CheckAABB3DToSphere(const AABB3D & box, const Sphere sphere)
 	return (distance < (sphere.radius * sphere.radius));
 }
 
-bool Collision::CapsuleToSphere(const Sphere & sphere, const Capsule & capsule)
+bool JimaXengine::Collision::CapsuleToSphere(const Sphere & sphere, const Capsule & capsule)
 {
 	//カプセルのスタートからエンドまでのベクトル
 	Vector3 vStartToEnd = capsule.endPos - capsule.startPos;
@@ -339,7 +339,7 @@ bool Collision::CapsuleToSphere(const Sphere & sphere, const Capsule & capsule)
 	return distance < sphere.radius;
 }
 
-bool Collision::CapsuleToCapsule(const Capsule & capsule1, const Capsule & capsule2)
+bool JimaXengine::Collision::CapsuleToCapsule(const Capsule & capsule1, const Capsule & capsule2)
 {
 	//線分と線分の距離を調べる(結果は距離の2乗)
 	float sqDistance =
@@ -352,7 +352,7 @@ bool Collision::CapsuleToCapsule(const Capsule & capsule1, const Capsule & capsu
 	return (sqDistance < (r * r));
 }
 
-float Collision::SqDistanceSegmentToSegment(const Vector3 & p1, const Vector3 & q1, const Vector3 & p2, const Vector3 & q2)
+float JimaXengine::Collision::SqDistanceSegmentToSegment(const Vector3 & p1, const Vector3 & q1, const Vector3 & p2, const Vector3 & q2)
 {
 	//p1->q1のベクトル
 	Vector3 d1 = q1 - p1;
@@ -422,7 +422,7 @@ float Collision::SqDistanceSegmentToSegment(const Vector3 & p1, const Vector3 & 
 * @param colPos 衝突位置
 * @return 衝突していればtrue
 */
-bool Collision::LineToAABB3D(struct Lay* lay, AABB3D* aabb, XMMATRIX* mat,float& t, Vector3* colPos)
+bool JimaXengine::Collision::LineToAABB3D(struct Lay* lay, AABB3D* aabb, XMMATRIX* mat,float& t, Vector3* colPos)
 {
 	// 光線を境界ボックスの空間へ移動
 	XMMATRIX invMat;
@@ -483,7 +483,7 @@ bool Collision::LineToAABB3D(struct Lay* lay, AABB3D* aabb, XMMATRIX* mat,float&
 	return true;
 }
 
-float Collision::Clamp(float x, float low, float high)
+float JimaXengine::Collision::Clamp(float x, float low, float high)
 {
 	x = (x < low) ? low : x;
 	x = (x > high) ? high : x;

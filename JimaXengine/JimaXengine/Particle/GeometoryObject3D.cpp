@@ -4,14 +4,14 @@
 #include "../2d/Texture.h"
 #include "../general/General.h"
 
-DirectXCommon* GeometoryObject3D::dxcommon = nullptr;
-ComPtr<ID3D12DescriptorHeap> GeometoryObject3D::descHeap;
-ComPtr<ID3D12RootSignature> GeometoryObject3D::rootsignature;
-std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> GeometoryObject3D::pipelines;
-std::map<std::string, int> GeometoryObject3D::textureMap;
-int GeometoryObject3D::texNumber = 0;
+JimaXengine::DirectXCommon* JimaXengine::GeometoryObject3D::dxcommon = nullptr;
+ComPtr<ID3D12DescriptorHeap> JimaXengine::GeometoryObject3D::descHeap;
+ComPtr<ID3D12RootSignature> JimaXengine::GeometoryObject3D::rootsignature;
+std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> JimaXengine::GeometoryObject3D::pipelines;
+std::map<std::string, int> JimaXengine::GeometoryObject3D::textureMap;
+int JimaXengine::GeometoryObject3D::texNumber = 0;
 
-bool GeometoryObject3D::PreInitialize(DirectXCommon* dxcommon)
+bool JimaXengine::GeometoryObject3D::PreInitialize(DirectXCommon* dxcommon)
 {
 	GeometoryObject3D::dxcommon = dxcommon;
 
@@ -26,7 +26,7 @@ bool GeometoryObject3D::PreInitialize(DirectXCommon* dxcommon)
 	return true;
 }
 
-void GeometoryObject3D::LoadTexture(const std::string& filename)
+void JimaXengine::GeometoryObject3D::LoadTexture(const std::string& filename)
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	D3D12_RESOURCE_DESC resDesc = Texture::GetTexture(filename)->GetDesc();
@@ -56,7 +56,7 @@ void GeometoryObject3D::LoadTexture(const std::string& filename)
 	texNumber++;
 }
 
-void GeometoryObject3D::Initialize()
+void JimaXengine::GeometoryObject3D::Initialize()
 {
 	{
 		dxcommon->GetDevice()->CreateCommittedResource(
@@ -88,7 +88,7 @@ void GeometoryObject3D::Initialize()
 	}
 }
 
-void GeometoryObject3D::Update(std::forward_list<ParticleBase*>& particles)
+void JimaXengine::GeometoryObject3D::Update(std::forward_list<ParticleBase*>& particles)
 {
 	HRESULT result;
 
@@ -114,7 +114,7 @@ void GeometoryObject3D::Update(std::forward_list<ParticleBase*>& particles)
 	}
 }
 
-void GeometoryObject3D::Draw(Camera * camera, std::forward_list<ParticleBase*>& particles, const std::string& filename, const std::string& pipelinename, BILLBOARD billboardType)
+void JimaXengine::GeometoryObject3D::Draw(Camera * camera, std::forward_list<ParticleBase*>& particles, const std::string& filename, const std::string& pipelinename, BILLBOARD billboardType)
 {
 	HRESULT result;
 
@@ -158,7 +158,7 @@ void GeometoryObject3D::Draw(Camera * camera, std::forward_list<ParticleBase*>& 
 	dxcommon->GetCommandList()->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
 }
 
-HRESULT GeometoryObject3D::InitializeDescriptorHeap()
+HRESULT JimaXengine::GeometoryObject3D::InitializeDescriptorHeap()
 {
 	HRESULT result = S_FALSE;
 
@@ -172,7 +172,7 @@ HRESULT GeometoryObject3D::InitializeDescriptorHeap()
 	return result;
 }
 
-HRESULT GeometoryObject3D::InitializeRootSignature()
+HRESULT JimaXengine::GeometoryObject3D::InitializeRootSignature()
 {
 	HRESULT result = S_FALSE;
 
@@ -195,7 +195,7 @@ HRESULT GeometoryObject3D::InitializeRootSignature()
 	return result;
 }
 
-Microsoft::WRL::ComPtr<ID3D12PipelineState> GeometoryObject3D::InitializeGraphicsPipeline(BlendType type, const std::string& vsname, const std::string& psname, const std::string& gsname, bool depth)
+Microsoft::WRL::ComPtr<ID3D12PipelineState> JimaXengine::GeometoryObject3D::InitializeGraphicsPipeline(BlendType type, const std::string& vsname, const std::string& psname, const std::string& gsname, bool depth)
 {
 	HRESULT result = S_FALSE;
 

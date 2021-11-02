@@ -1,16 +1,16 @@
 #include "SceneManager.h"
 
-SceneManager::SceneManager()
+JimaXengine::SceneManager::SceneManager()
 {
 	ClearScenes();
 }
 
-SceneManager::~SceneManager()
+JimaXengine::SceneManager::~SceneManager()
 {
 	ClearScenes();
 }
 
-void SceneManager::Add(const std::string& registerName, Scene * scene)
+void JimaXengine::SceneManager::Add(const std::string& registerName, Scene * scene)
 {
 	//同名のシーンがある場合return
 	if (scenes[registerName] != nullptr)
@@ -21,7 +21,7 @@ void SceneManager::Add(const std::string& registerName, Scene * scene)
 	scenes[registerName] = scene;
 }
 
-void SceneManager::Update()
+void JimaXengine::SceneManager::Update()
 {
 	//現在のシーンがnullptrの場合return
 	if (currentScene == nullptr)
@@ -35,7 +35,7 @@ void SceneManager::Update()
 	}
 }
 
-void SceneManager::Change(const std::string& name)
+void JimaXengine::SceneManager::Change(const std::string& name)
 {
 	//登録されてないシーン名での呼び出しが行われた場合return
 	if (scenes[name] == nullptr)
@@ -47,7 +47,7 @@ void SceneManager::Change(const std::string& name)
 	currentScene->Initialize();
 }
 
-void SceneManager::Draw()
+void JimaXengine::SceneManager::Draw()
 {	
 	//現在のシーンがnullptrの場合return
 	if (currentScene == nullptr)
@@ -63,7 +63,7 @@ void SceneManager::Draw()
 	}
 }
 
-void SceneManager::ClearScenes()
+void JimaXengine::SceneManager::ClearScenes()
 {
 	//scenesが保持しているシーンの全消去
 	for (auto itr = scenes.begin(); itr != scenes.end(); ++itr)
@@ -74,17 +74,17 @@ void SceneManager::ClearScenes()
 	scenes.clear();
 }
 
-std::string SceneManager::GetNowScene()
+std::string JimaXengine::SceneManager::GetNowScene()
 {
 	return currentScene->GetNowScene();
 }
 
-std::string SceneManager::GetNextScene()
+std::string JimaXengine::SceneManager::GetNextScene()
 {
 	return currentScene->GetNextScene();
 }
 
-bool SceneManager::GetIsAllEnd()
+bool JimaXengine::SceneManager::GetIsAllEnd()
 {
 	return isAllEnd;
 }

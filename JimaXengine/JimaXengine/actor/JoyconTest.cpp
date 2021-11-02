@@ -2,7 +2,7 @@
 #include "../general/Input.h"
 #include "../imgui/imgui.h"
 
-void JoyconTest::Start()
+void JimaXengine::JoyconTest::Start()
 {
     JoyconManager::Instance()->Awake();
     JoyconManager::Instance()->Start();
@@ -10,7 +10,7 @@ void JoyconTest::Start()
 }
 
 
-void JoyconTest::OnGUI()
+void JimaXengine::JoyconTest::OnGUI()
 {
     for (auto itr = m_joycons.begin(); itr != m_joycons.end(); ++itr)
     {
@@ -45,7 +45,7 @@ void JoyconTest::OnGUI()
     }
 }
 
-void JoyconTest::SetControllers()
+void JimaXengine::JoyconTest::SetControllers()
 {
      m_joycons = JoyconManager::Instance()->j;
     if (m_joycons.data() == nullptr || m_joycons.size() <= 0) return;
@@ -62,20 +62,20 @@ void JoyconTest::SetControllers()
     }
 }
 
-JoyconTest::JoyconTest()
+JimaXengine::JoyconTest::JoyconTest()
 {
 }
 
-JoyconTest::~JoyconTest()
+JimaXengine::JoyconTest::~JoyconTest()
 {
 }
 
-void JoyconTest::Initialize()
+void JimaXengine::JoyconTest::Initialize()
 {
     Start();
 }
 
-void JoyconTest::Update()
+void JimaXengine::JoyconTest::Update()
 {
     m_pressedButtonL = nullptr;
     m_pressedButtonR = nullptr;
@@ -105,29 +105,29 @@ void JoyconTest::Update()
     }
 }
 
-void JoyconTest::Draw()
+void JimaXengine::JoyconTest::Draw()
 {
 }
 
-void JoyconTest::Dead()
+void JimaXengine::JoyconTest::Dead()
 {
 }
 
-void JoyconTest::Delete()
+void JimaXengine::JoyconTest::Delete()
 {
 }
 
-GameObject::TYPE JoyconTest::GetType()
+JimaXengine::GameObject::TYPE JimaXengine::JoyconTest::GetType()
 {
     return TYPE();
 }
 
-GameObject::RENDER_TYPE JoyconTest::GetRenderType()
+JimaXengine::GameObject::RENDER_TYPE JimaXengine::JoyconTest::GetRenderType()
 {
     return RENDER_TYPE();
 }
 
-void JoyconTest::DrawImGui()
+void JimaXengine::JoyconTest::DrawImGui()
 {
     OnGUI();
 }

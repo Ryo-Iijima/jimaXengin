@@ -1,6 +1,6 @@
 #include "Random.h"
 
-float Random::GetRandom(float minValue, float maxValue)
+float JimaXengine::Random::GetRandom(float minValue, float maxValue)
 {
 	std::random_device rnd;
 	std::mt19937_64 mt64(rnd());

@@ -3,53 +3,56 @@
 #include "Player.h"
 #include "../GameObject/GameObjectManager.h"
 
-void Target::Move()
+void JimaXengine::Target::Move()
 {
 	pos.z -= 0.2f;;
 	if (pos.z <= -10)
 	{
-		pos.z = 10;
+		pos.z = 30;
+		object->SetColor(Vector4(1, 1, 1, 1));
 	}
 
 }
 
-void Target::HitCheck()
+void JimaXengine::Target::HitCheck()
 {
 	Player* player = oManager->GetPlayer();
 
-	if (Collision::CheckSphereToSphere(sphereCol, player->GetSphereCol()))
+	// ƒ‰ƒPƒbƒg‚É“–‚½‚Á‚½‚ç
+	if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
+		|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
 	{
-		object->SetColor(Vector4(0, 1, 0, 1));
-		Dead();
+		object->SetColor(Vector4(0, 0, 0, 1));
+		//Dead();
 	}
 	else
 	{
-		object->SetColor(Vector4(1, 0, 0, 1));
+		//object->SetColor(Vector4(1, 1, 1, 1));
 	}
 }
 
-Target::Target(Camera* camera)
+JimaXengine::Target::Target(Camera* camera, Vector3 pos)
 {
 	pCamera = camera;
+	this->pos = pos;
 }
 
-Target::~Target()
+JimaXengine::Target::~Target()
 {
 }
 
-void Target::Initialize()
+void JimaXengine::Target::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
 	
 	object = new Object3d;
 	object->Initialize();
 	object->SetModel(model);
-	object->SetColor(Vector4(1, 0.3f, 0.3f, 1));
-
-
+	object->SetColor(Vector4(1, 1, 1, 1));
+	object->SetScale(Vector3(1, 1, 1));
 }
 
-void Target::Update()
+void JimaXengine::Target::Update()
 {
 	HitCheck();
 	Move();
@@ -61,17 +64,17 @@ void Target::Update()
 	sphereCol.center = pos.ConvertXMVECTOR();
 }
 
-void Target::Draw()
+void JimaXengine::Target::Draw()
 {
 	object->Draw();
 }
 
-GameObject::TYPE Target::GetType()
+JimaXengine::GameObject::TYPE JimaXengine::Target::GetType()
 {
 	return GameObject::TYPE::TARGET;
 }
 
-void Target::DrawImGui()
+void JimaXengine::Target::DrawImGui()
 {
 	//ImGui::Begin("TargetInfomation");
 	//ImGui::End();

@@ -1,16 +1,16 @@
 #include "ParticleObj.h"
 
-ParticleObj::ParticleObj()
+JimaXengine::ParticleObj::ParticleObj()
 {
 	//obj3d.CreateMesh();
 	obj3d.Initialize();
 }
 
-ParticleObj::~ParticleObj()
+JimaXengine::ParticleObj::~ParticleObj()
 {
 }
 
-void ParticleObj::Initialize(ParticleParam parameter, std::string model, std::string file, std::string shader, std::string blend, std::string pipeline)
+void JimaXengine::ParticleObj::Initialize(ParticleParam parameter, std::string model, std::string file, std::string shader, std::string blend, std::string pipeline)
 {
 	param = parameter;
 	isDead = false;
@@ -21,7 +21,7 @@ void ParticleObj::Initialize(ParticleParam parameter, std::string model, std::st
 	pipelinename = pipeline;
 }
 
-void ParticleObj::Update()
+void JimaXengine::ParticleObj::Update()
 {
 	param.vel.Normalize();
 	param.vel *= param.speed;
@@ -47,7 +47,7 @@ void ParticleObj::Update()
 	}
 }
 
-void ParticleObj::Draw(Camera* camera)
+void JimaXengine::ParticleObj::Draw(Camera* camera)
 {
 	if (!isDead)
 	{

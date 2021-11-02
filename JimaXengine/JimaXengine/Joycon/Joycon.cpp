@@ -3,10 +3,10 @@
 #include <array>
 #include "../general/_StringFormat.h"
 
-void Joycon::Poll(Joycon* j)
+void JimaXengine::Joycon::Poll(Joycon* j)
 {
 	int attempts = 0;
-	while (!j->stop_polling & j->state > state_::NO_JOYCONS)
+	while (!j->stop_polling && (j->state > state_::NO_JOYCONS))
 	{
 		j->SendRumble(j->rumble_obj->GetData());
 		int a = j->ReceiveRaw();
@@ -33,7 +33,7 @@ void Joycon::Poll(Joycon* j)
 	//DebugPrint("End poll loop.", DebugType::THREADING);
 }
 
-Joycon::Joycon(hid_device* handle_, bool imu, bool localize, float alpha, bool left)
+JimaXengine::Joycon::Joycon(hid_device* handle_, bool imu, bool localize, float alpha, bool left)
 {
 	handle = handle_;
 	imu_enabled = imu;
@@ -43,12 +43,12 @@ Joycon::Joycon(hid_device* handle_, bool imu, bool localize, float alpha, bool l
 	isLeft = left;
 }
 
-Joycon::~Joycon()
+JimaXengine::Joycon::~Joycon()
 {
 
 }
 
-void Joycon::DebugPrint(std::string s, DebugType d)
+void JimaXengine::Joycon::DebugPrint(std::string s, DebugType d)
 {
 	if (debug_type == DebugType::NONE) return;
 	if (d == DebugType::ALL || d == debug_type || debug_type == DebugType::ALL)
@@ -57,7 +57,7 @@ void Joycon::DebugPrint(std::string s, DebugType d)
 	}
 }
 
-Vector4 Joycon::GetVector()
+JimaXengine::Vector4 JimaXengine::Joycon::GetVector()
 {
 	Vector3 v1 = Vector3(j_b.x, i_b.x, k_b.x);
 	Vector3 v2 = -(Vector3(j_b.z, i_b.z, k_b.z));
@@ -72,7 +72,7 @@ Vector4 Joycon::GetVector()
 	return Vector4(1, 1, 1, 1);
 }
 
-int Joycon::Attach(uint8_t leds_)
+int JimaXengine::Joycon::Attach(uint8_t leds_)
 {
 	state = state_::ATTACHED;
 	uint8_t a[] = { 0x0 };
@@ -107,7 +107,7 @@ int Joycon::Attach(uint8_t leds_)
 	return 0;
 }
 
-void Joycon::Detach()
+void JimaXengine::Joycon::Detach()
 {
 	stop_polling = true;
 	PrintArray(&max, DebugType::IMU, 0, 0, "float");
@@ -126,7 +126,7 @@ void Joycon::Detach()
 	state = state_::NOT_ATTACHED;
 }
 
-int Joycon::ReceiveRaw()
+int JimaXengine::Joycon::ReceiveRaw()
 {
 	if (handle == 0) return -2;
 	hid_set_nonblocking(handle, 0);
@@ -194,7 +194,7 @@ int Joycon::ReceiveRaw()
 //	DebugPrint("End poll loop.", DebugType::THREADING);
 //}
 
-void Joycon::Update()
+void JimaXengine::Joycon::Update()
 {
 	if (state > state_::NO_JOYCONS)      // ジョイコンがあるか
 	{
@@ -236,7 +236,7 @@ void Joycon::Update()
 			DebugPrint({"Timestamp: %s.\n", report_buf[1] }, DebugType::THREADING);
 			//DebugPrint({"Lag to dequeue: %d.\n", (std::time_t() - rep->GetTime()) }, DebugType::THREADING);
 			//DebugPrint({"Lag between packets (expect 15ms): %d.\n", (rep->GetTime() - ts_prev) }, DebugType::THREADING);
-			ts_prev = rep->GetTime();
+			ts_prev = (long)rep->GetTime();
 		}
 		ProcessButtonsAndStick(report_buf);
 		if (rumble_obj->timed_rumble) {
@@ -250,7 +250,7 @@ void Joycon::Update()
 	}
 }
 
-int Joycon::ProcessButtonsAndStick(uint8_t* report_buf)
+int JimaXengine::Joycon::ProcessButtonsAndStick(uint8_t* report_buf)
 {
 	if (report_buf[0] == 0x00) return -1;
 
@@ -302,7 +302,7 @@ int Joycon::ProcessButtonsAndStick(uint8_t* report_buf)
 
 }
 
-void Joycon::ExtractIMUValues(uint8_t* report_buf, int n)
+void JimaXengine::Joycon::ExtractIMUValues(uint8_t* report_buf, int n)
 {
 	gyr_r[0] = (uint16_t)(report_buf[19 + n * 12] | ((report_buf[20 + n * 12] << 8) & 0xff00));    // n*12はLとRのバッファのズレ？12足すかそのままかで左右のコントローラを判別してる
 	gyr_r[1] = (uint16_t)(report_buf[21 + n * 12] | ((report_buf[22 + n * 12] << 8) & 0xff00));
@@ -348,13 +348,13 @@ void Joycon::ExtractIMUValues(uint8_t* report_buf, int n)
 	}
 }
 
-int Joycon::ProcessIMU(uint8_t* report_buf)
+int JimaXengine::Joycon::ProcessIMU(uint8_t* report_buf)
 {
 
 	// Direction Cosine Matrix method
 	// http://www.starlino.com/dcm_tutorial.html
 
-	if (!imu_enabled | state < state_::IMU_DATA_OK)
+	if (!imu_enabled || (state < state_::IMU_DATA_OK))
 		return -1;
 
 	if (report_buf[0] != 0x30) return -1; // no gyro data
@@ -409,7 +409,7 @@ int Joycon::ProcessIMU(uint8_t* report_buf)
 	return 0;
 }
 
-void Joycon::Begin()
+void JimaXengine::Joycon::Begin()
 {
 	// NULLなら
 	if (PollThreadObj == NULL)
@@ -420,17 +420,17 @@ void Joycon::Begin()
 	}
 }
 
-void Joycon::Recenter()
+void JimaXengine::Joycon::Recenter()
 {
 	first_imu_packet = true;
 }
 
-Vector2 Joycon::CenterSticks(uint16_t* vals)
+JimaXengine::Vector2 JimaXengine::Joycon::CenterSticks(uint16_t* vals)
 {
 	float s[2] = { 0, 0 };
 	for (unsigned int i = 0; i < 2; ++i)
 	{
-		float diff = vals[i] - stick_cal[2 + i];
+		float diff = (float)(vals[i] - stick_cal[2 + i]);
 		if (abs(diff) < deadzone) vals[i] = 0;
 		else if (diff > 0) // if axis is above center
 		{
@@ -448,7 +448,7 @@ Vector2 Joycon::CenterSticks(uint16_t* vals)
 	return ans;
 }
 
-void Joycon::SetRumble(float low_freq, float high_freq, float amp, int time)
+void JimaXengine::Joycon::SetRumble(float low_freq, float high_freq, float amp, int time)
 {
 	if (state <= state_::ATTACHED) return;
 	if (rumble_obj->timed_rumble == false || rumble_obj->t < 0)
@@ -457,7 +457,7 @@ void Joycon::SetRumble(float low_freq, float high_freq, float amp, int time)
 	}
 }
 
-void Joycon::SendRumble(uint8_t* buf)
+void JimaXengine::Joycon::SendRumble(uint8_t* buf)
 {
 	uint8_t* buf_ = new uint8_t[report_len];
 	buf_[0] = 0x10;
@@ -473,7 +473,7 @@ void Joycon::SendRumble(uint8_t* buf)
 	hid_write(handle, buf_, sizeof(report_len));
 }
 
-uint8_t* Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool print)
+uint8_t* JimaXengine::Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool print)
 {
 	uint8_t* buf_ = new uint8_t[report_len];
 	uint8_t* response = new uint8_t[report_len];
@@ -497,7 +497,7 @@ uint8_t* Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool pri
 	return response;
 }
 
-void Joycon::dump_calibration_data()
+void JimaXengine::Joycon::dump_calibration_data()
 {
 	uint8_t* buf_ = ReadSPI(0x80, (isLeft ? (uint8_t)0x12 : (uint8_t)0x1d), 9); // get user calibration data if possible
 	bool found = false;
@@ -544,7 +544,7 @@ void Joycon::dump_calibration_data()
 	}
 }
 
-uint8_t* Joycon::ReadSPI(uint8_t addr1, uint8_t addr2, unsigned int len, bool print)
+uint8_t* JimaXengine::Joycon::ReadSPI(uint8_t addr1, uint8_t addr2, unsigned int len, bool print)
 {
 	uint8_t buf[5] = { addr2, addr1, 0x00, 0x00, (uint8_t)len };		// ←要素数マジックナンバー、直して
 	uint8_t* read_buf = new uint8_t[len];
@@ -564,7 +564,7 @@ uint8_t* Joycon::ReadSPI(uint8_t addr1, uint8_t addr2, unsigned int len, bool pr
 	return read_buf;
 }
 
-template<class T> void Joycon::PrintArray(T* arr, DebugType d, uint8_t len, uint8_t start, std::string format)
+template<class T> void JimaXengine::Joycon::PrintArray(T* arr, DebugType d, uint8_t len, uint8_t start, std::string format)
 {
 	if (d != debug_type && debug_type != DebugType::ALL) return;
 

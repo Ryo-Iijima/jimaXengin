@@ -2,39 +2,39 @@
 #include <iostream>
 #include "../WinApp.h"
 
-WinApp* Input::pWindow = nullptr;
+JimaXengine::WinApp* JimaXengine::Input::pWindow;
 
-BYTE Input::currentKey[256] = {};
-BYTE Input::prevKey[256] = {};
-IDirectInput8* Input::dinput = nullptr;
-IDirectInputDevice8* Input::devkeyboard = nullptr;
+BYTE JimaXengine::Input::currentKey[256] = {};
+BYTE JimaXengine::Input::prevKey[256] = {};
+IDirectInput8* JimaXengine::Input::dinput = nullptr;
+IDirectInputDevice8* JimaXengine::Input::devkeyboard = nullptr;
 
-DIMOUSESTATE Input::currentMouse;
-DIMOUSESTATE Input::prevMouse;
-IDirectInputDevice8* Input::devmouse = nullptr;
-Vector2 Input::currentMousePos = {};
-Vector2 Input::prevMousePos = {};
+DIMOUSESTATE JimaXengine::Input::currentMouse;
+DIMOUSESTATE JimaXengine::Input::prevMouse;
+IDirectInputDevice8* JimaXengine::Input::devmouse = nullptr;
+JimaXengine::Vector2 JimaXengine::Input::currentMousePos = {};
+JimaXengine::Vector2 JimaXengine::Input::prevMousePos = {};
 
-XINPUT_STATE Input::xinputCurrent = {};
-XINPUT_STATE Input::xinputPrev = {};
-int Input::leftDeadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
-int Input::rightDeadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+XINPUT_STATE JimaXengine::Input::xinputCurrent = {};
+XINPUT_STATE JimaXengine::Input::xinputPrev = {};
+int JimaXengine::Input::leftDeadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+int JimaXengine::Input::rightDeadZone = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
 
-void Input::Initialize(WinApp* window)
+void JimaXengine::Input::Initialize(WinApp* window)
 {
 	pWindow = window;
 
 	HRESULT result;
 
-	//DirectInputオブジェクトの生成
+	// DirectInputオブジェクトの生成
 	result = DirectInput8Create(pWindow->GetWndClass().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, nullptr);
 
-	//キーボードデバイスの生成
+	// キーボードデバイスの生成
 	result = dinput->CreateDevice(GUID_SysKeyboard, &devkeyboard, NULL);
 	result = devkeyboard->SetDataFormat(&c_dfDIKeyboard);
 	result = devkeyboard->SetCooperativeLevel(pWindow->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 
-	//マウスデバイスの生成
+	// マウスデバイスの生成
 	result = dinput->CreateDevice(GUID_SysMouse, &devmouse, NULL);
 	if (FAILED(result))assert(0);
 	result = devmouse->SetDataFormat(&c_dfDIMouse);
@@ -43,7 +43,7 @@ void Input::Initialize(WinApp* window)
 	if (FAILED(result))assert(0);
 
 	//ゲームパッドの初期化
-	//ZeroMemory・・・内部で使われているものすべてに0を代入する
+	// ZeroMemory・・・内部で使われているものすべてに0を代入する
 	ZeroMemory(&xinputCurrent, sizeof(XINPUT_STATE));
 	ZeroMemory(&xinputPrev, sizeof(XINPUT_STATE));
 
@@ -52,94 +52,96 @@ void Input::Initialize(WinApp* window)
 #endif // _DEBUG
 }
 
-void Input::Update()
+void JimaXengine::Input::Update()
 {
-	//キーボード
+	// キーボード
 	devkeyboard->Acquire();
 	memcpy(prevKey, currentKey, sizeof(currentKey));
 	devkeyboard->GetDeviceState(sizeof(currentKey), currentKey);
 
-	//マウス
+	// マウス
 	devmouse->Acquire();
 	memcpy(&prevMouse, &currentMouse, sizeof(currentMouse));
 	devmouse->GetDeviceState(sizeof(currentMouse), &currentMouse);
 
-	//マウスポジションの更新
+	// マウスポジションの更新
 	POINT tmpPoint;
 	GetCursorPos(&tmpPoint);
 	ScreenToClient(pWindow->GetHwnd(), &tmpPoint);
 	prevMousePos = currentMousePos;
 	currentMousePos = { (float)tmpPoint.x, (float)tmpPoint.y };
 
-	//パッド
+	// パッド
 	xinputPrev = xinputCurrent;
+	// リザルトが0以外はエラー
+	//DWORD a= XInputGetState(0, &xinputCurrent);
 	XInputGetState(0, &xinputCurrent);
 }
 
-void Input::SetDeadZone(int lDeadZone, int rDeadZone)
+void JimaXengine::Input::SetDeadZone(int lDeadZone, int rDeadZone)
 {
 	leftDeadZone = lDeadZone;
 	rightDeadZone = rDeadZone;
 }
 
-void Input::Finalize()
+void JimaXengine::Input::Finalize()
 {
 	dinput->Release();
 	devkeyboard->Release();
 	devmouse->Release();
 }
 
-bool Input::KeyPress(const int& keys)
+bool JimaXengine::Input::KeyPress(const int& keys)
 {
 	 return (currentKey[keys]);
 }
 
-bool Input::KeyTrigger(const int& keys)
+bool JimaXengine::Input::KeyTrigger(const int& keys)
 {
 	return (currentKey[keys] && !prevKey[keys]);
 }
 
-bool Input::KeyRelease(const int & keys)
+bool JimaXengine::Input::KeyRelease(const int & keys)
 {
 	return (!currentKey[keys] && prevKey[keys]);
 }
 
-bool Input::MouseButtonPress(const int & keys)
+bool JimaXengine::Input::MouseButtonPress(const int & keys)
 {
 	return (currentMouse.rgbButtons[keys]);
 }
 
-bool Input::MouseButtonTrigger(const int & keys)
+bool JimaXengine::Input::MouseButtonTrigger(const int & keys)
 {
 	return (currentMouse.rgbButtons[keys] && !prevMouse.rgbButtons[keys]);
 }
 
-bool Input::MouseButtonHold(const int & keys)
+bool JimaXengine::Input::MouseButtonHold(const int & keys)
 {
 	return (currentMouse.rgbButtons[keys] && prevMouse.rgbButtons[keys]);
 }
 
-bool Input::MouseButtonRelease(const int & keys)
+bool JimaXengine::Input::MouseButtonRelease(const int & keys)
 {
 	return (!currentMouse.rgbButtons[keys] && prevMouse.rgbButtons[keys]);
 }
 
-int Input::MouseXMove()
+int JimaXengine::Input::MouseXMove()
 {
 	return currentMouse.lX;
 }
 
-int Input::MouseYMove()
+int JimaXengine::Input::MouseYMove()
 {
 	return currentMouse.lY;
 }
 
-int Input::MouseWheelMove()
+int JimaXengine::Input::MouseWheelMove()
 {
 	return currentMouse.lZ;
 }
 
-void Input::SetMousePos(Vector2 pos)
+void JimaXengine::Input::SetMousePos(Vector2 pos)
 {
 	RECT tmpRect;
 	GetWindowRect(pWindow->GetHwnd(), &tmpRect);
@@ -147,166 +149,166 @@ void Input::SetMousePos(Vector2 pos)
 	SetCursorPos((int)(pos.x + tmpRect.left + pWindow->WINDOW_WIDTH), (int)(pos.y + tmpRect.top + pWindow->WINDOW_HEIGHT));
 }
 
-Vector2 Input::GetCurrentMousePos()
+JimaXengine::Vector2 JimaXengine::Input::GetCurrentMousePos()
 {
 	return currentMousePos;
 }
 
-Vector2 Input::GetPrevMousePos()
+JimaXengine::Vector2 JimaXengine::Input::GetPrevMousePos()
 {
 	return prevMousePos;
 }
 
-bool Input::PadButtonPress(const int & keys)
+bool JimaXengine::Input::PadButtonPress(const int & keys)
 {
 	return (xinputCurrent.Gamepad.wButtons & keys);
 }
 
-bool Input::PadButtonTrigger(const int & keys)
+bool JimaXengine::Input::PadButtonTrigger(const int & keys)
 {
 	return ((xinputCurrent.Gamepad.wButtons & keys) && !(xinputPrev.Gamepad.wButtons & keys));
 }
 
-bool Input::PadButtonRelease(const int & keys)
+bool JimaXengine::Input::PadButtonRelease(const int & keys)
 {
 	return (!(xinputCurrent.Gamepad.wButtons & keys) && (xinputPrev.Gamepad.wButtons & keys));
 }
 
-bool Input::PadLTPress()
+bool JimaXengine::Input::PadLTPress()
 {
 	return (xinputCurrent.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 }
 
-bool Input::PadLTTrigger()
+bool JimaXengine::Input::PadLTTrigger()
 {
 	return ((xinputCurrent.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && 
 		!(xinputPrev.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD));
 }
 
-bool Input::PadLTRelease()
+bool JimaXengine::Input::PadLTRelease()
 {
 	return (!(xinputCurrent.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) &&
 		(xinputPrev.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD));
 }
 
-bool Input::PadRTPress()
+bool JimaXengine::Input::PadRTPress()
 {
 	return (xinputCurrent.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 }
 
-bool Input::PadRTTrigger()
+bool JimaXengine::Input::PadRTTrigger()
 {
 	return ((xinputCurrent.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) &&
 		!(xinputPrev.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD));;
 }
 
-bool Input::PadRTRelease()
+bool JimaXengine::Input::PadRTRelease()
 {
 	return (!(xinputCurrent.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) &&
 		(xinputPrev.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD));
 }
 
-bool Input::PadLeftStickRight()
+bool JimaXengine::Input::PadLeftStickRight()
 {
 	return (xinputCurrent.Gamepad.sThumbLX >= leftDeadZone);
 }
 
-bool Input::PadLeftStickLeft()
+bool JimaXengine::Input::PadLeftStickLeft()
 {
 	return (xinputCurrent.Gamepad.sThumbLX <= -leftDeadZone);
 }
 
-bool Input::PadLeftStickUp()
+bool JimaXengine::Input::PadLeftStickUp()
 {
 	return (xinputCurrent.Gamepad.sThumbLY >= leftDeadZone);
 }
 
-bool Input::PadLeftStickDown()
+bool JimaXengine::Input::PadLeftStickDown()
 {
 	return (xinputCurrent.Gamepad.sThumbLY <= -leftDeadZone);
 }
 
-bool Input::PadRightStickRight()
+bool JimaXengine::Input::PadRightStickRight()
 {
 	return (xinputCurrent.Gamepad.sThumbRX >= rightDeadZone);
 }
 
-bool Input::PadRightStickLeft()
+bool JimaXengine::Input::PadRightStickLeft()
 {
 	return (xinputCurrent.Gamepad.sThumbRX <= -rightDeadZone);
 }
 
-bool Input::PadRightStickUp()
+bool JimaXengine::Input::PadRightStickUp()
 {
 	return (xinputCurrent.Gamepad.sThumbRY >= rightDeadZone);
 }
 
-bool Input::PadRightStickDown()
+bool JimaXengine::Input::PadRightStickDown()
 {
 	return (xinputCurrent.Gamepad.sThumbRY <= -rightDeadZone);
 }
 
-bool Input::PadLeftStickRightTrigger()
+bool JimaXengine::Input::PadLeftStickRightTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbLX >= leftDeadZone) && !(xinputPrev.Gamepad.sThumbLX >= leftDeadZone));
 }
 
-bool Input::PadLeftStickLeftTrigger()
+bool JimaXengine::Input::PadLeftStickLeftTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbLX <= -leftDeadZone) && !(xinputPrev.Gamepad.sThumbLX <= -leftDeadZone));
 }
 
-bool Input::PadLeftStickUpTrigger()
+bool JimaXengine::Input::PadLeftStickUpTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbLY >= leftDeadZone) && !(xinputPrev.Gamepad.sThumbLY >= leftDeadZone));
 }
 
-bool Input::PadLeftStickDownTrigger()
+bool JimaXengine::Input::PadLeftStickDownTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbLY <= -leftDeadZone) && !(xinputPrev.Gamepad.sThumbLY <= -leftDeadZone));
 }
 
-bool Input::PadRightStickRightTrigger()
+bool JimaXengine::Input::PadRightStickRightTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbRX >= rightDeadZone) && !(xinputPrev.Gamepad.sThumbRX >= rightDeadZone));
 }
 
-bool Input::PadRightStickLeftTrigger()
+bool JimaXengine::Input::PadRightStickLeftTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbRX <= -rightDeadZone) && !(xinputPrev.Gamepad.sThumbRX <= -rightDeadZone));
 }
 
-bool Input::PadRightStickUpTrigger()
+bool JimaXengine::Input::PadRightStickUpTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbRY >= rightDeadZone) && !(xinputPrev.Gamepad.sThumbRY >= rightDeadZone));
 }
 
-bool Input::PadRightStickDownTrigger()
+bool JimaXengine::Input::PadRightStickDownTrigger()
 {
 	return ((xinputCurrent.Gamepad.sThumbRY <= -rightDeadZone) && !(xinputPrev.Gamepad.sThumbRY <= -rightDeadZone));
 }
 
-float Input::PadLeftStickPercentageX()
+float JimaXengine::Input::PadLeftStickPercentageX()
 {
 	return xinputCurrent.Gamepad.sThumbLX < 0 ? -((float)xinputCurrent.Gamepad.sThumbLX / (float)SHRT_MIN) : ((float)xinputCurrent.Gamepad.sThumbLX / (float)SHRT_MAX);
 }
 
-float Input::PadLeftStickPercentageY()
+float JimaXengine::Input::PadLeftStickPercentageY()
 {
 	return xinputCurrent.Gamepad.sThumbLY < 0 ? -((float)xinputCurrent.Gamepad.sThumbLY / (float)SHRT_MIN) : ((float)xinputCurrent.Gamepad.sThumbLY / (float)SHRT_MAX);
 }
 
-float Input::PadRightStickPercentageX()
+float JimaXengine::Input::PadRightStickPercentageX()
 {
 	return xinputCurrent.Gamepad.sThumbRX < 0 ? -((float)xinputCurrent.Gamepad.sThumbRX / (float)SHRT_MIN) : ((float)xinputCurrent.Gamepad.sThumbRX / (float)SHRT_MAX);
 }
 
-float Input::PadRightStickPercentageY()
+float JimaXengine::Input::PadRightStickPercentageY()
 {
 	return xinputCurrent.Gamepad.sThumbRY < 0 ? -((float)xinputCurrent.Gamepad.sThumbRY / (float)SHRT_MIN) : ((float)xinputCurrent.Gamepad.sThumbRY / (float)SHRT_MAX);
 }
 
-Vector2 Input::PadLeftStickVector()
+JimaXengine::Vector2 JimaXengine::Input::PadLeftStickVector()
 {
 	Vector2 vec;
 	vec.x = PadLeftStickPercentageX();
@@ -314,7 +316,7 @@ Vector2 Input::PadLeftStickVector()
 	return vec.Normalize();
 }
 
-Vector2 Input::PadRightStickVector()
+JimaXengine::Vector2 JimaXengine::Input::PadRightStickVector()
 {
 	Vector2 vec;
 	vec.x = PadRightStickPercentageX();

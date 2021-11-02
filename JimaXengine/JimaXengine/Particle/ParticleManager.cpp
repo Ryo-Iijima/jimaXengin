@@ -1,17 +1,17 @@
 #include "ParticleManager.h"
 
-GeometoryObject3D* ParticleManager::q_alp_geo = nullptr;
-GeometoryObject3D* ParticleManager::q_add_geo = nullptr;
-GeometoryObject3D* ParticleManager::c_alp_geo = nullptr;
-GeometoryObject3D* ParticleManager::c_add_geo = nullptr;
+JimaXengine::GeometoryObject3D* JimaXengine::ParticleManager::q_alp_geo = nullptr;
+JimaXengine::GeometoryObject3D* JimaXengine::ParticleManager::q_add_geo = nullptr;
+JimaXengine::GeometoryObject3D* JimaXengine::ParticleManager::c_alp_geo = nullptr;
+JimaXengine::GeometoryObject3D* JimaXengine::ParticleManager::c_add_geo = nullptr;
 
-std::forward_list<ParticleBase*> ParticleManager::quad_alpha_particle;
-std::forward_list<ParticleBase*> ParticleManager::quad_add_particle;
-std::forward_list<ParticleBase*> ParticleManager::cube_alpha_particle;
-std::forward_list<ParticleBase*> ParticleManager::cube_add_particle;
-std::vector<ParticleObj*> ParticleManager::particleObj;
+std::forward_list<JimaXengine::ParticleBase*> JimaXengine::ParticleManager::quad_alpha_particle;
+std::forward_list<JimaXengine::ParticleBase*> JimaXengine::ParticleManager::quad_add_particle;
+std::forward_list<JimaXengine::ParticleBase*> JimaXengine::ParticleManager::cube_alpha_particle;
+std::forward_list<JimaXengine::ParticleBase*> JimaXengine::ParticleManager::cube_add_particle;
+std::vector<JimaXengine::ParticleObj*> JimaXengine::ParticleManager::particleObj;
 
-void ParticleManager::StaticInitialize()
+void JimaXengine::ParticleManager::StaticInitialize()
 {
 	q_alp_geo = new GeometoryObject3D();
 	q_add_geo = new GeometoryObject3D();
@@ -23,7 +23,7 @@ void ParticleManager::StaticInitialize()
 	c_add_geo->Initialize();
 }
 
-void ParticleManager::Finalize()
+void JimaXengine::ParticleManager::Finalize()
 {
 	delete q_alp_geo;
 	delete q_add_geo;
@@ -42,15 +42,15 @@ void ParticleManager::Finalize()
  	particleObj.clear();
 }
 
-ParticleManager::ParticleManager()
+JimaXengine::ParticleManager::ParticleManager()
 {
 }
 
-ParticleManager::~ParticleManager()
+JimaXengine::ParticleManager::~ParticleManager()
 {
 }
 
-void ParticleManager::Initialize()
+void JimaXengine::ParticleManager::Initialize()
 {
 	DeleteList(quad_alpha_particle);
 	DeleteList(quad_add_particle);
@@ -58,7 +58,7 @@ void ParticleManager::Initialize()
 	DeleteList(cube_add_particle);
 }
 
-void ParticleManager::Update()
+void JimaXengine::ParticleManager::Update()
 {
 	UpdateList(quad_alpha_particle);
 	UpdateList(quad_add_particle);
@@ -73,7 +73,7 @@ void ParticleManager::Update()
 	UpdateObj();
 }
 
-void ParticleManager::DrawDepth(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepth(Camera* camera)
 {
 	c_alp_geo->Draw(camera, cube_alpha_particle, "white", "cube_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
 
@@ -84,43 +84,43 @@ void ParticleManager::DrawDepth(Camera* camera)
 	}
 }
 
-void ParticleManager::DrawDepthAlpha(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepthAlpha(Camera* camera)
 {
 	c_add_geo->Draw(camera, cube_add_particle, "white", "cube_add", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
 }
 
-void ParticleManager::DrawDepthNone(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepthNone(Camera* camera)
 {
 	q_alp_geo->Draw(camera, quad_alpha_particle, "particle.png", "quad_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_ALL);
 	q_add_geo->Draw(camera, quad_add_particle, "particle.png", "quad_add", GeometoryObject3D::BILLBOARD::BILLBOARD_ALL);
 }
 
-void ParticleManager::AddParticleObj(ParticleObj * particle)
+void JimaXengine::ParticleManager::AddParticleObj(ParticleObj * particle)
 {
 	particleObj.push_back(particle);
 }
 
-void ParticleManager::AddQuadAlpha(ParticleBase* parameter)
+void JimaXengine::ParticleManager::AddQuadAlpha(ParticleBase* parameter)
 {
 	quad_alpha_particle.push_front(parameter);
 }
 
-void ParticleManager::AddQuadAdd(ParticleBase* parameter)
+void JimaXengine::ParticleManager::AddQuadAdd(ParticleBase* parameter)
 {
 	quad_add_particle.push_front(parameter);
 }
 
-void ParticleManager::AddCubeAlpha(ParticleBase* parameter)
+void JimaXengine::ParticleManager::AddCubeAlpha(ParticleBase* parameter)
 {
 	cube_alpha_particle.push_front(parameter);
 }
 
-void ParticleManager::AddCubeAdd(ParticleBase* parameter)
+void JimaXengine::ParticleManager::AddCubeAdd(ParticleBase* parameter)
 {
 	cube_add_particle.push_front(parameter);
 }
 
-void ParticleManager::UpdateList(std::forward_list<ParticleBase*>& list)
+void JimaXengine::ParticleManager::UpdateList(std::forward_list<ParticleBase*>& list)
 {
 	list.remove_if([](ParticleBase* obj) { return obj->GetParticleParameter().life <= 0; });
 	auto end = list.end();
@@ -130,7 +130,7 @@ void ParticleManager::UpdateList(std::forward_list<ParticleBase*>& list)
 	}
 }
 
-void ParticleManager::AddList(std::forward_list<ParticleBase*>& list1, std::forward_list<ParticleBase*>& list2)
+void JimaXengine::ParticleManager::AddList(std::forward_list<ParticleBase*>& list1, std::forward_list<ParticleBase*>& list2)
 {
 	auto end = list2.end();
 	for (auto itr = list2.begin(); itr != end; itr++)
@@ -139,7 +139,7 @@ void ParticleManager::AddList(std::forward_list<ParticleBase*>& list1, std::forw
 	}
 }
 
-void ParticleManager::UpdateObj()
+void JimaXengine::ParticleManager::UpdateObj()
 {
 	auto itr = particleObj.begin();
 	while (itr != particleObj.end())
@@ -157,7 +157,7 @@ void ParticleManager::UpdateObj()
 	}
 }
 
-void ParticleManager::DeleteList(std::forward_list<ParticleBase*>& list)
+void JimaXengine::ParticleManager::DeleteList(std::forward_list<ParticleBase*>& list)
 {
 	for (auto itr = list.begin(); itr != list.end(); itr++)
 	{

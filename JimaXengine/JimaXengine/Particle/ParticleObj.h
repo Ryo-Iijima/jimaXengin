@@ -3,29 +3,31 @@
 #include "ParticleParam.h"
 
 class Camera;
-class ParticleObj
+namespace JimaXengine
 {
-public:
-	ParticleObj();
-	~ParticleObj();
-	void Initialize(ParticleParam parameter,
-		std::string model,
-		std::string file,
-		std::string shader,
-		std::string blend,
-		std::string pipeline);
-	void Update();
-	void Draw(Camera* camera);
-	bool IsDead() { return isDead; }
+	class ParticleObj
+	{
+	public:
+		ParticleObj();
+		~ParticleObj();
+		void Initialize(ParticleParam parameter,
+			std::string model,
+			std::string file,
+			std::string shader,
+			std::string blend,
+			std::string pipeline);
+		void Update();
+		void Draw(Camera* camera);
+		bool IsDead() { return isDead; }
 
-private:
-	Object3d obj3d;
-	ParticleParam param;
-	bool isDead;
-	std::string modelname;
-	std::string filename;
-	std::string shadername;
-	std::string blendname;
-	std::string pipelinename;
-};
-
+	private:
+		Object3d obj3d;
+		ParticleParam param;
+		bool isDead;
+		std::string modelname;
+		std::string filename;
+		std::string shadername;
+		std::string blendname;
+		std::string pipelinename;
+	};
+}

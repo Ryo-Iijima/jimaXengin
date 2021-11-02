@@ -1,15 +1,18 @@
 #pragma once
 #include "ParticleParam.h"
 
-class ParticleBase
+namespace JimaXengine
 {
-public:
-	ParticleBase() = default;
-	virtual ~ParticleBase() = default;
-	virtual void Initialize() = 0;
-	virtual void Update() = 0;
-	const ParticleParam& GetParticleParameter() { return param; }
+	class ParticleBase
+	{
+	public:
+		ParticleBase() = default;
+		virtual ~ParticleBase() = default;
+		virtual void Initialize() = 0;
+		virtual void Update() = 0;
+		const ParticleParam& GetParticleParameter() { return param; }
 
-protected:
-	ParticleParam param;
-};
+	protected:
+		ParticleParam param;
+	};
+}

@@ -1,40 +1,40 @@
 #include "GameObject.h"
 
-GameObject::GameObject()
+JimaXengine::GameObject::GameObject()
 {
 	pEmitter = new ParticleEmitter();
 }
 
-GameObject::~GameObject()
+JimaXengine::GameObject::~GameObject()
 {
 	delete pEmitter;
 }
 
-void GameObject::Dead()
+void JimaXengine::GameObject::Dead()
 {
 	isDead = true;
 }
 
-void GameObject::Delete()
+void JimaXengine::GameObject::Delete()
 {
 	isDelete = true;
 }
 
-GameObject::TYPE GameObject::GetType()
+JimaXengine::GameObject::TYPE JimaXengine::GameObject::GetType()
 {
 	return TYPE::NONE;
 }
 
-GameObject::RENDER_TYPE GameObject::GetRenderType()
+JimaXengine::GameObject::RENDER_TYPE JimaXengine::GameObject::GetRenderType()
 {
 	return renderType;
 }
 
-void GameObject::DrawImGui()
+void JimaXengine::GameObject::DrawImGui()
 {
 }
 
-void GameObject::InitializeParticleEmitter(ParticleManager* pManager)
+void JimaXengine::GameObject::InitializeParticleEmitter(ParticleManager* pManager)
 {
 	pEmitter->Initialize(pManager);
 }

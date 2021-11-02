@@ -2,17 +2,17 @@
 
 using namespace DirectX;
 
-Camera::Camera()
+JimaXengine::Camera::Camera()
 {
 	matBillboard = XMMatrixIdentity();
 	matBillboardY = XMMatrixIdentity();
 }
 
-Camera::~Camera()
+JimaXengine::Camera::~Camera()
 {
 }
 
-void Camera::SetProjectionMatrix(float win_width, float win_height, float angleOfView, float near, float far)
+void JimaXengine::Camera::SetProjectionMatrix(float win_width, float win_height, float angleOfView, float near, float far)
 {
 	matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(angleOfView),		// 画角
@@ -20,7 +20,7 @@ void Camera::SetProjectionMatrix(float win_width, float win_height, float angleO
 		near, far);								// 前後
 }
 
-void Camera::SetViewMatrix(Vector3 argEye, Vector3 argTarget, Vector3 argUp)
+void JimaXengine::Camera::SetViewMatrix(Vector3 argEye, Vector3 argTarget, Vector3 argUp)
 {
 	// ビュー行列
 	eye = argEye;
