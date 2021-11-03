@@ -248,7 +248,7 @@
     <ClCompile Include="TargetManager.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
-    <ClCompile Include="Boss.cpp">
+    <ClCompile Include="actor\Boss.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -415,7 +415,7 @@
     <ClInclude Include="TargetManager.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
-    <ClInclude Include="Boss.h">
+    <ClInclude Include="actor\Boss.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,7 +15,8 @@ namespace JimaXengine
 		{
 			std::unique_ptr<Object3d> object;	// モデル
 			Vector3 pos;						// 位置
-			Vector3 vel;						// 速度
+			Vector3 vel;						// 移動量
+			Vector3 acc;						// 加速度
 			AABB3D col;							// 当たり判定用
 		};
 	private:

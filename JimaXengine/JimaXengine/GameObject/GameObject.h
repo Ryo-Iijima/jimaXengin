@@ -34,6 +34,7 @@ namespace JimaXengine
 			NONE,
 			PLAYER,
 			TARGET,
+			BOSS,
 		};
 
 		// ƒˆ‰¼‘zŠÖ”

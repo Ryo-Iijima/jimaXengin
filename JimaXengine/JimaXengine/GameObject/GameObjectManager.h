@@ -23,6 +23,7 @@ namespace JimaXengine
 		void Draw();
 		void ResetObject();
 		Player* GetPlayer();
+		Boss* GetBoss();
 		ParticleManager* GetParticleManager() { return pManager; }
 
 	private:

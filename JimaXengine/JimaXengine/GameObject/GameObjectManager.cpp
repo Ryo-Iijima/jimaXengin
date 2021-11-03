@@ -104,6 +104,19 @@ JimaXengine::Player* JimaXengine::GameObjectManager::GetPlayer()
 	return nullptr;
 }
 
+JimaXengine::Boss* JimaXengine::GameObjectManager::GetBoss()
+{
+	for (auto itr = gameObjects.begin(); itr != gameObjects.end(); ++itr)
+	{
+		if ((*itr)->GetType() == GameObject::TYPE::BOSS)
+		{
+			Boss* p = static_cast<Boss*>(static_cast<void*>(*itr));
+			return p;
+		}
+	}
+	return nullptr;
+}
+
 void JimaXengine::GameObjectManager::SortRenderType()
 {
 	std::sort(gameObjects.begin(), gameObjects.end(), [](GameObject* obj1, GameObject* obj2) { return obj1->GetRenderType() < obj2->GetRenderType(); });

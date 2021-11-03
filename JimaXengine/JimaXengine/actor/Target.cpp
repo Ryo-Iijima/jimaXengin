@@ -5,7 +5,7 @@
 
 void JimaXengine::Target::Move()
 {
-	pos.z -= 0.2f;;
+	pos += vel;
 	if (pos.z <= -10)
 	{
 		pos.z = 30;
@@ -16,18 +16,39 @@ void JimaXengine::Target::Move()
 
 void JimaXengine::Target::HitCheck()
 {
-	Player* player = oManager->GetPlayer();
+	if (reflection == false)
+	{
+		Player* player = oManager->GetPlayer();
 
-	// ラケットに当たったら
-	if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
-		|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
-	{
-		object->SetColor(Vector4(0, 0, 0, 1));
-		//Dead();
+		// ラケットに当たったら
+		if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
+			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
+		{
+			object->SetColor(Vector4(0, 0, 0, 1));
+			reflection = true;
+			vel *= -1;
+		}
+		else
+		{
+			//object->SetColor(Vector4(1, 1, 1, 1));
+		}
 	}
-	else
+
+	if (reflection == true)
 	{
-		//object->SetColor(Vector4(1, 1, 1, 1));
+		Boss* boss = oManager->GetBoss();
+
+		// ボスに当たったら
+		if (Collision::CheckAABB3DToSphere(boss->GetAABB3DCol(), sphereCol))
+		{
+			object->SetColor(Vector4(0, 0, 0, 1));
+			boss->Damage();
+			//Dead();
+		}
+		else
+		{
+			//object->SetColor(Vector4(1, 1, 1, 1));
+		}
 	}
 }
 
@@ -50,6 +71,10 @@ void JimaXengine::Target::Initialize()
 	object->SetModel(model);
 	object->SetColor(Vector4(1, 1, 1, 1));
 	object->SetScale(Vector3(1, 1, 1));
+
+	vel = Vector3(0, 0, -0.2);
+
+	reflection = false;
 }
 
 void JimaXengine::Target::Update()

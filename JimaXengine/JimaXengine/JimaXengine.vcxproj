@@ -179,11 +179,11 @@
     <ClCompile Include="3d\Model.cpp" />
     <ClCompile Include="3d\Object3d.cpp" />
     <ClCompile Include="actor\BackGround.cpp" />
+    <ClCompile Include="actor\Boss.cpp" />
     <ClCompile Include="actor\JoyconTest.cpp" />
     <ClCompile Include="actor\Player.cpp" />
     <ClCompile Include="actor\Target.cpp" />
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="collision\Collision.cpp" />
     <ClCompile Include="collision\CollisionPrimitive.cpp" />
@@ -236,11 +236,11 @@
     <ClInclude Include="3d\Model.h" />
     <ClInclude Include="3d\Object3d.h" />
     <ClInclude Include="actor\BackGround.h" />
+    <ClInclude Include="actor\Boss.h" />
     <ClInclude Include="actor\JoyconTest.h" />
     <ClInclude Include="actor\Player.h" />
     <ClInclude Include="actor\Target.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Boss.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="collision\Collision.h" />
     <ClInclude Include="collision\CollisionPrimitive.h" />

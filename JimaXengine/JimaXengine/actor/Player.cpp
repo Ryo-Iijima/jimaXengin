@@ -195,20 +195,100 @@ void JimaXengine::Player::Move()
     pos += vel;
 
 #pragma region Stick
+    float defaultvel = 1.0f;
+    float maxacc = 0.5f;    // 最大加速度
+
     // 左
     leftRacket->vel = Vector3(0, 0, 0);
-    if (Input::KeyPress(DIK_W) || Input::PadLeftStickUp()) leftRacket->vel.y = 1;
-    if (Input::KeyPress(DIK_S) || Input::PadLeftStickDown()) leftRacket->vel.y = -1;
-    if (Input::KeyPress(DIK_A) || Input::PadLeftStickLeft()) leftRacket->vel.x = -1;
-    if (Input::KeyPress(DIK_D) || Input::PadLeftStickRight()) leftRacket->vel.x = 1;
-    leftRacket->pos += leftRacket->vel;
+
+    if (Input::KeyPress(DIK_W) || Input::PadLeftStickUp()) leftRacket->vel.y = defaultvel;
+    if (Input::KeyPress(DIK_S) || Input::PadLeftStickDown()) leftRacket->vel.y = -defaultvel;
+    if (Input::KeyPress(DIK_A) || Input::PadLeftStickLeft()) leftRacket->vel.x = -defaultvel;
+    if (Input::KeyPress(DIK_D) || Input::PadLeftStickRight()) leftRacket->vel.x = defaultvel;
+
+    leftRacket->acc += leftRacket->vel / 10;
+
+    // 操作されていたら
+    if (Input::KeyPress(DIK_W) || Input::PadLeftStickUp()
+        || Input::KeyPress(DIK_S) || Input::PadLeftStickDown())
+    {
+        // 最高速までに制限（現在の加速方向によって分岐）
+        if (leftRacket->acc.y > maxacc)
+        {
+            leftRacket->acc.y = maxacc;
+        }
+        else if (leftRacket->acc.y < -maxacc)
+        {
+            leftRacket->acc.y = -maxacc;
+        }
+    }
+    // 操作されていなかったら
+    else
+    {
+        // 減速（現在の加速方向によって分岐）
+        if (leftRacket->acc.y > 0)
+        {
+            leftRacket->acc.y -= defaultvel / 10;
+            if (leftRacket->acc.y <= 0.1f)
+            {
+                leftRacket->acc.y = 0;
+            }
+        }
+        else if (leftRacket->acc.y < 0)
+        {
+            leftRacket->acc.y += defaultvel / 10;
+            if (leftRacket->acc.y >= -0.1)
+            {
+                leftRacket->acc.y = 0;
+            }
+        }
+    }
+
+    // 操作されていたら
+    if(Input::KeyPress(DIK_A) || Input::PadLeftStickLeft()
+        || Input::KeyPress(DIK_D) || Input::PadLeftStickRight())
+    {
+        // 最高速までに制限（現在の加速方向によって分岐）
+        if (leftRacket->acc.x > maxacc)
+        {
+            leftRacket->acc.x = maxacc;
+        }
+        else if (leftRacket->acc.x < -maxacc)
+        {
+            leftRacket->acc.x = -maxacc;
+        }
+    }
+    // 操作されていなかったら
+    else
+    {
+        // 減速（現在の加速方向によって分岐）
+        if (leftRacket->acc.x > 0)
+        {
+            leftRacket->acc.x -= defaultvel / 10;
+            if (leftRacket->acc.x <= 0.1f)
+            {
+                leftRacket->acc.x = 0;
+            }
+        }
+        else if (leftRacket->acc.x < 0)
+        {
+            leftRacket->acc.x += defaultvel / 10;
+            if (leftRacket->acc.x >= -0.1)
+            {
+                leftRacket->acc.x = 0;
+            }
+        }
+    }
+
+    leftRacket->pos += leftRacket->acc;
+
     // 右
     rightRacket->vel = Vector3(0, 0, 0);
-    if (Input::KeyPress(DIK_I) || Input::PadRightStickUp()) rightRacket->vel.y = 1;
-    if (Input::KeyPress(DIK_K) || Input::PadRightStickDown()) rightRacket->vel.y = -1;
-    if (Input::KeyPress(DIK_J) || Input::PadRightStickLeft()) rightRacket->vel.x = -1;
-    if (Input::KeyPress(DIK_L) || Input::PadRightStickRight()) rightRacket->vel.x = 1;
-    rightRacket->pos += rightRacket->vel;
+    if (Input::KeyPress(DIK_I) || Input::PadRightStickUp()) rightRacket->vel.y = defaultvel;
+    if (Input::KeyPress(DIK_K) || Input::PadRightStickDown()) rightRacket->vel.y = -defaultvel;
+    if (Input::KeyPress(DIK_J) || Input::PadRightStickLeft()) rightRacket->vel.x = -defaultvel;
+    if (Input::KeyPress(DIK_L) || Input::PadRightStickRight()) rightRacket->vel.x = defaultvel;
+    rightRacket->acc += rightRacket->vel / 10;
 #pragma endregion
 }
 

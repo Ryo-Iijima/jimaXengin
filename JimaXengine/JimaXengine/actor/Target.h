@@ -12,6 +12,9 @@ namespace JimaXengine
 		Model* model = nullptr;
 		Object3d* object = nullptr;
 
+		// ’µ‚Ë•Ô‚µ‚½Œã‚©
+		bool reflection = false;
+
 	private:
 		void Move();
 		void HitCheck();
