@@ -32,7 +32,7 @@ void JimaXengine::Play::Initialize()
 	//oManager->Add(new Target(camera, Vector3(5, -5, 20)));
 	//oManager->Add(new Target(camera, Vector3(-5, -5, 20)));
 	//oManager->Add(new Target(camera, Vector3(-5, 5, 30)));
-	oManager->Add(new Boss(camera));
+	oManager->Add(new Boss(camera,oManager));
 	oManager->Add(new BackGround(camera));
 	oManager->Add(new JoyconTest());
 

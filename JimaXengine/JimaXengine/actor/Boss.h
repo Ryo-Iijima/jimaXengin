@@ -13,6 +13,8 @@ namespace JimaXengine
 		Model* model;
 		std::unique_ptr<Object3d> object;
 
+		GameObjectManager* pOManager = nullptr;
+
 		int hp;					// ヒットポイント
 		bool damaged = false;	// ダメージ点滅用
 		int count = 20;			// 点滅時間
@@ -29,7 +31,7 @@ namespace JimaXengine
 		};
 		State state;
 	
-		// ボス移動位置
+		// 移動位置
 		Vector3 waitPos[6] =
 		{
 			{  0,  0, 50},
@@ -43,8 +45,26 @@ namespace JimaXengine
 		Vector3 nextPos;
 		Vector3 toDestinationVelocity;
 		Vector3 v;
+
+		// 攻撃種類
+		enum class AttackType
+		{
+			SINGLESHOT,	// 単発
+			RAPIDFIRE,	// 連射
+			EACHSHOT,	// 拡散
+		};
+		AttackType attackType;
+		bool attackchoseed;	// 攻撃抽選フラグ
+		bool attacked;		// 攻撃完了フラグ
+		
+	private:
+		void Move();
+		void SingleShot();
+		void RapidFire();
+		void EachShot();
+
 	public:
-		Boss(Camera* camera);
+		Boss(Camera* camera, GameObjectManager* oManager);
 		~Boss();
 		void Initialize()override;
 		void Update()override;
@@ -57,6 +77,5 @@ namespace JimaXengine
 		void DrawImGui()override;
 
 		void Damage();	// ダメージを食らう
-		void Move();
 	};
 }

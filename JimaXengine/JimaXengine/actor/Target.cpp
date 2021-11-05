@@ -6,16 +6,17 @@
 void JimaXengine::Target::Move()
 {
 	pos += vel;
-	if (pos.z <= -10)
-	{
-		pos.z = 30;
-		object->SetColor(Vector4(1, 1, 1, 1));
-	}
-
 }
 
 void JimaXengine::Target::HitCheck()
 {
+	// ”ÍˆÍŠO‚Éo‚½‚ç
+	if (pos.z <= -10)
+	{
+		Dead();
+	}
+
+
 	if (reflection == false)
 	{
 		Player* player = oManager->GetPlayer();

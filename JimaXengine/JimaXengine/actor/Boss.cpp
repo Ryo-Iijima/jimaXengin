@@ -1,10 +1,12 @@
 #include "Boss.h"
 #include "../3d/FbxLoader.h"
 #include "../general/Random.h"
+#include "../GameObject/GameObjectManager.h"
 
-JimaXengine::Boss::Boss(Camera* camera)
+JimaXengine::Boss::Boss(Camera* camera, GameObjectManager* oManager)
 {
 	pCamera = camera;
+	pOManager = oManager;
 }
 
 JimaXengine::Boss::~Boss()
@@ -36,6 +38,7 @@ void JimaXengine::Boss::Initialize()
 void JimaXengine::Boss::Update()
 {
 	Move();
+
 	// ダメージ受けてたら点滅する
 	if (damaged)
 	{
@@ -157,6 +160,7 @@ void JimaXengine::Boss::Move()
 			actionIntervalTimer = 200;
 		}
 		break;
+
 	case JimaXengine::Boss::State::MOVE:
 
 		pos += toDestinationVelocity;
@@ -165,18 +169,58 @@ void JimaXengine::Boss::Move()
 		//if (pos == nextPos)
 		if (abs(v.x) < 0.5f || abs(v.y) < 0.5f)
 		{
-			// 待機状態に変更
-			state = State::WAIT;
+			//// 待機状態に変更
+			//state = State::WAIT;
+
+			// 攻撃状態に変更
+			state = State::ATTACK;
 		}
 		break;
+
 	case JimaXengine::Boss::State::ATTACK:
+		
+		// 攻撃前だったら
+		if (!attackchoseed)
+		{
+			// 次の攻撃を抽選
+			random = (int)Random::GetRandom(1, 1);
+			attackType = (AttackType)random;
+
+			attackchoseed = true;
+		}
+
+		if (!attacked)
+		{
+			switch (attackType)
+			{
+			case JimaXengine::Boss::AttackType::SINGLESHOT:
+				SingleShot();
+				break;
+			case JimaXengine::Boss::AttackType::RAPIDFIRE:
+				RapidFire();
+				break;
+			case JimaXengine::Boss::AttackType::EACHSHOT:
+				EachShot();
+				break;
+			default:
+				break;
+			}
+		}
+
+		// 攻撃完了したら
+		if (attacked)
+		{
+			// 待機状態に変更
+			state = State::WAIT;
+			attackchoseed = false;
+			attacked = false;
+		}
 
 		break;
+
 	default:
 		break;
 	}
-
-
 
 	float xLimit = 42.0f;    // 画面内に制限する用
 	float yLimit = 20.0f;
@@ -200,4 +244,22 @@ void JimaXengine::Boss::Move()
 		//pos.y = -yLimit;
 		pos.y = -10;
 	}
+}
+
+void JimaXengine::Boss::SingleShot()
+{
+	pOManager->Insert(new Target(pCamera, pos));
+	attacked = true;
+}
+
+void JimaXengine::Boss::RapidFire()
+{
+	pOManager->Insert(new Target(pCamera, pos));
+	attacked = true;
+}
+
+void JimaXengine::Boss::EachShot()
+{
+	pOManager->Insert(new Target(pCamera, pos));
+	attacked = true;
 }
