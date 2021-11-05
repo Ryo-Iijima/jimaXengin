@@ -27,11 +27,11 @@ void JimaXengine::Play::Initialize()
 	oManager = new GameObjectManager();
 	oManager->Initialize();
 	oManager->Add(new Player(camera));
-	oManager->Add(new Target(camera));
-	oManager->Add(new Target(camera, Vector3(5, 5, 10)));
-	oManager->Add(new Target(camera, Vector3(5, -5, 20)));
-	oManager->Add(new Target(camera, Vector3(-5, -5, 20)));
-	oManager->Add(new Target(camera, Vector3(-5, 5, 30)));
+	//oManager->Add(new Target(camera));
+	//oManager->Add(new Target(camera, Vector3(5, 5, 10)));
+	//oManager->Add(new Target(camera, Vector3(5, -5, 20)));
+	//oManager->Add(new Target(camera, Vector3(-5, -5, 20)));
+	//oManager->Add(new Target(camera, Vector3(-5, 5, 30)));
 	oManager->Add(new Boss(camera));
 	oManager->Add(new BackGround(camera));
 	oManager->Add(new JoyconTest());

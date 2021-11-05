@@ -185,18 +185,11 @@ void JimaXengine::Player::JoyConUpdate()
 
 void JimaXengine::Player::Move()
 {
-    vel = { 0,0,0 };
-
-    //if (Input::KeyPress(DIK_W)) vel.z = 1;
-    //if (Input::KeyPress(DIK_S)) vel.z = -1;
-    //if (Input::KeyPress(DIK_A)) vel.x = -1;
-    //if (Input::KeyPress(DIK_D)) vel.x = 1;
-
-    pos += vel;
-
 #pragma region Stick
     float defaultvel = 1.0f;
     float maxacc = 0.5f;    // 最大加速度
+    float xLimit = 8.0f;    // 画面内に制限する用
+    float yLimit = 4.0f;
 
     // 左
     leftRacket->vel = Vector3(0, 0, 0);
@@ -282,13 +275,125 @@ void JimaXengine::Player::Move()
 
     leftRacket->pos += leftRacket->acc;
 
+    // 画面外に出ないように
+    if (leftRacket->pos.x > xLimit)
+    {
+        leftRacket->pos.x = xLimit;
+    }
+    if (leftRacket->pos.x < -xLimit)
+    {
+        leftRacket->pos.x = -xLimit;
+    }
+    if (leftRacket->pos.y > yLimit)
+    {
+        leftRacket->pos.y = yLimit;
+    }
+    if (leftRacket->pos.y < -yLimit)
+    {
+        leftRacket->pos.y = -yLimit;
+    }
+
     // 右
     rightRacket->vel = Vector3(0, 0, 0);
     if (Input::KeyPress(DIK_I) || Input::PadRightStickUp()) rightRacket->vel.y = defaultvel;
     if (Input::KeyPress(DIK_K) || Input::PadRightStickDown()) rightRacket->vel.y = -defaultvel;
     if (Input::KeyPress(DIK_J) || Input::PadRightStickLeft()) rightRacket->vel.x = -defaultvel;
     if (Input::KeyPress(DIK_L) || Input::PadRightStickRight()) rightRacket->vel.x = defaultvel;
+
     rightRacket->acc += rightRacket->vel / 10;
+
+    // 操作されていたら
+    if (Input::KeyPress(DIK_I) || Input::PadRightStickUp()
+        || Input::KeyPress(DIK_K) || Input::PadRightStickDown())
+    {
+        // 最高速までに制限（現在の加速方向によって分岐）
+        if (rightRacket->acc.y > maxacc)
+        {
+            rightRacket->acc.y = maxacc;
+        }
+        else if (rightRacket->acc.y < -maxacc)
+        {
+            rightRacket->acc.y = -maxacc;
+        }
+    }
+    // 操作されていなかったら
+    else
+    {
+        // 減速（現在の加速方向によって分岐）
+        if (rightRacket->acc.y > 0)
+        {
+            rightRacket->acc.y -= defaultvel / 10;
+            if (rightRacket->acc.y <= 0.1f)
+            {
+                rightRacket->acc.y = 0;
+            }
+        }
+        else if (rightRacket->acc.y < 0)
+        {
+            rightRacket->acc.y += defaultvel / 10;
+            if (rightRacket->acc.y >= -0.1)
+            {
+                rightRacket->acc.y = 0;
+            }
+        }
+    }
+
+    // 操作されていたら
+    if (Input::KeyPress(DIK_J) || Input::PadRightStickLeft()
+        || Input::KeyPress(DIK_L) || Input::PadRightStickRight())
+    {
+        // 最高速までに制限（現在の加速方向によって分岐）
+        if (rightRacket->acc.x > maxacc)
+        {
+            rightRacket->acc.x = maxacc;
+        }
+        else if (rightRacket->acc.x < -maxacc)
+        {
+            rightRacket->acc.x = -maxacc;
+        }
+    }
+    // 操作されていなかったら
+    else
+    {
+        // 減速（現在の加速方向によって分岐）
+        if (rightRacket->acc.x > 0)
+        {
+            rightRacket->acc.x -= defaultvel / 10;
+            if (rightRacket->acc.x <= 0.1f)
+            {
+                rightRacket->acc.x = 0;
+            }
+        }
+        else if (rightRacket->acc.x < 0)
+        {
+            rightRacket->acc.x += defaultvel / 10;
+            if (rightRacket->acc.x >= -0.1)
+            {
+                rightRacket->acc.x = 0;
+            }
+        }
+    }
+
+    rightRacket->pos += rightRacket->acc;
+
+    // 画面外に出ないように
+    if (rightRacket->pos.x > xLimit)
+    {
+        rightRacket->pos.x = xLimit;
+    }
+    if (rightRacket->pos.x < -xLimit)
+    {
+        rightRacket->pos.x = -xLimit;
+    }
+    if (rightRacket->pos.y > yLimit)
+    {
+        rightRacket->pos.y = yLimit;
+    }
+    if (rightRacket->pos.y < -yLimit)
+    {
+        rightRacket->pos.y = -yLimit;
+    }
+
 #pragma endregion
 }
 
@@ -314,7 +419,7 @@ void JimaXengine::Player::Initialize()
 	object = new Object3d;
 	object->Initialize();
 	object->SetModel(model);
-
+    
     pos = Vector3(5, 0, 0);
 	object->SetPosition(pos);
     object->SetScale(Vector3(4, 0.5, 1));
@@ -323,6 +428,7 @@ void JimaXengine::Player::Initialize()
     target = { 0,0,100 };
     pCamera->SetViewMatrix(eye, target);
 
+    renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
     //JoyConInitialize();
 
 #pragma region Stick初期化
@@ -334,7 +440,7 @@ void JimaXengine::Player::Initialize()
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
     leftRacket->object->SetModel(model);
-    leftRacket->object->SetColor(Vector4(0, 0, 1, 1));
+    leftRacket->object->SetColor(Vector4(0, 0, 1, 0.7f));
 
     leftRacket->col.minPos = Vector3(leftRacket->pos.x - 1, leftRacket->pos.y - 1, leftRacket->pos.z - 1);
     leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
@@ -347,13 +453,12 @@ void JimaXengine::Player::Initialize()
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
     rightRacket->object->SetModel(model);
-    rightRacket->object->SetColor(Vector4(1, 0, 0, 1));
+    rightRacket->object->SetColor(Vector4(1, 0, 0, 0.7f));
 
     rightRacket->col.minPos = Vector3(rightRacket->pos.x - 1, rightRacket->pos.y - 1, rightRacket->pos.z - 1);
     rightRacket->col.maxPos = Vector3(rightRacket->pos.x + 1, rightRacket->pos.y + 1, rightRacket->pos.z + 1);
 
 #pragma endregion
-
 
     model = FbxLoader::GetInstance().LoadModelFromFile("box");
     layObj = new Object3d;
@@ -472,8 +577,13 @@ JimaXengine::GameObject::TYPE JimaXengine::Player::GetType()
 
 void JimaXengine::Player::DrawImGui()
 {
-    //ImGui::Begin("PlayerInfomation");
-    //ImGui::End();
+    ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
+    ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+
+    ImGui::Begin("PlayerInfomation");
+    ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
+    ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
+    ImGui::End();
 }
 
 JimaXengine::Camera* JimaXengine::Player::GetCamera()

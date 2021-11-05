@@ -1,8 +1,2 @@
-﻿  Application.cpp
-  GameObjectManager.cpp
-  Boss.cpp
-  Target.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\actor\Target.cpp(75,27): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
-  Play.cpp
-  コードを生成中...
-  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+﻿  Play.cpp
+  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

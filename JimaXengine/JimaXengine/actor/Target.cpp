@@ -43,7 +43,7 @@ void JimaXengine::Target::HitCheck()
 		{
 			object->SetColor(Vector4(0, 0, 0, 1));
 			boss->Damage();
-			//Dead();
+			Dead();
 		}
 		else
 		{
@@ -72,7 +72,7 @@ void JimaXengine::Target::Initialize()
 	object->SetColor(Vector4(1, 1, 1, 1));
 	object->SetScale(Vector3(1, 1, 1));
 
-	vel = Vector3(0, 0, -0.2);
+	vel = Vector3(0, 0, -0.2f);
 
 	reflection = false;
 }

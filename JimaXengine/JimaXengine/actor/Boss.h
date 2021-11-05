@@ -1,7 +1,6 @@
 #pragma once
 #include "../GameObject/GameObject.h"
 
-
 namespace JimaXengine
 {	
 	class Camera;
@@ -16,9 +15,34 @@ namespace JimaXengine
 
 		int hp;					// ヒットポイント
 		bool damaged = false;	// ダメージ点滅用
-		int count = 10;			// 点滅時間
+		int count = 20;			// 点滅時間
 		int i = 0;				// 点滅カウント用
 
+		int actionIntervalTimer=200;		// 次に行動するまでの時間
+
+		// 状態パターン
+		enum class State
+		{
+			WAIT,		// 何もしない
+			MOVE,		// 移動
+			ATTACK,		// 攻撃
+		};
+		State state;
+	
+		// ボス移動位置
+		Vector3 waitPos[6] =
+		{
+			{  0,  0, 50},
+			{  0,  0, 50},
+			{-35, 15, 50},
+			{ 35, 15, 50},
+			{-35,-10, 50},
+			{ 35,-10, 50}
+		};
+		int random;
+		Vector3 nextPos;
+		Vector3 toDestinationVelocity;
+		Vector3 v;
 	public:
 		Boss(Camera* camera);
 		~Boss();
@@ -33,5 +57,6 @@ namespace JimaXengine
 		void DrawImGui()override;
 
 		void Damage();	// ダメージを食らう
+		void Move();
 	};
 }
