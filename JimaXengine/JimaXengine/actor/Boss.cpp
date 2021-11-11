@@ -15,7 +15,8 @@ JimaXengine::Boss::~Boss()
 
 void JimaXengine::Boss::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
+	//model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
+	model = FbxLoader::GetInstance().LoadModelFromFile("enemy");
 	object = std::make_unique<Object3d>();
 	object->Initialize();
 	object->SetModel(model);
