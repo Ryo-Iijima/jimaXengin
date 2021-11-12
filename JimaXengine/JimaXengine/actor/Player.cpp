@@ -433,6 +433,8 @@ void JimaXengine::Player::Initialize()
 
 #pragma region Stickèâä˙âª
 
+    model = FbxLoader::GetInstance().LoadModelFromFile("racketL");
+
     leftRacket = std::make_unique<Racket>();
 
     leftRacket->pos = Vector3(-5, 0, 0);
@@ -440,11 +442,13 @@ void JimaXengine::Player::Initialize()
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
     leftRacket->object->SetModel(model);
-    leftRacket->object->SetColor(Vector4(0, 0, 1, 0.7f));
+    leftRacket->object->SetColor(Vector4(1, 1, 1, 0.7f));
 
     leftRacket->col.minPos = Vector3(leftRacket->pos.x - 1, leftRacket->pos.y - 1, leftRacket->pos.z - 1);
     leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
 
+
+    model = FbxLoader::GetInstance().LoadModelFromFile("racket");
 
     rightRacket = std::make_unique<Racket>();
 
@@ -453,14 +457,13 @@ void JimaXengine::Player::Initialize()
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
     rightRacket->object->SetModel(model);
-    rightRacket->object->SetColor(Vector4(1, 0, 0, 0.7f));
+    rightRacket->object->SetColor(Vector4(1, 1, 1, 0.7f));
 
     rightRacket->col.minPos = Vector3(rightRacket->pos.x - 1, rightRacket->pos.y - 1, rightRacket->pos.z - 1);
     rightRacket->col.maxPos = Vector3(rightRacket->pos.x + 1, rightRacket->pos.y + 1, rightRacket->pos.z + 1);
 
 #pragma endregion
 
-    model = FbxLoader::GetInstance().LoadModelFromFile("box");
     layObj = new Object3d;
     layObj->Initialize();
     layObj->SetModel(model);

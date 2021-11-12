@@ -14,7 +14,8 @@ JimaXengine::BackGround::~BackGround()
 
 void JimaXengine::BackGround::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
+	//model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
+	model = FbxLoader::GetInstance().LoadModelFromFile("ground");
 	top = std::make_unique<Object3d>();
 	top->Initialize();
 	top->SetModel(model);
@@ -37,9 +38,9 @@ void JimaXengine::BackGround::Initialize()
 	top->SetScale(Vector3(20, 0.01f, 100));
 	top->SetColor(Vector4(0,0,0,1));
 
-	bottom->SetPosition(pos + Vector3(0, -20, 0));
-	bottom->SetScale(Vector3(100, 0.01f, 100));
-	bottom->SetColor(Vector4(0.3f, 0.3f, 0.3f, 1));
+	bottom->SetPosition(pos + Vector3(0, -10, 0));
+	bottom->SetScale(Vector3(1,1,1));
+	bottom->SetColor(Vector4(1, 1, 1, 1));
 
 	left->SetPosition(pos + Vector3(-20, 0, 0));
 	left->SetScale(Vector3(0.01f, 20, 100));

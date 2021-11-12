@@ -15,8 +15,7 @@ JimaXengine::Boss::~Boss()
 
 void JimaXengine::Boss::Initialize()
 {
-	//model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
-	model = FbxLoader::GetInstance().LoadModelFromFile("enemy");
+	model = FbxLoader::GetInstance().LoadModelFromFile("boss");
 	object = std::make_unique<Object3d>();
 	object->Initialize();
 	object->SetModel(model);
@@ -24,6 +23,8 @@ void JimaXengine::Boss::Initialize()
 	pos = Vector3(0, 0, 50);
 	object->SetPosition(pos);
 	object->SetScale(Vector3(10, 10, 10));
+	rotation = Vector3(0, 180, 0);
+	object->SetRotation(rotation);
 
 	aabb3dCol.maxPos = Vector3(pos.x + 10, pos.y + 10, pos.z + 10);
 	aabb3dCol.minPos = Vector3(pos.x - 10, pos.y - 10, pos.z - 10);
@@ -40,6 +41,13 @@ void JimaXengine::Boss::Update()
 {
 	Move();
 
+	//{
+	//	if (Input::KeyPress(DIK_UP)) rotation.x++;
+	//	if (Input::KeyPress(DIK_DOWN)) rotation.x--;
+	//	if (Input::KeyPress(DIK_LEFT)) rotation.y--;
+	//	if (Input::KeyPress(DIK_RIGHT)) rotation.y++;
+	//}
+
 	// ダメージ受けてたら点滅する
 	if (damaged)
 	{
@@ -55,15 +63,16 @@ void JimaXengine::Boss::Update()
 		}
 		else
 		{
-			object->SetColor(Vector4(0.5f, 0.5f, 0.5f, 1));
+			object->SetColor(Vector4(1, 1, 1, 1));
 		}
 	}
 	else
 	{
-		object->SetColor(Vector4(0.5f, 0.5f, 0.5f, 1));
+		object->SetColor(Vector4(1, 1, 1, 1));
 	}
 
 	object->SetPosition(pos);
+	object->SetRotation(rotation);
 	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
 	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
 
@@ -115,14 +124,6 @@ void JimaXengine::Boss::Damage()
 
 void JimaXengine::Boss::Move()
 {
-
-	{
-		if (Input::KeyPress(DIK_UP)) pos.y++;
-		if (Input::KeyPress(DIK_DOWN)) pos.y--;
-		if (Input::KeyPress(DIK_LEFT)) pos.x--;
-		if (Input::KeyPress(DIK_RIGHT)) pos.x++;
-	}
-
 	switch (state)
 	{
 	case JimaXengine::Boss::State::WAIT:

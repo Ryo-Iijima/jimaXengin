@@ -117,6 +117,14 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     // UV名リスト
     FbxStringList uvNames;
     fbxMesh->GetUVSetNames(uvNames);
+
+    //int cnt = uvNames.GetCount();
+    //std::vector<std::string> unNames2;
+
+    //for (int i = 0; i < cnt; i++) {
+    //    unNames2.emplace_back(uvNames[i].Buffer());
+    //}
+
     // 面ごとの情報読み取り
     for (int i = 0; i < polygonCount; i++)
     {

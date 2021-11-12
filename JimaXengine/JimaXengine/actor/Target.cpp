@@ -6,6 +6,13 @@
 void JimaXengine::Target::Move()
 {
 	pos += vel;
+	//{
+	//	if (Input::KeyPress(DIK_UP)) rotation.x++;
+	//	if (Input::KeyPress(DIK_DOWN)) rotation.x--;
+	//	if (Input::KeyPress(DIK_LEFT)) rotation.y--;
+	//	if (Input::KeyPress(DIK_RIGHT)) rotation.y++;
+	//}
+
 }
 
 void JimaXengine::Target::HitCheck()
@@ -65,7 +72,7 @@ JimaXengine::Target::~Target()
 
 void JimaXengine::Target::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
+	model = FbxLoader::GetInstance().LoadModelFromFile("ball");
 	
 	object = new Object3d;
 	object->Initialize();
@@ -84,6 +91,7 @@ void JimaXengine::Target::Update()
 	Move();
 
 	object->SetPosition(pos);
+	object->SetRotation(rotation);
 	object->SetCamera(pCamera);
 	object->Update();
 

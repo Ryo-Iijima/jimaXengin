@@ -22,19 +22,16 @@ void JimaXengine::Play::Initialize()
 
 	camera = new Camera();
 	camera->SetViewMatrix(eye, target, up);
-	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+
+	float viewAngle = 80.0f;
+	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT,viewAngle);
 	
 	oManager = new GameObjectManager();
 	oManager->Initialize();
 	oManager->Add(new Player(camera));
-	//oManager->Add(new Target(camera));
-	//oManager->Add(new Target(camera, Vector3(5, 5, 10)));
-	//oManager->Add(new Target(camera, Vector3(5, -5, 20)));
-	//oManager->Add(new Target(camera, Vector3(-5, -5, 20)));
-	//oManager->Add(new Target(camera, Vector3(-5, 5, 30)));
 	oManager->Add(new Boss(camera,oManager));
 	oManager->Add(new BackGround(camera));
-	oManager->Add(new JoyconTest());
+	//oManager->Add(new JoyconTest());
 
 	isEnd = false;
 	nowScene = "Play";
