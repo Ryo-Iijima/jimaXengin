@@ -251,6 +251,7 @@ void JimaXengine::Boss::Move()
 void JimaXengine::Boss::SingleShot()
 {
 	pOManager->Insert(new Target(pCamera, pos));
+
 	attacked = true;
 }
 

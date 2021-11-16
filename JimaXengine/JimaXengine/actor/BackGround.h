@@ -12,15 +12,10 @@ namespace JimaXengine
 	{
 	private:
 		Model* model = nullptr;
-		//Object3d* top = nullptr;
-		//Object3d* bottom = nullptr;
-		//Object3d* left = nullptr;
-		//Object3d* right = nullptr;
 
 		std::unique_ptr<Object3d> top;
-		std::unique_ptr<Object3d> bottom;
-		std::unique_ptr<Object3d> left;
-		std::unique_ptr<Object3d> right;
+		std::unique_ptr<Object3d> ground;
+		std::unique_ptr<Object3d> seat;
 
 	public:
 		BackGround(Camera* camera);

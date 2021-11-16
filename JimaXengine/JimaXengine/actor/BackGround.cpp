@@ -14,23 +14,21 @@ JimaXengine::BackGround::~BackGround()
 
 void JimaXengine::BackGround::Initialize()
 {
-	//model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
-	model = FbxLoader::GetInstance().LoadModelFromFile("ground");
+	model = FbxLoader::GetInstance().LoadModelFromFile("wall");
 	top = std::make_unique<Object3d>();
 	top->Initialize();
 	top->SetModel(model);
 
-	bottom = std::make_unique<Object3d>();
-	bottom->Initialize();
-	bottom->SetModel(model);
+	model = FbxLoader::GetInstance().LoadModelFromFile("ground");
+	ground = std::make_unique<Object3d>();
+	ground->Initialize();
+	ground->SetModel(model);
 	
-	left = std::make_unique<Object3d>();
-	left->Initialize();
-	left->SetModel(model);
+	model = FbxLoader::GetInstance().LoadModelFromFile("seat");
+	seat = std::make_unique<Object3d>();
+	seat->Initialize();
+	seat->SetModel(model);
 	
-	right = std::make_unique<Object3d>();
-	right->Initialize();
-	right->SetModel(model);
 
 	pos = { 0,0,0 };
 
@@ -38,17 +36,14 @@ void JimaXengine::BackGround::Initialize()
 	top->SetScale(Vector3(20, 0.01f, 100));
 	top->SetColor(Vector4(0,0,0,1));
 
-	bottom->SetPosition(pos + Vector3(0, -10, 0));
-	bottom->SetScale(Vector3(1,1,1));
-	bottom->SetColor(Vector4(1, 1, 1, 1));
+	ground->SetPosition(pos + Vector3(0, -10, 0));
+	ground->SetScale(Vector3(1,1,1));
+	ground->SetColor(Vector4(1, 1, 1, 1));
 
-	left->SetPosition(pos + Vector3(-20, 0, 0));
-	left->SetScale(Vector3(0.01f, 20, 100));
-	left->SetColor(Vector4(0, 0, 0, 1));
+	seat->SetPosition(pos + Vector3(-20, 0, 0));
+	seat->SetScale(Vector3(0.01f, 20, 100));
+	seat->SetColor(Vector4(0, 0, 0, 1));
 
-	right->SetPosition(pos + Vector3(20, 0, 0));
-	right->SetScale(Vector3(0.01f, 20, 100));
-	right->SetColor(Vector4(0, 0, 0, 1));
 
 }
 
@@ -56,20 +51,17 @@ void JimaXengine::BackGround::Update()
 {
 	top->SetCamera(pCamera);
 	top->Update();
-	bottom->SetCamera(pCamera);
-	bottom->Update();
-	left->SetCamera(pCamera);
-	left->Update();
-	right->SetCamera(pCamera);
-	right->Update();
+	ground->SetCamera(pCamera);
+	ground->Update();
+	seat->SetCamera(pCamera);
+	seat->Update();
 }
 
 void JimaXengine::BackGround::Draw()
 {
 	//top->Draw();
-	bottom->Draw();
-	//left->Draw();
-	//right->Draw();
+	ground->Draw();
+	//seat->Draw();
 }
 
 JimaXengine::GameObject::TYPE JimaXengine::BackGround::GetType()

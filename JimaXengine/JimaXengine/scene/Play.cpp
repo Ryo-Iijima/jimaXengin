@@ -23,7 +23,7 @@ void JimaXengine::Play::Initialize()
 	camera = new Camera();
 	camera->SetViewMatrix(eye, target, up);
 
-	float viewAngle = 80.0f;
+	float viewAngle = 80.0f;	// Ž‹–ìŠp
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT,viewAngle);
 	
 	oManager = new GameObjectManager();
