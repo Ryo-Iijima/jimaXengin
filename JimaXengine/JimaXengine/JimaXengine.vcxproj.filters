@@ -251,6 +251,9 @@
     <ClCompile Include="actor\Boss.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
+    <ClCompile Include="DebugCamera.cpp">
+      <Filter>ソース ファイル\engin\3DObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -417,6 +420,9 @@
     </ClInclude>
     <ClInclude Include="actor\Boss.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugCamera.h">
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

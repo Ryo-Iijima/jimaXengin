@@ -2,6 +2,7 @@
 #include "../3d/Object3d.h"
 #include "../3d/FbxLoader.h"
 #include "../2d/Object2d.h"
+#include "../DebugCamera.h"
 
 JimaXengine::Play::Play(WinApp* winapp)
 {
@@ -20,7 +21,8 @@ void JimaXengine::Play::Initialize()
 	target = { 0, 0, 0 };
 	up = { 0, 1, 0 };
 
-	camera = new Camera();
+	//camera = new Camera();
+	camera = std::make_unique<DebugCamera>();
 	camera->SetViewMatrix(eye, target, up);
 
 	float viewAngle = 80.0f;	// Ž‹–ìŠp
@@ -28,9 +30,9 @@ void JimaXengine::Play::Initialize()
 	
 	oManager = new GameObjectManager();
 	oManager->Initialize();
-	oManager->Add(new Player(camera));
-	oManager->Add(new Boss(camera,oManager));
-	oManager->Add(new BackGround(camera));
+	oManager->Add(new Player(camera.get()));
+	oManager->Add(new Boss(camera.get(),oManager));
+	oManager->Add(new BackGround(camera.get()));
 	//oManager->Add(new JoyconTest());
 
 	isEnd = false;
@@ -49,10 +51,14 @@ void JimaXengine::Play::Initialize()
 
 void JimaXengine::Play::Update()
 {
+	camera->Move();
+
 	oManager->Update();
 
-	floor->SetCamera(camera);
+	floor->SetCamera(camera.get());
 	floor->Update();
+
+	
 
 	if (Input::KeyTrigger(DIK_1))
 	{

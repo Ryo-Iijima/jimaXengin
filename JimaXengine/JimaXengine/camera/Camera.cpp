@@ -12,6 +12,10 @@ JimaXengine::Camera::~Camera()
 {
 }
 
+void JimaXengine::Camera::Move()
+{
+}
+
 void JimaXengine::Camera::SetProjectionMatrix(float win_width, float win_height, float angleOfView, float near, float far)
 {
 	matProjection = XMMatrixPerspectiveFovLH(
@@ -20,7 +24,7 @@ void JimaXengine::Camera::SetProjectionMatrix(float win_width, float win_height,
 		near, far);								// 前後
 }
 
-void JimaXengine::Camera::SetViewMatrix(Vector3 argEye, Vector3 argTarget, Vector3 argUp)
+void JimaXengine::Camera::SetViewMatrix(const Vector3& argEye, const Vector3& argTarget, const Vector3& argUp)
 {
 	// ビュー行列
 	eye = argEye;

@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "../GameObject/GameObjectManager.h"
 #include "../actor/JoyconTest.h"
+#include "../DebugCamera.h"
 
 class Object3d;
 class Object2d;
@@ -17,7 +18,9 @@ namespace JimaXengine
 
 		Object2d* object2d;
 
-		Camera* camera = nullptr;
+		std::unique_ptr<Camera> camera;
+		//Camera* camera = nullptr;
+		//DebugCamera* camera = nullptr;
 
 		GameObjectManager* oManager = nullptr;
 

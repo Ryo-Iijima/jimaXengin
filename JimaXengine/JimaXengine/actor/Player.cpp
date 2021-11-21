@@ -425,7 +425,7 @@ void JimaXengine::Player::Initialize()
     object->SetScale(Vector3(4, 0.5, 1));
 
     eye = { 0,0,-10 };
-    target = { 0,0,100 };
+    target = { 0,0,15 };
     pCamera->SetViewMatrix(eye, target);
 
     renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;

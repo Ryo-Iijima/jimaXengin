@@ -23,6 +23,7 @@ namespace JimaXengine
 
 		Vector2& operator +=(const Vector2& other);
 		Vector2& operator -=(const Vector2& other);
+		Vector2& operator *=(const Vector2& other);
 		Vector2& operator *=(float scalar);
 		Vector2& operator /=(float scalar);
 	};

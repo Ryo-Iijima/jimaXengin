@@ -110,7 +110,6 @@ void JimaXengine::Application::Run()
 
 		fpsManager->Update();
 
-
 		input->Update();
 
 		sceneManager->Update();

@@ -1,5 +1,6 @@
 #include "background.h"
 #include "../3d/FbxLoader.h"
+#include "../camera/Camera.h"
 
 JimaXengine::BackGround::BackGround(Camera* camera)
 {
@@ -15,9 +16,9 @@ JimaXengine::BackGround::~BackGround()
 void JimaXengine::BackGround::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("wall");
-	top = std::make_unique<Object3d>();
-	top->Initialize();
-	top->SetModel(model);
+	wall = std::make_unique<Object3d>();
+	wall->Initialize();
+	wall->SetModel(model);
 
 	model = FbxLoader::GetInstance().LoadModelFromFile("ground");
 	ground = std::make_unique<Object3d>();
@@ -32,9 +33,9 @@ void JimaXengine::BackGround::Initialize()
 
 	pos = { 0,0,0 };
 
-	top->SetPosition(pos + Vector3(0, 20, 0));
-	top->SetScale(Vector3(20, 0.01f, 100));
-	top->SetColor(Vector4(0,0,0,1));
+	wall->SetPosition(pos + Vector3(0, 20, 0));
+	wall->SetScale(Vector3(20, 0.01f, 100));
+	wall->SetColor(Vector4(0,0,0,1));
 
 	ground->SetPosition(pos + Vector3(0, -10, 0));
 	ground->SetScale(Vector3(1,1,1));
@@ -49,8 +50,8 @@ void JimaXengine::BackGround::Initialize()
 
 void JimaXengine::BackGround::Update()
 {
-	top->SetCamera(pCamera);
-	top->Update();
+	wall->SetCamera(pCamera);
+	wall->Update();
 	ground->SetCamera(pCamera);
 	ground->Update();
 	seat->SetCamera(pCamera);

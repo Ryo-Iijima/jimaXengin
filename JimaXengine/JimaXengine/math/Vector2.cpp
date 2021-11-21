@@ -77,6 +77,13 @@ JimaXengine::Vector2 & JimaXengine::Vector2::operator-=(const Vector2 & other)
 	return *this;
 }
 
+JimaXengine::Vector2& JimaXengine::Vector2::operator*=(const Vector2& other)
+{
+	x *= other.x;
+	y *= other.y;
+	return *this;
+}
+
 JimaXengine::Vector2 & JimaXengine::Vector2::operator*=(float scalar)
 {
 	x *= scalar;

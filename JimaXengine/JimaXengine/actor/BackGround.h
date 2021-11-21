@@ -13,7 +13,7 @@ namespace JimaXengine
 	private:
 		Model* model = nullptr;
 
-		std::unique_ptr<Object3d> top;
+		std::unique_ptr<Object3d> wall;
 		std::unique_ptr<Object3d> ground;
 		std::unique_ptr<Object3d> seat;
 

@@ -39,7 +39,7 @@ void JimaXengine::Boss::Initialize()
 
 void JimaXengine::Boss::Update()
 {
-	Move();
+	//Move();
 
 	//{
 	//	if (Input::KeyPress(DIK_UP)) rotation.x++;

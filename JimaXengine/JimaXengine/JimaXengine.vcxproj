@@ -187,6 +187,7 @@
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="collision\Collision.cpp" />
     <ClCompile Include="collision\CollisionPrimitive.cpp" />
+    <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="GameObject\GameObjectManager.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="collision\Collision.h" />
     <ClInclude Include="collision\CollisionPrimitive.h" />
+    <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameObjectManager.h" />
