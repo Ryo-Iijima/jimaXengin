@@ -428,7 +428,7 @@ void JimaXengine::Player::Initialize()
 
     eye = { 0, -9, -23 };
     target = { 0, 1.5, 10 };
-    pCamera->SetViewMatrix(eye, target);
+    //pCamera->SetViewMatrix(eye, target);
 
     renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
     //JoyConInitialize();

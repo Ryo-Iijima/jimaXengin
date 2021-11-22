@@ -43,21 +43,27 @@ void JimaXengine::Boss::Update()
 
 	{
 		float a = 0.2f;
-		if (Input::KeyPress(DIK_UP)) pos.y+=a;
-		if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
-		if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
-		if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
+		//if (Input::KeyPress(DIK_UP)) pos.y+=a;
+		//if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
+		//if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
+		//if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
 
 		// ƒvƒŒƒCƒ„[‚Ì‚Ù‚¤‚ðŒü‚­
 		Vector3 targetPos = oManager->GetPlayer()->GetPos();
 		Vector3 bollVel = targetPos - pos;
 		double angle = 0;
 
-		angle = acosf(targetPos.x / sqrt(targetPos.x * targetPos.x + targetPos.y * targetPos.y));
-		angle = angle * 180.0f / DirectX::XM_PI;
-		if (targetPos.y < 0) angle = 360 - angle;
+		//angle = acosf(bollVel.x / sqrt(bollVel.x * bollVel.x + bollVel.y * bollVel.y));
+		//angle = angle * 180.0f / DirectX::XM_PI;
+		//if (bollVel.y < 0) angle = 360 - angle;
 
-		//rotation.y = angle + 180;
+		Vector3 velB = Vector3(0, 0, bollVel.z);
+		angle = (bollVel.Dot(velB) / (bollVel.Length() * velB.Length()));
+
+		angle = acos(angle) * 100 + 180;
+		if (bollVel.x > 0) angle *= -1;
+
+		rotation.y = angle;
 
 	}
 

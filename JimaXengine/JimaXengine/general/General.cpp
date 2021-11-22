@@ -21,7 +21,7 @@ unsigned int JimaXengine::General::GetDigit(int& num)
 	return (unsigned int)std::to_string(number).length();
 }
 
-float JimaXengine::General::ConvertToRadians(float& degrees)
+float JimaXengine::General::ConvertToRadians(float degrees)
 {
 	return degrees * (MATH_PI / 180.0f);
 }

@@ -13,7 +13,7 @@ namespace JimaXengine
 		// 桁数を取得
 		unsigned int GetDigit(int& num);
 		// 度数→ラジアン
-		float ConvertToRadians(float& degrees);
+		float ConvertToRadians(float degrees);
 		// ラジアン→度数
 		float ConvertToDegrees(float& radians);
 	};
