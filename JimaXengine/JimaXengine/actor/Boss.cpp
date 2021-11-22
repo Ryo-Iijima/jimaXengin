@@ -43,28 +43,20 @@ void JimaXengine::Boss::Update()
 
 	{
 		float a = 0.2f;
-		//if (Input::KeyPress(DIK_UP)) pos.y+=a;
-		//if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
-		//if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
-		//if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
+		if (Input::KeyPress(DIK_UP)) pos.y+=a;
+		if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
+		if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
+		if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
 
 		// プレイヤーのほうを向く
 		Vector3 targetPos = oManager->GetPlayer()->GetPos();
 		Vector3 bollVel = targetPos - pos;
 		double angle = 0;
 
-		//angle = acosf(bollVel.x / sqrt(bollVel.x * bollVel.x + bollVel.y * bollVel.y));
-		//angle = angle * 180.0f / DirectX::XM_PI;
-		//if (bollVel.y < 0) angle = 360 - angle;
+		angle = atan2f(bollVel.x, bollVel.z);
 
-		Vector3 velB = Vector3(0, 0, bollVel.z);
-		angle = (bollVel.Dot(velB) / (bollVel.Length() * velB.Length()));
 
-		angle = acos(angle) * 100 + 180;
-		if (bollVel.x > 0) angle *= -1;
-
-		rotation.y = angle;
-
+		rotation.y = 180-angle;
 	}
 
 	// ダメージ受けてたら点滅する

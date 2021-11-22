@@ -39,48 +39,19 @@ void JimaXengine::DebugCamera::Move()
 		// x=φ,y=θ
 		angle += diff;
 
-		// -90<θ<90 , 0<=φ<=360
-		//if (angle.x > 90)
-		//{
-		//	angle.x = 90;
-		//}
-		//if (angle.x < -90)
-		//{
-		//	angle.x = -90;
-		//}
-		//if (angle.y > 360)
-		//{
-		//	angle.y = 0;
-		//}
-		//if (angle.y < 0)
-		//{
-		//	angle.y = 360;
-		//}
-
 		dirty = true;
 	}
 
 
 	// マウスの中ボタンが押されていたらカメラを並行移動させる
-	//if (Input::KeyPress(DIK_LALT) && (Input::KeyPress(DIK_LEFT) || Input::KeyPress(DIK_RIGHT) || Input::KeyPress(DIK_UP) || Input::KeyPress(DIK_DOWN)))
 	if ((Input::KeyPress(DIK_LALT) || Input::KeyPress(DIK_RALT)) && Input::MouseButtonHold(2))
 	{
-		//{// キーボードでのtarget操作　平行移動（テスト）
-		//	float a = 0.5f;
-		//	if (Input::KeyPress(DIK_LEFT)) targetOffset.x += a;
-		//	if (Input::KeyPress(DIK_RIGHT)) targetOffset.x -= a;
-		//	if (Input::KeyPress(DIK_UP)) targetOffset.y -= a;
-		//	if (Input::KeyPress(DIK_DOWN)) targetOffset.y += a;
-		//}
-
-		{
-			float nScale = 50.0f;
-			Vector2 currentPos = Input::GetCurrentMousePos();
-			Vector2 prevPos = Input::GetPrevMousePos();
-			Vector2 diff = prevPos - currentPos;
-			diff /= nScale;
-			targetOffset = { diff.x,-diff.y,0 };
-		}
+		float nScale = 50.0f;
+		Vector2 currentPos = Input::GetCurrentMousePos();
+		Vector2 prevPos = Input::GetPrevMousePos();
+		Vector2 diff = prevPos - currentPos;
+		diff /= nScale;
+		targetOffset = { diff.x,-diff.y,0 };
 
 		DirectX::XMMATRIX vMat = GetMatView();
 		vMat = DirectX::XMMatrixInverse(0, vMat);

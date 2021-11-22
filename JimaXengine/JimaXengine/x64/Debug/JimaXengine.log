@@ -1,2 +1,3 @@
-﻿  DebugCamera.cpp
+﻿  Boss.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\actor\Boss.cpp(59,19): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
