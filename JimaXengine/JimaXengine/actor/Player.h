@@ -41,8 +41,10 @@ namespace JimaXengine
 		void SetCamera(Camera* camera) { pCamera = camera; }
 		Camera* GetCamera();
 		void DrawAlphaObj();
+		void Move();
 
-		// joycon Žü‚è
+
+	// joycon Žü‚è‚±‚±‚©‚ç
 	private:
 		Object3d* layObj = nullptr;
 
@@ -63,7 +65,9 @@ namespace JimaXengine
 	private:
 		void JoyConInitialize();
 		void JoyConUpdate();
-		void Move();
+
+	// joycon Žü‚è‚±‚±‚Ü‚Å
+
 
 	};
 }

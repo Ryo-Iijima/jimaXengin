@@ -13,7 +13,6 @@ namespace JimaXengine
 	class Play : public Scene
 	{
 	private:
-		Object3d* floor;
 		Model* model = nullptr;
 
 		Object2d* object2d;

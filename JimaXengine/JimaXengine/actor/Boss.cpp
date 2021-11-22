@@ -20,9 +20,9 @@ void JimaXengine::Boss::Initialize()
 	object->Initialize();
 	object->SetModel(model);
 
-	pos = Vector3(0, 0, 50);
+	pos = Vector3(0, 0, 0);
 	object->SetPosition(pos);
-	object->SetScale(Vector3(10, 10, 10));
+	object->SetScale(Vector3(2, 2, 2));
 	rotation = Vector3(0, 180, 0);
 	object->SetRotation(rotation);
 
@@ -41,12 +41,25 @@ void JimaXengine::Boss::Update()
 {
 	//Move();
 
-	//{
-	//	if (Input::KeyPress(DIK_UP)) rotation.x++;
-	//	if (Input::KeyPress(DIK_DOWN)) rotation.x--;
-	//	if (Input::KeyPress(DIK_LEFT)) rotation.y--;
-	//	if (Input::KeyPress(DIK_RIGHT)) rotation.y++;
-	//}
+	{
+		float a = 0.2f;
+		if (Input::KeyPress(DIK_UP)) pos.y+=a;
+		if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
+		if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
+		if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
+
+		// プレイヤーのほうを向く
+		Vector3 targetPos = oManager->GetPlayer()->GetPos();
+		Vector3 bollVel = targetPos - pos;
+		double angle = 0;
+
+		angle = acosf(targetPos.x / sqrt(targetPos.x * targetPos.x + targetPos.y * targetPos.y));
+		angle = angle * 180.0f / DirectX::XM_PI;
+		if (targetPos.y < 0) angle = 360 - angle;
+
+		//rotation.y = angle + 180;
+
+	}
 
 	// ダメージ受けてたら点滅する
 	if (damaged)
@@ -111,6 +124,7 @@ void JimaXengine::Boss::DrawImGui()
 	ImGui::Begin("BossInfomation");
 	ImGui::Text("hp : %d", hp);
 	ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
+	ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
 	ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
 	ImGui::Text("state : %d", state);
 	ImGui::End();
@@ -185,7 +199,7 @@ void JimaXengine::Boss::Move()
 		if (!attackchoseed)
 		{
 			// 次の攻撃を抽選
-			random = (int)Random::GetRandom(1, 1);
+			random = (int)Random::GetRandom(0, 0);
 			attackType = (AttackType)random;
 
 			attackchoseed = true;
@@ -250,7 +264,11 @@ void JimaXengine::Boss::Move()
 
 void JimaXengine::Boss::SingleShot()
 {
-	pOManager->Insert(new Target(pCamera, pos));
+	// プレイヤーの位置を参考に球の発射方向を決定
+	Vector3 targetPos = oManager->GetPlayer()->GetPos();
+	Vector3 bollVel = targetPos - pos;
+
+	pOManager->Insert(new Target(pCamera, pos, bollVel));
 
 	attacked = true;
 }

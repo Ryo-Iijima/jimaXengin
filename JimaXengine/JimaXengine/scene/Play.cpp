@@ -25,7 +25,7 @@ void JimaXengine::Play::Initialize()
 	camera = std::make_unique<DebugCamera>();
 	camera->SetViewMatrix(eye, target, up);
 
-	float viewAngle = 80.0f;	// Ž‹–ìŠp
+	float viewAngle = 60.0f;	// Ž‹–ìŠp
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT,viewAngle);
 	
 	oManager = new GameObjectManager();
@@ -39,12 +39,6 @@ void JimaXengine::Play::Initialize()
 	nowScene = "Play";
 	nextScene = "Title";
 
-	model = FbxLoader::GetInstance().LoadModelFromFile("cube");
-	floor = new Object3d();
-	floor->Initialize();
-	floor->SetModel(model);
-	floor->SetScale(Vector3(10, 0.01f, 10));
-
 	object2d = new Object2d();
 	object2d->CreateSprite();
 }
@@ -54,11 +48,6 @@ void JimaXengine::Play::Update()
 	camera->Move();
 
 	oManager->Update();
-
-	floor->SetCamera(camera.get());
-	floor->Update();
-
-	
 
 	if (Input::KeyTrigger(DIK_1))
 	{
@@ -72,5 +61,5 @@ void JimaXengine::Play::Draw()
 
 	oManager->Draw();
 
-	//floor->Draw();
+
 }

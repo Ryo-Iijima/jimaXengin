@@ -5,20 +5,15 @@
 
 void JimaXengine::Target::Move()
 {
-	pos += vel;
-	//{
-	//	if (Input::KeyPress(DIK_UP)) rotation.x++;
-	//	if (Input::KeyPress(DIK_DOWN)) rotation.x--;
-	//	if (Input::KeyPress(DIK_LEFT)) rotation.y--;
-	//	if (Input::KeyPress(DIK_RIGHT)) rotation.y++;
-	//}
+	vel.Normalize();
 
+	pos += vel;
 }
 
 void JimaXengine::Target::HitCheck()
 {
-	// 範囲外に出たら
-	if (pos.z <= -10)
+	// 範囲外に出たら(playerより後ろか,bossより後ろ)
+	if (pos.z <= -30 || pos.z > 10)
 	{
 		Dead();
 	}
@@ -60,10 +55,12 @@ void JimaXengine::Target::HitCheck()
 	}
 }
 
-JimaXengine::Target::Target(Camera* camera, Vector3 pos)
+JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, float speed)
 {
 	pCamera = camera;
 	this->pos = pos;
+	this->vel = vel;
+	this->speed = speed;
 }
 
 JimaXengine::Target::~Target()
@@ -80,7 +77,7 @@ void JimaXengine::Target::Initialize()
 	object->SetColor(Vector4(1, 1, 1, 1));
 	object->SetScale(Vector3(1, 1, 1));
 
-	vel = Vector3(0, 0, -0.2f);
+	//vel = Vector3(0, 0, -0.2f);
 
 	reflection = false;
 }

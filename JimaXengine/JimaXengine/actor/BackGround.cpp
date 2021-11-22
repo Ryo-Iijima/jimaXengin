@@ -40,6 +40,7 @@ void JimaXengine::BackGround::Initialize()
 	ground->SetPosition(pos + Vector3(0, -10, 0));
 	ground->SetScale(Vector3(1,1,1));
 	ground->SetColor(Vector4(1, 1, 1, 1));
+	ground->SetRotation(Vector3(0, 180, 0));
 
 	seat->SetPosition(pos + Vector3(-20, 0, 0));
 	seat->SetScale(Vector3(0.01f, 20, 100));

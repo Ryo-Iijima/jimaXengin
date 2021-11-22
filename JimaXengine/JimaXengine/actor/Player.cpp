@@ -198,6 +198,7 @@ void JimaXengine::Player::Move()
     if (Input::KeyPress(DIK_S) || Input::PadLeftStickDown()) leftRacket->vel.y = -defaultvel;
     if (Input::KeyPress(DIK_A) || Input::PadLeftStickLeft()) leftRacket->vel.x = -defaultvel;
     if (Input::KeyPress(DIK_D) || Input::PadLeftStickRight()) leftRacket->vel.x = defaultvel;
+    leftRacket->vel.Normalize();
 
     leftRacket->acc += leftRacket->vel / 10;
 
@@ -299,6 +300,7 @@ void JimaXengine::Player::Move()
     if (Input::KeyPress(DIK_K) || Input::PadRightStickDown()) rightRacket->vel.y = -defaultvel;
     if (Input::KeyPress(DIK_J) || Input::PadRightStickLeft()) rightRacket->vel.x = -defaultvel;
     if (Input::KeyPress(DIK_L) || Input::PadRightStickRight()) rightRacket->vel.x = defaultvel;
+    rightRacket->vel.Normalize();
 
     rightRacket->acc += rightRacket->vel / 10;
 
@@ -420,24 +422,24 @@ void JimaXengine::Player::Initialize()
 	object->Initialize();
 	object->SetModel(model);
     
-    pos = Vector3(5, 0, 0);
+    pos = Vector3(0, 0, -20);
 	object->SetPosition(pos);
     object->SetScale(Vector3(4, 0.5, 1));
 
-    eye = { 0,0,-10 };
-    target = { 0,0,15 };
+    eye = { 0, -9, -23 };
+    target = { 0, 1.5, 10 };
     pCamera->SetViewMatrix(eye, target);
 
     renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
     //JoyConInitialize();
 
-#pragma region Stick初期化
+#pragma region ラケット初期化
 
     model = FbxLoader::GetInstance().LoadModelFromFile("racketL");
 
     leftRacket = std::make_unique<Racket>();
 
-    leftRacket->pos = Vector3(-5, 0, 0);
+    leftRacket->pos = Vector3(-5, 0, -20);
 
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
@@ -452,7 +454,7 @@ void JimaXengine::Player::Initialize()
 
     rightRacket = std::make_unique<Racket>();
 
-    rightRacket->pos = Vector3(5, 0, 0);
+    rightRacket->pos = Vector3(5, 0, -20);
 
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
@@ -491,32 +493,6 @@ void DebugPrint(std::string s, DebugType d)
 void JimaXengine::Player::Update()
 {
     {
-        //{   // ポインターテスト
-//    uint8_t* buf_ = new uint8_t[5]{ 0,1,2,3,4 };
-//   
-//    printf("buf   : %d\n", buf_);
-//    printf("buf+1 : %d\n", (buf_ + 1));
-//    printf("buf+2 : %d\n", (buf_ + 2));
-//    printf("buf+3 : %d\n", (buf_ + 3));
-//    printf("buf+4 : %d\n", (buf_ + 4));
-//    printf("sizeof(buf) : %d\n", sizeof(buf_));
-
-//}
-
-//{   // 変数の型の比較
-//    int a = 0;
-//    if (typeid(a)==typeid(int))
-//    {
-//        printf("int is : %s\n", typeid(int).name());
-//    }
-//}
-
-//{
-//    DebugType debug_type = DebugType::NONE;
-//    const unsigned int len = 5;
-//    int arr[len]{ 0,1,2,3,4 };
-//    std::string format = "%s";
-
 //    std::string tostr = "";
 //    for (int i = 0; i < len; ++i)
 //    {
@@ -543,7 +519,7 @@ void JimaXengine::Player::Update()
 
     sphereCol.center = pos.ConvertXMVECTOR();
 
-#pragma region Stick
+#pragma region ラケット
     // left
     leftRacket->object->SetPosition(leftRacket->pos);
     leftRacket->object->SetCamera(pCamera);
@@ -586,6 +562,9 @@ void JimaXengine::Player::DrawImGui()
     ImGui::Begin("PlayerInfomation");
     ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
     ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
+
+    ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
+
     ImGui::End();
 }
 
