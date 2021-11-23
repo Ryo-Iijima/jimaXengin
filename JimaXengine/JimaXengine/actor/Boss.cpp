@@ -35,29 +35,42 @@ void JimaXengine::Boss::Initialize()
 	nextPos = { 0,0,50 };
 	toDestinationVelocity = { 0,0,0 };
 	v = Vector3(0, 0, 0);
+
+	for (int i = 0; i < 4; i++)
+	{
+		moveUnDuplicate[i] = false;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		attackUnDuplicate[i] = false;
+	}
+
+	floatingOffsetPos = Vector3(0, 0, 0);
+	floatingOffsetWidth = 1.0f;
 }
 
 void JimaXengine::Boss::Update()
 {
-	//Move();
+	Move();
 
-	{
-		float a = 0.2f;
-		if (Input::KeyPress(DIK_UP)) pos.y+=a;
-		if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
-		if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
-		if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
+	//{
+	//	float a = 0.2f;
+	//	if (Input::KeyPress(DIK_UP)) pos.y+=a;
+	//	if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
+	//	if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
+	//	if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
 
-		// プレイヤーのほうを向く
-		Vector3 targetPos = oManager->GetPlayer()->GetPos();
-		Vector3 bollVel = targetPos - pos;
-		double angle = 0;
+	//	// プレイヤーのほうを向く
+	//	Vector3 targetPos = oManager->GetPlayer()->GetPos();
+	//	Vector3 bollVel = targetPos - pos;
+	//	double angle = 0;
 
-		angle = atan2f(bollVel.x, bollVel.z);
+	//	angle = atan2f(bollVel.x, bollVel.z);
 
 
-		rotation.y = 180-angle;
-	}
+	//	rotation.y = 180-angle;
+	//}
 
 	// ダメージ受けてたら点滅する
 	if (damaged)
@@ -82,7 +95,14 @@ void JimaXengine::Boss::Update()
 		object->SetColor(Vector4(1, 1, 1, 1));
 	}
 
-	object->SetPosition(pos);
+	// 上下に浮遊
+	floatingOffsetPos.y += a;
+	if (floatingOffsetPos.y < -floatingOffsetWidth || floatingOffsetPos.y > floatingOffsetWidth)
+	{
+		a *= -1;
+	}
+
+	object->SetPosition(pos + floatingOffsetPos);
 	object->SetRotation(rotation);
 	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
 	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
@@ -145,33 +165,48 @@ void JimaXengine::Boss::Move()
 		if (actionIntervalTimer <= 0)
 		{
 			// 次の移動先を抽選
-			random = (int)Random::GetRandom(1, 5);
-			switch (random)
+			random = (int)Random::GetRandom(0, 5);
+
+			if (!moveUnDuplicate[random])
 			{
-			case 1:
-				nextPos = waitPos[random];
-				break;
-			case 2:
-				nextPos = waitPos[random];
-				break;
-			case 3:
-				nextPos = waitPos[random];
-				break;
-			case 4:
-				nextPos = waitPos[random];
-				break;
-			case 5:
-				nextPos = waitPos[random];
-				break;
-			default:
-				break;
+				switch (random)
+				{
+				case 0:
+					nextPos = waitPos[random];
+					break;
+				case 1:
+					nextPos = waitPos[random];
+					break;
+				case 2:
+					nextPos = waitPos[random];
+					break;
+				case 3:
+					nextPos = waitPos[random];
+					break;
+				case 4:
+					nextPos = waitPos[random];
+					break;
+				default:
+					break;
+				}
+				// 現在の位置から移動先までの速度を決定
+				toDestinationVelocity = (nextPos - pos) / 200;
+				// 移動状態に変更
+				state = State::MOVE;
+				// タイマーを戻す
+				actionIntervalTimer = 200;
+				// 今の位置に行ったことを記録
+				moveUnDuplicate[random] = true;
+				// すべての移動先に移動したら
+				if (moveUnDuplicate[0] && moveUnDuplicate[1] && moveUnDuplicate[2] && moveUnDuplicate[3] && moveUnDuplicate[4])
+				{
+					// 記録をリセット
+					for (int i = 0; i < 5; i++)
+					{
+						moveUnDuplicate[i] = false;
+					}
+				}
 			}
-			// 現在の位置から移動先までの速度を決定
-			toDestinationVelocity = (nextPos - pos) / 200;
-			// 移動状態に変更
-			state = State::MOVE;
-			// タイマーを戻す
-			actionIntervalTimer = 200;
 		}
 		break;
 
@@ -180,12 +215,8 @@ void JimaXengine::Boss::Move()
 		pos += toDestinationVelocity;
 		v = pos - nextPos;
 		// 移動先についたら
-		//if (pos == nextPos)
 		if (abs(v.x) < 0.5f || abs(v.y) < 0.5f)
 		{
-			//// 待機状態に変更
-			//state = State::WAIT;
-
 			// 攻撃状態に変更
 			state = State::ATTACK;
 		}
@@ -193,17 +224,33 @@ void JimaXengine::Boss::Move()
 
 	case JimaXengine::Boss::State::ATTACK:
 		
-		// 攻撃前だったら
+		// 攻撃選択前だったら
 		if (!attackchoseed)
 		{
 			// 次の攻撃を抽選
-			random = (int)Random::GetRandom(0, 0);
-			attackType = (AttackType)random;
+			random = (int)Random::GetRandom(0, 3);
 
-			attackchoseed = true;
+			// 重複してない攻撃パターンなら
+			if (!attackUnDuplicate[random])
+			{
+				// 設定
+				attackType = (AttackType)random;
+				attackchoseed = true;
+				attackUnDuplicate[random] = true;
+
+				// すべての攻撃パターンを行ったら
+				if (attackUnDuplicate[0] && attackUnDuplicate[1] && attackUnDuplicate[2])
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						attackUnDuplicate[i] = false;
+					}
+				}
+			}
 		}
 
-		if (!attacked)
+		// 攻撃前かつ攻撃選択後だったら
+		if (!attacked && attackchoseed)
 		{
 			switch (attackType)
 			{

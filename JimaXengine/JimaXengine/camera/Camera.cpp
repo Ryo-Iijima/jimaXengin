@@ -12,6 +12,10 @@ JimaXengine::Camera::~Camera()
 {
 }
 
+void JimaXengine::Camera::SetInitialViewMatrix(const Vector3& argEye, const Vector3& argTarget)
+{
+}
+
 void JimaXengine::Camera::Move()
 {
 }

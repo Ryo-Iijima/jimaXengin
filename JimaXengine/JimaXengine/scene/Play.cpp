@@ -17,14 +17,14 @@ void JimaXengine::Play::Initialize()
 {
 	Vector3 eye, target, up;
 
-	eye = { 0, 0, -20 };
-	target = { 0, 0, 0 };
+	eye = { 0, 2, -20 };
+	target = { 0, 1.5, 10 };
 	up = { 0, 1, 0 };
 
-	//camera = new Camera();
 	camera = std::make_unique<DebugCamera>();
+	camera->SetInitialViewMatrix(eye, target);
 	camera->SetViewMatrix(eye, target, up);
-
+	
 	float viewAngle = 60.0f;	// Ž‹–ìŠp
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT,viewAngle);
 	
@@ -60,6 +60,5 @@ void JimaXengine::Play::Draw()
 	//object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f, Vector2(1.0f, 1.0f), "ALPHA");
 
 	oManager->Draw();
-
 
 }

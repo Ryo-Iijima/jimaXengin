@@ -18,8 +18,6 @@ namespace JimaXengine
 		Object2d* object2d;
 
 		std::unique_ptr<Camera> camera;
-		//Camera* camera = nullptr;
-		//DebugCamera* camera = nullptr;
 
 		GameObjectManager* oManager = nullptr;
 

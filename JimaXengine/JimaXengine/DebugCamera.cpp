@@ -28,6 +28,16 @@ JimaXengine::DebugCamera::~DebugCamera()
 {
 }
 
+void JimaXengine::DebugCamera::SetInitialViewMatrix(const Vector3& argEye, const Vector3& argTarget)
+{
+	eye = argEye;
+	target = argTarget;
+
+	lange = eye - target;
+	r = abs(lange.Length());
+	r += -Input::MouseWheelMove() / 100.0f;
+}
+
 void JimaXengine::DebugCamera::Move()
 {
 	dirty = false;

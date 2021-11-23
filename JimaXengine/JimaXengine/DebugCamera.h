@@ -38,6 +38,7 @@ namespace JimaXengine
 		DebugCamera();
 		~DebugCamera();
 
-		void Move()override;
+		void SetInitialViewMatrix(const Vector3& argEye, const Vector3& argTarget) override;
+		void Move() override;
 	};
 }

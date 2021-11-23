@@ -21,6 +21,7 @@ namespace JimaXengine
 		Camera();
 		~Camera();
 
+		virtual void SetInitialViewMatrix(const Vector3& argEye, const Vector3& argTarget);	// デバッグカメラ用初期値
 		virtual void Move();
 
 		void SetProjectionMatrix(float win_width, float win_height, float angleOfView = 60.0f, float near = 0.1f, float far = 10000.0f);

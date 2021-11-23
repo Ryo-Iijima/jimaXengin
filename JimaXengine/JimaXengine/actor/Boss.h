@@ -32,9 +32,8 @@ namespace JimaXengine
 		State state;
 	
 		// 移動位置
-		Vector3 waitPos[6] =
+		Vector3 waitPos[5] =
 		{
-			{  0,  0, 0},
 			{  0,  0, 0},
 			{-35, 15, 0},
 			{ 35, 15, 0},
@@ -42,9 +41,10 @@ namespace JimaXengine
 			{ 35,-10, 0}
 		};
 		int random;
-		Vector3 nextPos;
-		Vector3 toDestinationVelocity;
-		Vector3 v;
+		Vector3 nextPos;				// 移動先
+		Vector3 toDestinationVelocity;	// 移動先までのベクトル
+		Vector3 v;						// 移動先への到着判定用
+		bool moveUnDuplicate[5];		// 移動先の重複回避用
 
 		// 攻撃種類
 		enum class AttackType
@@ -54,9 +54,14 @@ namespace JimaXengine
 			EACHSHOT,	// 拡散
 		};
 		AttackType attackType;
-		bool attackchoseed;	// 攻撃抽選フラグ
-		bool attacked;		// 攻撃完了フラグ
-		
+		bool attackchoseed;			// 攻撃抽選完了フラグ
+		bool attacked;				// 攻撃完了フラグ
+		bool attackUnDuplicate[3];	// 攻撃の重複回避用
+
+		Vector3 floatingOffsetPos;	// モデルを上下させる用のオフセット
+		float floatingOffsetWidth;	// 上下移動の幅
+		float a = 0.04f;
+
 	private:
 		void Move();
 		void SingleShot();
