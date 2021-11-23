@@ -16,6 +16,12 @@ JimaXengine::DebugCamera::DebugCamera()
 	target = { 0, 1.5, 10 };
 
 	angle.x = -90;
+
+	lange = eye - target;
+
+	r = abs(lange.Length());
+	r += -Input::MouseWheelMove() / 100.0f;
+
 }
 
 JimaXengine::DebugCamera::~DebugCamera()
@@ -24,16 +30,16 @@ JimaXengine::DebugCamera::~DebugCamera()
 
 void JimaXengine::DebugCamera::Move()
 {
-	bool dirty = false;
+	dirty = false;
 	targetOffset = { 0, 0, 0 };
 
 
 	// マウスの左ボタンが押されていたらカメラを回転させる
 	if ((Input::KeyPress(DIK_LALT) || Input::KeyPress(DIK_RALT)) && Input::MouseButtonHold(DIMOFS_X))
 	{
-		Vector2 currentPos = Input::GetCurrentMousePos();
-		Vector2 prevPos = Input::GetPrevMousePos();
-		Vector2 diff = prevPos - currentPos;
+		currentPos = Input::GetCurrentMousePos();
+		prevPos = Input::GetPrevMousePos();
+		diff = prevPos - currentPos;
 		diff.y *= -1;
 
 		// x=φ,y=θ
@@ -46,18 +52,17 @@ void JimaXengine::DebugCamera::Move()
 	// マウスの中ボタンが押されていたらカメラを並行移動させる
 	if ((Input::KeyPress(DIK_LALT) || Input::KeyPress(DIK_RALT)) && Input::MouseButtonHold(2))
 	{
-		float nScale = 50.0f;
-		Vector2 currentPos = Input::GetCurrentMousePos();
-		Vector2 prevPos = Input::GetPrevMousePos();
-		Vector2 diff = prevPos - currentPos;
+		currentPos = Input::GetCurrentMousePos();
+		prevPos = Input::GetPrevMousePos();
+		diff = prevPos - currentPos;
 		diff /= nScale;
 		targetOffset = { diff.x,-diff.y,0 };
 
-		DirectX::XMMATRIX vMat = GetMatView();
+		vMat = GetMatView();
 		vMat = DirectX::XMMatrixInverse(0, vMat);
 		
-		Vector3 X = { vMat.r[0].m128_f32[0], vMat.r[0].m128_f32[1], vMat.r[0].m128_f32[2] };
-		Vector3 Y = { vMat.r[1].m128_f32[0], vMat.r[1].m128_f32[1], vMat.r[1].m128_f32[2] };
+		X = { vMat.r[0].m128_f32[0], vMat.r[0].m128_f32[1], vMat.r[0].m128_f32[2] };
+		Y = { vMat.r[1].m128_f32[0], vMat.r[1].m128_f32[1], vMat.r[1].m128_f32[2] };
 
 		targetOffset = X * targetOffset.x + Y * targetOffset.y;
 
@@ -67,7 +72,7 @@ void JimaXengine::DebugCamera::Move()
 	// ホイール入力で距離を変更
 	if (Input::MouseWheelMove() != 0) 
 	{
-		Vector3 lange = eye - target;
+		lange = eye - target;
 
 		r = abs(lange.Length());
 		r += -Input::MouseWheelMove()/ 100.0f;
@@ -79,7 +84,6 @@ void JimaXengine::DebugCamera::Move()
 	{
 		General:: ConvertToRadians(0);
 
-		Vector3 newEye;
 		eye.x = cosf(General::ConvertToRadians(angle.x)) * cosf(General::ConvertToRadians(angle.y));
 		eye.z = sinf(General::ConvertToRadians(angle.x)) * cosf(General::ConvertToRadians(angle.y));
 		eye.y = sinf(General::ConvertToRadians(angle.y));

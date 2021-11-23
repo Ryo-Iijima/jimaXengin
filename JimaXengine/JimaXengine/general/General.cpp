@@ -15,7 +15,7 @@ std::wstring JimaXengine::General::StringToWString(const std::string& name)
 	return returnName;
 }
 
-unsigned int JimaXengine::General::GetDigit(int& num)
+unsigned int JimaXengine::General::GetDigit(int num)
 {
 	int number = std::abs(num);
 	return (unsigned int)std::to_string(number).length();
@@ -26,7 +26,7 @@ float JimaXengine::General::ConvertToRadians(float degrees)
 	return degrees * (MATH_PI / 180.0f);
 }
 
-float JimaXengine::General::ConvertToDegrees(float& radians)
+float JimaXengine::General::ConvertToDegrees(float radians)
 {
 	return radians * (180.0f / MATH_PI);
 }

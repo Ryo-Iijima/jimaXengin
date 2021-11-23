@@ -11,4 +11,7 @@
 
 // jopyconのpoll実行確認
 
-// namespace内で宣言された同じ名前のstatic変数があるからダメ説
+// namespace内で宣言された同じ名前のstatic変数があるからダメ説 -> 前方宣言もネームスペースの中で
+
+// float JimaXengine::General::ConvertToDegrees(float& radians)参照渡しにするとx64環境だと64bitになって逆に容量食う
+
