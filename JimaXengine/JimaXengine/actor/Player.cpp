@@ -516,8 +516,8 @@ void JimaXengine::Player::Update()
     rightRacket->object->SetCamera(pCamera);
     rightRacket->object->Update();
 
-    rightRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
-    rightRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
+    rightRacket->col.minPos = Vector3(rightRacket->pos - racketScale);
+    rightRacket->col.maxPos = Vector3(rightRacket->pos + racketScale);
 #pragma endregion
 }
 

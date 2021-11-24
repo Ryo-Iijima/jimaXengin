@@ -43,20 +43,39 @@ void JimaXengine::Target::HitCheck()
 			}
 
 			// ラケットの中心からどちらに寄ってるかで分岐
+			Vector3 diff = hitRacket->pos - pos;
+			
+			vel.z *= -1;
 			// 左
-			if (hitRacket->pos.x > pos.x)
+			if (diff.x > 0)
 			{
-				vel = Vector3(-1, 0, 1);
+				vel.x = -1.0f * abs(diff.x);
 			}
 			// 右
-			else if (hitRacket->pos.x < pos.x)
+			else if (diff.x < 0)
 			{
-				vel = Vector3(1, 0, 1);
+				vel.x = 1.0f * abs(diff.x);
 			}
 			// 中
 			else
 			{
-				vel = Vector3(0, 0, 1);
+				vel.x = 0;
+			}
+
+			// 上
+			if (diff.y > 0)
+			{
+				vel.y = -1.0f * abs(diff.y);
+			}
+			// 下
+			else if (diff.y < 0)
+			{
+				vel.y = 1.0f * abs(diff.y);
+			}
+			// 中
+			else
+			{
+				vel.y = 0;
 			}
 
 		}
@@ -98,7 +117,7 @@ void JimaXengine::Target::Initialize()
 	object->SetColor(Vector4(1, 1, 1, 1));
 	float sca = 0.3f;
 	object->SetScale(Vector3(sca, sca, sca));
-
+	sphereCol.radius = sca;
 	//vel = Vector3(0, 0, -0.2f);
 
 	reflection = false;
