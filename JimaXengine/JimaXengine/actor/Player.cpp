@@ -399,6 +399,12 @@ void JimaXengine::Player::Move()
 #pragma endregion
 }
 
+void JimaXengine::Player::Damage()
+{
+    damaged = true;
+    hp--;
+}
+
 JimaXengine::Player::Player(Camera* camera)
 {
     pCamera = camera;
@@ -471,6 +477,11 @@ void JimaXengine::Player::Initialize()
     layObj->SetPosition(pos);
     layObj->SetScale(Vector3(1, 1, 1));
     layObj->SetColor(Vector4(1, 0, 0, 1));
+
+    damageSprite = std::make_unique<Object2d>();
+    damageSprite->CreateSprite();
+
+    hp = Maxhp;
 }
 
 enum class DebugType
@@ -490,6 +501,11 @@ void DebugPrint(std::string s, DebugType d)
 
 void JimaXengine::Player::Update()
 {    
+    if (Input::KeyTrigger(DIK_V))
+    {
+        Damage();
+    }
+
     Move();
 
     object->SetPosition(pos);
@@ -529,6 +545,26 @@ void JimaXengine::Player::Draw()
 #pragma endregion
     //object->Draw();
 
+    if (damaged)
+    {
+        if (!half && damageCount > damageTime)
+        {
+            a *= -1;
+            half = true;
+        }
+
+        damageCount += a;
+
+        if (damageCount < -1)
+        {
+            damageCount = 0;
+            a = 1;
+            damaged = false;
+            half = false;
+        }
+
+        damageSprite->DrawOriginal("damagefilter.png", Vector2(0, 0), 0.0f, Vector2(1.0f / 1.5f, 1.0f / 1.5f), "ALPHA", Vector2(), Vector4(1, 0, 0, 1.0f * (float)damageCount / (float)damageTime));
+    }
 }
 
 JimaXengine::GameObject::TYPE JimaXengine::Player::GetType()

@@ -61,6 +61,7 @@ void JimaXengine::Application::Initialize()
 	Texture::LoadTexture("pushstart.png");
 	Texture::LoadTexture("title.png");
 	Texture::LoadTexture("Stand_Tex.png");
+	Texture::LoadTexture("damagefilter.png");
 
 
 	//object->SetInput(input);

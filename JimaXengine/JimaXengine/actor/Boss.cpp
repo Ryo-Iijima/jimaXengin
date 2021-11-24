@@ -30,7 +30,7 @@ void JimaXengine::Boss::Initialize()
 	aabb3dCol.minPos = Vector3(pos.x - 10, pos.y - 10, pos.z - 10);
 
 	state = State::WAIT;
-	hp = 3;
+	hp = Maxhp;
 	random = 1;
 	nextPos = { 0,0,50 };
 	toDestinationVelocity = { 0,0,0 };
@@ -48,6 +48,9 @@ void JimaXengine::Boss::Initialize()
 
 	floatingOffsetPos = Vector3(0, 0, 0);
 	floatingOffsetWidth = 0.5f;
+
+	hpSprite = std::make_unique<Object2d>();
+	hpSprite->CreateSprite();
 }
 
 void JimaXengine::Boss::Update()
@@ -93,6 +96,9 @@ void JimaXengine::Boss::Update()
 void JimaXengine::Boss::Draw()
 {
 	object->Draw();
+
+	hpBarLength = hpBarMaxLength * hp / Maxhp;
+	hpSprite->DrawOriginal("white1x1.png", Vector2(WinApp::WINDOW_WIDTH / 2 - 250, 20), 0.0f, Vector2(hpBarLength, 50.0f), "ALPHA");
 }
 
 void JimaXengine::Boss::Dead()
@@ -306,12 +312,6 @@ void JimaXengine::Boss::EachShot()
 
 void JimaXengine::Boss::SuitableForPlayer()
 {
-	float a = 0.2f;
-	if (Input::KeyPress(DIK_UP)) pos.y += a;
-	if (Input::KeyPress(DIK_DOWN)) pos.y -= a;
-	if (Input::KeyPress(DIK_LEFT)) pos.x -= a;
-	if (Input::KeyPress(DIK_RIGHT)) pos.x += a;
-
 	// ƒvƒŒƒCƒ„[‚Ì‚Ù‚¤‚ðŒü‚­
 	playerPos = oManager->GetPlayer()->GetPos();
 	dir = pos - playerPos;

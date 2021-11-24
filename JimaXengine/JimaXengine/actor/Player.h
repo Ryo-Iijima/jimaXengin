@@ -17,6 +17,16 @@ namespace JimaXengine
 
 		Vector3 racketScale;
 
+		int hp;					// ヒットポイント
+		const int Maxhp = 3;	// 最大ヒットポイント
+
+		std::unique_ptr<Object2d> damageSprite;		// 球食らったときに画面の周りを赤くする用
+		bool damaged = false;						// ダメージ点滅用
+		bool half = false;							// 往復用
+		const int damageTime = 20;					// 点滅時間
+		int damageCount = 0;						// 点滅カウント用
+		int a = 1;
+
 	public:
 		struct Racket
 		{
@@ -44,6 +54,7 @@ namespace JimaXengine
 		Camera* GetCamera();
 		void DrawAlphaObj();
 		void Move();
+		void Damage();	// ダメージを食らう
 
 
 	// joycon 周りここから

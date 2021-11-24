@@ -14,13 +14,13 @@ void JimaXengine::Target::Move()
 void JimaXengine::Target::HitCheck()
 {
 	// 範囲外に出たら(playerより後ろか,bossより後ろ)
-	if (pos.z <= -30 || pos.z > 10)
+	if (pos.z > 10)
 	{
 		Dead();
 		Delete();
 	}
 
-
+	// プレイヤーが跳ね返した後
 	if (reflection == false)
 	{
 		Player* player = oManager->GetPlayer();
@@ -79,8 +79,17 @@ void JimaXengine::Target::HitCheck()
 			}
 
 		}
+
+		// プレイヤーより後ろに行ったら
+		if (pos.z <= -30)
+		{
+			Dead();
+			Delete();
+		}
+		
 	}
 
+	// プレイヤーが跳ね返した後
 	if (reflection == true)
 	{
 		Boss* boss = oManager->GetBoss();

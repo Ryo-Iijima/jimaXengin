@@ -6,6 +6,7 @@ namespace JimaXengine
 	class Camera;
 	class Model;
 	class Object3d;
+	class Object2d;
 
 	class Boss : public GameObject
 	{
@@ -16,9 +17,14 @@ namespace JimaXengine
 		GameObjectManager* pOManager = nullptr;
 
 		int hp;					// ヒットポイント
+		const int Maxhp = 3;	// 最大ヒットポイント
 		bool damaged = false;	// ダメージ点滅用
 		int count = 20;			// 点滅時間
 		int i = 0;				// 点滅カウント用
+		
+		std::unique_ptr<Object2d> hpSprite;		// HP表示用
+		const float hpBarMaxLength = 500;		// HPバーの最大長
+		float hpBarLength;						// 今のHPバーの長さ
 
 		int actionIntervalTimer=200;		// 次に行動するまでの時間
 
