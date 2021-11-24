@@ -7,7 +7,8 @@ void JimaXengine::Target::Move()
 {
 	vel.Normalize();
 
-	pos += vel;
+	pos += vel / 10;
+	rotation += {1, 1, 0};
 }
 
 void JimaXengine::Target::HitCheck()
@@ -16,6 +17,7 @@ void JimaXengine::Target::HitCheck()
 	if (pos.z <= -30 || pos.z > 10)
 	{
 		Dead();
+		Delete();
 	}
 
 
@@ -75,7 +77,8 @@ void JimaXengine::Target::Initialize()
 	object->Initialize();
 	object->SetModel(model);
 	object->SetColor(Vector4(1, 1, 1, 1));
-	object->SetScale(Vector3(1, 1, 1));
+	float sca = 0.3f;
+	object->SetScale(Vector3(sca, sca, sca));
 
 	//vel = Vector3(0, 0, -0.2f);
 

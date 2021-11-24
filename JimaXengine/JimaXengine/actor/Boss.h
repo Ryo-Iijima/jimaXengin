@@ -34,11 +34,11 @@ namespace JimaXengine
 		// 移動位置
 		Vector3 waitPos[5] =
 		{
-			{  0,  0, 0},
-			{-35, 15, 0},
-			{ 35, 15, 0},
-			{-35,-10, 0},
-			{ 35,-10, 0}
+			{  0,  6, 0},
+			{-15, 14, 0},
+			{ 15, 14, 0},
+			{-13,  6, 0},
+			{ 13,  6, 0}
 		};
 		int random;
 		Vector3 nextPos;				// 移動先
@@ -58,15 +58,25 @@ namespace JimaXengine
 		bool attacked;				// 攻撃完了フラグ
 		bool attackUnDuplicate[3];	// 攻撃の重複回避用
 
+		// プレイヤーの方を向く用
+		Vector3 playerPos;
+		Vector3 dir;
+		Vector3 angle = { 0,0,0 };
+
+		// 上下浮遊用
 		Vector3 floatingOffsetPos;	// モデルを上下させる用のオフセット
 		float floatingOffsetWidth;	// 上下移動の幅
-		float a = 0.04f;
+		float a = 0.02f;
 
 	private:
 		void Move();
 		void SingleShot();
 		void RapidFire();
 		void EachShot();
+		// プレイヤーのほうに向く
+		void SuitableForPlayer();
+		// 上下にふわふわ
+		void Floating();
 
 	public:
 		Boss(Camera* camera, GameObjectManager* oManager);

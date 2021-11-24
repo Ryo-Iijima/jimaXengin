@@ -20,7 +20,7 @@ void JimaXengine::Boss::Initialize()
 	object->Initialize();
 	object->SetModel(model);
 
-	pos = Vector3(0, 0, 0);
+	pos = Vector3(0, 6, 0);
 	object->SetPosition(pos);
 	object->SetScale(Vector3(2, 2, 2));
 	rotation = Vector3(0, 180, 0);
@@ -47,30 +47,14 @@ void JimaXengine::Boss::Initialize()
 	}
 
 	floatingOffsetPos = Vector3(0, 0, 0);
-	floatingOffsetWidth = 1.0f;
+	floatingOffsetWidth = 0.5f;
 }
 
 void JimaXengine::Boss::Update()
 {
 	Move();
 
-	//{
-	//	float a = 0.2f;
-	//	if (Input::KeyPress(DIK_UP)) pos.y+=a;
-	//	if (Input::KeyPress(DIK_DOWN)) pos.y-=a;
-	//	if (Input::KeyPress(DIK_LEFT)) pos.x-=a;
-	//	if (Input::KeyPress(DIK_RIGHT)) pos.x+=a;
-
-	//	// プレイヤーのほうを向く
-	//	Vector3 targetPos = oManager->GetPlayer()->GetPos();
-	//	Vector3 bollVel = targetPos - pos;
-	//	double angle = 0;
-
-	//	angle = atan2f(bollVel.x, bollVel.z);
-
-
-	//	rotation.y = 180-angle;
-	//}
+	SuitableForPlayer();
 
 	// ダメージ受けてたら点滅する
 	if (damaged)
@@ -95,12 +79,7 @@ void JimaXengine::Boss::Update()
 		object->SetColor(Vector4(1, 1, 1, 1));
 	}
 
-	// 上下に浮遊
-	floatingOffsetPos.y += a;
-	if (floatingOffsetPos.y < -floatingOffsetWidth || floatingOffsetPos.y > floatingOffsetWidth)
-	{
-		a *= -1;
-	}
+	Floating();
 
 	object->SetPosition(pos + floatingOffsetPos);
 	object->SetRotation(rotation);
@@ -145,6 +124,11 @@ void JimaXengine::Boss::DrawImGui()
 	ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
 	ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
 	ImGui::Text("state : %d", state);
+
+	ImGui::Text("playerPos : %f,%f,%f", playerPos.x, playerPos.y, playerPos.z);
+	ImGui::Text("dir : %f,%f,%f", dir.x, dir.y, dir.z);
+	ImGui::Text("angle : %f", angle);
+
 	ImGui::End();
 }
 
@@ -169,28 +153,10 @@ void JimaXengine::Boss::Move()
 
 			if (!moveUnDuplicate[random])
 			{
-				switch (random)
-				{
-				case 0:
-					nextPos = waitPos[random];
-					break;
-				case 1:
-					nextPos = waitPos[random];
-					break;
-				case 2:
-					nextPos = waitPos[random];
-					break;
-				case 3:
-					nextPos = waitPos[random];
-					break;
-				case 4:
-					nextPos = waitPos[random];
-					break;
-				default:
-					break;
-				}
-				// 現在の位置から移動先までの速度を決定
-				toDestinationVelocity = (nextPos - pos) / 200;
+				nextPos = waitPos[random];
+ 				// 現在の位置から移動先までの速度を決定
+				toDestinationVelocity = (nextPos - pos);
+				toDestinationVelocity = toDestinationVelocity.Normalize() / 5;
 				// 移動状態に変更
 				state = State::MOVE;
 				// タイマーを戻す
@@ -211,11 +177,23 @@ void JimaXengine::Boss::Move()
 		break;
 
 	case JimaXengine::Boss::State::MOVE:
-
+		// 設定したベクトルを加算
 		pos += toDestinationVelocity;
+		// 現在地点と目標地点を比較
 		v = pos - nextPos;
+		// それぞれの方向で目標地点との差が一定以下になったら,目標地点に固定して移動量を０にする
+		if (abs(v.x) < 0.1f)
+		{
+			pos.x = nextPos.x;
+			toDestinationVelocity.x = 0;
+		}
+		if (abs(v.y) < 0.1f)
+		{
+			pos.y = nextPos.y;
+			toDestinationVelocity.y = 0;
+		}
 		// 移動先についたら
-		if (abs(v.x) < 0.5f || abs(v.y) < 0.5f)
+		if (pos == nextPos)
 		{
 			// 攻撃状態に変更
 			state = State::ATTACK;
@@ -258,10 +236,14 @@ void JimaXengine::Boss::Move()
 				SingleShot();
 				break;
 			case JimaXengine::Boss::AttackType::RAPIDFIRE:
-				RapidFire();
+				//RapidFire();
+				SingleShot();
+
 				break;
 			case JimaXengine::Boss::AttackType::EACHSHOT:
-				EachShot();
+				//EachShot();
+				SingleShot();
+
 				break;
 			default:
 				break;
@@ -282,35 +264,19 @@ void JimaXengine::Boss::Move()
 	default:
 		break;
 	}
-
-	float xLimit = 42.0f;    // 画面内に制限する用
-	float yLimit = 20.0f;
-
-	// 画面外に出ないように
-	if (pos.x > xLimit)
-	{
-		pos.x = xLimit;
-	}
-	if (pos.x < -xLimit)
-	{
-		pos.x = -xLimit;
-	}
-	if (pos.y > yLimit)
-	{
-		pos.y = yLimit;
-	}
-	//if (pos.y < -yLimit)
-	if (pos.y < -10)
-	{
-		//pos.y = -yLimit;
-		pos.y = -10;
-	}
 }
 
 void JimaXengine::Boss::SingleShot()
 {
 	// プレイヤーの位置を参考に球の発射方向を決定
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
+	// 目標地点をランダムにずらす
+	float blurredWidth = 1.0f;
+	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+	targetPos.x += random;
+	random = Random::GetRandom(-blurredWidth, blurredWidth);
+	targetPos.y += random;
+
 	Vector3 bollVel = targetPos - pos;
 
 	pOManager->Insert(new Target(pCamera, pos, bollVel));
@@ -320,12 +286,49 @@ void JimaXengine::Boss::SingleShot()
 
 void JimaXengine::Boss::RapidFire()
 {
-	pOManager->Insert(new Target(pCamera, pos));
+	// プレイヤーの位置を参考に球の発射方向を決定
+	Vector3 targetPos = oManager->GetPlayer()->GetPos();
+	Vector3 bollVel = targetPos - pos;
+
+	pOManager->Insert(new Target(pCamera, pos, bollVel));
 	attacked = true;
 }
 
 void JimaXengine::Boss::EachShot()
 {
-	pOManager->Insert(new Target(pCamera, pos));
+	// プレイヤーの位置を参考に球の発射方向を決定
+	Vector3 targetPos = oManager->GetPlayer()->GetPos();
+	Vector3 bollVel = targetPos - pos;
+
+	pOManager->Insert(new Target(pCamera, pos, bollVel));
 	attacked = true;
+}
+
+void JimaXengine::Boss::SuitableForPlayer()
+{
+	float a = 0.2f;
+	if (Input::KeyPress(DIK_UP)) pos.y += a;
+	if (Input::KeyPress(DIK_DOWN)) pos.y -= a;
+	if (Input::KeyPress(DIK_LEFT)) pos.x -= a;
+	if (Input::KeyPress(DIK_RIGHT)) pos.x += a;
+
+	// プレイヤーのほうを向く
+	playerPos = oManager->GetPlayer()->GetPos();
+	dir = pos - playerPos;
+	angle = { 0,0,0 };
+
+	angle.x = atan2f(dir.y, dir.z);
+	angle.y = atan2f(dir.x, dir.z);
+
+	rotation.x = angle.x * 20;
+	rotation.y = 180 + angle.y * 50;
+}
+
+void JimaXengine::Boss::Floating()
+{
+	floatingOffsetPos.y += a;
+	if (floatingOffsetPos.y < -floatingOffsetWidth || floatingOffsetPos.y > floatingOffsetWidth)
+	{
+		a *= -1;
+	}
 }

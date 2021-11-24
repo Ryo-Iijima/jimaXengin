@@ -111,10 +111,4 @@ JimaXengine::GameObject::TYPE JimaXengine::BackGround::GetType()
 
 void JimaXengine::BackGround::DrawImGui()
 {
-	ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
-	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
-
-	ImGui::Begin("CameraInfomation");
-	ImGui::Text("pos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
-	ImGui::End();
 }

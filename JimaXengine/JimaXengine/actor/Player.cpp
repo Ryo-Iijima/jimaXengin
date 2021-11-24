@@ -410,8 +410,6 @@ JimaXengine::Player::~Player()
 	delete model;
 
     delete device;
-    //delete dev;
-
 }
 
 void JimaXengine::Player::Initialize()
@@ -422,20 +420,21 @@ void JimaXengine::Player::Initialize()
 	object->Initialize();
 	object->SetModel(model);
     
-    pos = Vector3(0, 0, -20);
+    pos = Vector3(0, 1, -17);
 	object->SetPosition(pos);
-    object->SetScale(Vector3(4, 0.5, 1));
+    object->SetScale(Vector3(1, 1, 0.01f));
+    object->SetColor(Vector4(1, 1, 1, 0.3f));
 
     renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
     //JoyConInitialize();
 
 #pragma region ラケット初期化
 
-    model = FbxLoader::GetInstance().LoadModelFromFile("racketL");
+    model = FbxLoader::GetInstance().LoadModelFromFile("AimMark");
 
     leftRacket = std::make_unique<Racket>();
 
-    leftRacket->pos = Vector3(-5, 0, -20);
+    leftRacket->pos = Vector3(-5, 0, -15);
 
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
@@ -446,11 +445,11 @@ void JimaXengine::Player::Initialize()
     leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
 
 
-    model = FbxLoader::GetInstance().LoadModelFromFile("racket");
+    model = FbxLoader::GetInstance().LoadModelFromFile("AimMark");
 
     rightRacket = std::make_unique<Racket>();
 
-    rightRacket->pos = Vector3(5, 0, -20);
+    rightRacket->pos = Vector3(5, 0, -15);
 
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
@@ -487,21 +486,7 @@ void DebugPrint(std::string s, DebugType d)
 }
 
 void JimaXengine::Player::Update()
-{
-    {
-//    std::string tostr = "";
-//    for (int i = 0; i < len; ++i)
-//    {
-//        tostr += _StringFormat::Format((typeid(arr[0]) == typeid(int)) ? ((std::string)"%d") : ((typeid(arr[0]) == typeid(float)) ? ((std::string)"%f") : ((std::string)"%s")), arr[i]);
-//    }
-//    DebugPrint(_StringFormat::Format(format, tostr), debug_type);
-
-//}
-
-//JoyConUpdate();
-
-    }
-    
+{    
     Move();
 
     object->SetPosition(pos);
@@ -535,13 +520,11 @@ void JimaXengine::Player::Update()
 
 void JimaXengine::Player::Draw()
 {
-	//object->Draw();
-	//layObj->Draw();
-
-#pragma region Stick
+#pragma region ラケット
     leftRacket->object->Draw();
     rightRacket->object->Draw();
 #pragma endregion
+    object->Draw();
 
 }
 

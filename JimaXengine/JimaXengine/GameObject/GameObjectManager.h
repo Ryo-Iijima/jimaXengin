@@ -18,7 +18,7 @@ namespace JimaXengine
 
 		void Initialize();
 		void Add(GameObject* obj);
-		void Insert(GameObject* obj);	// “®“I
+		void Insert(GameObject* obj);	// “®“I’Ç‰Á‚Ìê‡
 		void Update();
 		void Draw();
 		void ResetObject();
