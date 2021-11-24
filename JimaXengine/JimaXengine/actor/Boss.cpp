@@ -22,7 +22,7 @@ void JimaXengine::Boss::Initialize()
 
 	pos = Vector3(0, 6, 0);
 	object->SetPosition(pos);
-	object->SetScale(Vector3(2, 2, 2));
+	object->SetScale(Vector3(1.5f, 1.5f, 1.5f));
 	rotation = Vector3(0, 180, 0);
 	object->SetRotation(rotation);
 
@@ -274,7 +274,7 @@ void JimaXengine::Boss::SingleShot()
 	float blurredWidth = 1.0f;
 	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
 	targetPos.x += random;
-	random = Random::GetRandom(-blurredWidth, blurredWidth);
+	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
 	targetPos.y += random;
 
 	Vector3 bollVel = targetPos - pos;

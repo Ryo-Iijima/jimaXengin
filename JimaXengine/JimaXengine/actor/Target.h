@@ -1,5 +1,6 @@
 #pragma once
 #include "../GameObject/GameObject.h"
+#include "Player.h"
 
 namespace JimaXengine
 {
@@ -14,6 +15,9 @@ namespace JimaXengine
 
 		// ’µ‚Ë•Ô‚µ‚½Œã‚©
 		bool reflection = false;
+
+		// “–‚½‚Á‚½Œã‚Ì•ûŒü’²®—p
+		Player::Racket* hitRacket = nullptr;
 
 	private:
 		void Move();

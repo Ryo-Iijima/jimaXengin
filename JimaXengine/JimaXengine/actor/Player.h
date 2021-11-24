@@ -11,6 +11,13 @@ namespace JimaXengine
 	class Player : public GameObject
 	{
 	private:
+		Model* model = nullptr;
+		Object3d* object = nullptr;
+		Vector3 eye, target;
+
+		Vector3 racketScale;
+
+	public:
 		struct Racket
 		{
 			std::unique_ptr<Object3d> object;	// ƒ‚ƒfƒ‹
@@ -19,12 +26,7 @@ namespace JimaXengine
 			Vector3 acc;						// ‰Á‘¬“x
 			AABB3D col;							// “–‚½‚è”»’è—p
 		};
-	private:
-		Model* model = nullptr;
-		Object3d* object = nullptr;
-		Vector3 eye, target;
 
-	public:
 		std::unique_ptr<Racket> leftRacket;
 		std::unique_ptr<Racket> rightRacket;
 

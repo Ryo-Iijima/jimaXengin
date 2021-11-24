@@ -17,8 +17,8 @@ void JimaXengine::Play::Initialize()
 {
 	Vector3 eye, target, up;
 
-	eye = { 0, 1, -20 };
-	target = { 0, 10, 10 };
+	eye = { 0, 3, -23 };
+	target = { 0, 3, 10 };
 	up = { 0, 1, 0 };
 
 	camera = std::make_unique<DebugCamera>();

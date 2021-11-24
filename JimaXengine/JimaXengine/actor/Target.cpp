@@ -29,13 +29,36 @@ void JimaXengine::Target::HitCheck()
 		if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
 			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
 		{
-			object->SetColor(Vector4(0, 0, 0, 1));
+			object->SetColor(Vector4(0, 1, 1, 1));
 			reflection = true;
-			vel *= -1;
-		}
-		else
-		{
-			//object->SetColor(Vector4(1, 1, 1, 1));
+
+			// どっちのラケットに当たったか判定
+			if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol))
+			{	
+				hitRacket = (player->leftRacket.get());
+			}
+			else if(Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
+			{
+				hitRacket = (player->rightRacket.get());
+			}
+
+			// ラケットの中心からどちらに寄ってるかで分岐
+			// 左
+			if (hitRacket->pos.x > pos.x)
+			{
+				vel = Vector3(-1, 0, 1);
+			}
+			// 右
+			else if (hitRacket->pos.x < pos.x)
+			{
+				vel = Vector3(1, 0, 1);
+			}
+			// 中
+			else
+			{
+				vel = Vector3(0, 0, 1);
+			}
+
 		}
 	}
 
@@ -49,10 +72,6 @@ void JimaXengine::Target::HitCheck()
 			object->SetColor(Vector4(0, 0, 0, 1));
 			boss->Damage();
 			Dead();
-		}
-		else
-		{
-			//object->SetColor(Vector4(1, 1, 1, 1));
 		}
 	}
 }

@@ -186,10 +186,10 @@ void JimaXengine::Player::JoyConUpdate()
 void JimaXengine::Player::Move()
 {
 #pragma region Stick
-    float defaultvel = 1.0f;
-    float maxacc = 0.5f;    // 最大加速度
-    float xLimit = 8.0f;    // 画面内に制限する用
-    float yLimit = 4.0f;
+    float defaultvel = 0.01f;
+    float maxacc = 0.1f;    // 最大加速度
+    float xLimit = 100.0f;    // 画面内に制限する用
+    float yLimit = 100.0f;
 
     // 左
     leftRacket->vel = Vector3(0, 0, 0);
@@ -200,7 +200,7 @@ void JimaXengine::Player::Move()
     if (Input::KeyPress(DIK_D) || Input::PadLeftStickRight()) leftRacket->vel.x = defaultvel;
     leftRacket->vel.Normalize();
 
-    leftRacket->acc += leftRacket->vel / 10;
+    leftRacket->acc += leftRacket->vel;
 
     // 操作されていたら
     if (Input::KeyPress(DIK_W) || Input::PadLeftStickUp()
@@ -222,16 +222,16 @@ void JimaXengine::Player::Move()
         // 減速（現在の加速方向によって分岐）
         if (leftRacket->acc.y > 0)
         {
-            leftRacket->acc.y -= defaultvel / 10;
-            if (leftRacket->acc.y <= 0.1f)
+            leftRacket->acc.y -= defaultvel;
+            if (leftRacket->acc.y <= defaultvel)
             {
                 leftRacket->acc.y = 0;
             }
         }
         else if (leftRacket->acc.y < 0)
         {
-            leftRacket->acc.y += defaultvel / 10;
-            if (leftRacket->acc.y >= -0.1)
+            leftRacket->acc.y += defaultvel;
+            if (leftRacket->acc.y >= -defaultvel)
             {
                 leftRacket->acc.y = 0;
             }
@@ -258,16 +258,16 @@ void JimaXengine::Player::Move()
         // 減速（現在の加速方向によって分岐）
         if (leftRacket->acc.x > 0)
         {
-            leftRacket->acc.x -= defaultvel / 10;
-            if (leftRacket->acc.x <= 0.1f)
+            leftRacket->acc.x -= defaultvel;
+            if (leftRacket->acc.x <= defaultvel)
             {
                 leftRacket->acc.x = 0;
             }
         }
         else if (leftRacket->acc.x < 0)
         {
-            leftRacket->acc.x += defaultvel / 10;
-            if (leftRacket->acc.x >= -0.1)
+            leftRacket->acc.x += defaultvel;
+            if (leftRacket->acc.x >= -defaultvel)
             {
                 leftRacket->acc.x = 0;
             }
@@ -302,7 +302,7 @@ void JimaXengine::Player::Move()
     if (Input::KeyPress(DIK_L) || Input::PadRightStickRight()) rightRacket->vel.x = defaultvel;
     rightRacket->vel.Normalize();
 
-    rightRacket->acc += rightRacket->vel / 10;
+    rightRacket->acc += rightRacket->vel;
 
     // 操作されていたら
     if (Input::KeyPress(DIK_I) || Input::PadRightStickUp()
@@ -324,16 +324,16 @@ void JimaXengine::Player::Move()
         // 減速（現在の加速方向によって分岐）
         if (rightRacket->acc.y > 0)
         {
-            rightRacket->acc.y -= defaultvel / 10;
-            if (rightRacket->acc.y <= 0.1f)
+            rightRacket->acc.y -= defaultvel;
+            if (rightRacket->acc.y <= defaultvel)
             {
                 rightRacket->acc.y = 0;
             }
         }
         else if (rightRacket->acc.y < 0)
         {
-            rightRacket->acc.y += defaultvel / 10;
-            if (rightRacket->acc.y >= -0.1)
+            rightRacket->acc.y += defaultvel;
+            if (rightRacket->acc.y >= -defaultvel)
             {
                 rightRacket->acc.y = 0;
             }
@@ -360,16 +360,16 @@ void JimaXengine::Player::Move()
         // 減速（現在の加速方向によって分岐）
         if (rightRacket->acc.x > 0)
         {
-            rightRacket->acc.x -= defaultvel / 10;
-            if (rightRacket->acc.x <= 0.1f)
+            rightRacket->acc.x -= defaultvel;
+            if (rightRacket->acc.x <= defaultvel)
             {
                 rightRacket->acc.x = 0;
             }
         }
         else if (rightRacket->acc.x < 0)
         {
-            rightRacket->acc.x += defaultvel / 10;
-            if (rightRacket->acc.x >= -0.1)
+            rightRacket->acc.x += defaultvel;
+            if (rightRacket->acc.x >= -defaultvel)
             {
                 rightRacket->acc.x = 0;
             }
@@ -429,6 +429,7 @@ void JimaXengine::Player::Initialize()
     //JoyConInitialize();
 
 #pragma region ラケット初期化
+    racketScale = Vector3(0.5f, 0.5f, 0.01f);
 
     model = FbxLoader::GetInstance().LoadModelFromFile("AimMark");
 
@@ -439,10 +440,11 @@ void JimaXengine::Player::Initialize()
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
     leftRacket->object->SetModel(model);
-    leftRacket->object->SetColor(Vector4(1, 1, 1, 0.7f));
+    leftRacket->object->SetColor(Vector4(1, 0.0f, 0.0f, 1));
+    leftRacket->object->SetScale(racketScale);
 
-    leftRacket->col.minPos = Vector3(leftRacket->pos.x - 1, leftRacket->pos.y - 1, leftRacket->pos.z - 1);
-    leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
+    leftRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
+    leftRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
 
 
     model = FbxLoader::GetInstance().LoadModelFromFile("AimMark");
@@ -454,10 +456,11 @@ void JimaXengine::Player::Initialize()
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
     rightRacket->object->SetModel(model);
-    rightRacket->object->SetColor(Vector4(1, 1, 1, 0.7f));
+    rightRacket->object->SetColor(Vector4(0.0f, 0.0f, 1, 1));
+    rightRacket->object->SetScale(racketScale);
 
-    rightRacket->col.minPos = Vector3(rightRacket->pos.x - 1, rightRacket->pos.y - 1, rightRacket->pos.z - 1);
-    rightRacket->col.maxPos = Vector3(rightRacket->pos.x + 1, rightRacket->pos.y + 1, rightRacket->pos.z + 1);
+    rightRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
+    rightRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
 
 #pragma endregion
 
@@ -506,15 +509,15 @@ void JimaXengine::Player::Update()
     leftRacket->object->SetCamera(pCamera);
     leftRacket->object->Update();
 
-    leftRacket->col.minPos = Vector3(leftRacket->pos.x - 1, leftRacket->pos.y - 1, leftRacket->pos.z - 1);
-    leftRacket->col.maxPos = Vector3(leftRacket->pos.x + 1, leftRacket->pos.y + 1, leftRacket->pos.z + 1);
+    leftRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
+    leftRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
     // right
     rightRacket->object->SetPosition(rightRacket->pos);
     rightRacket->object->SetCamera(pCamera);
     rightRacket->object->Update();
 
-    rightRacket->col.minPos = Vector3(rightRacket->pos.x - 1, rightRacket->pos.y - 1, rightRacket->pos.z - 1);
-    rightRacket->col.maxPos = Vector3(rightRacket->pos.x + 1, rightRacket->pos.y + 1, rightRacket->pos.z + 1);
+    rightRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
+    rightRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
 #pragma endregion
 }
 
@@ -524,7 +527,7 @@ void JimaXengine::Player::Draw()
     leftRacket->object->Draw();
     rightRacket->object->Draw();
 #pragma endregion
-    object->Draw();
+    //object->Draw();
 
 }
 
