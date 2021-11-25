@@ -87,23 +87,6 @@ namespace JimaXengine
 
 		static void CreateGraphicsPipline();
 
-		/// <summary>
-		/// ルートパラメーターの設定
-		/// </summary>
-		//static void SetUpRootParameter();
-
-		/// <summary>
-		/// サンプラーの設定
-		/// </summary>
-		/// <returns>成否</returns>
-		//static void SetUpSampler();
-
-		/// <summary>
-		/// ルートシグネチャの作成
-		/// </summary>
-		/// <returns>成否</returns>
-		//static bool CreatRootSignature();
-
 		// setter
 		static void SetDevice(ID3D12Device* device) { Object3d::_dev = device; }
 

@@ -1,10 +1,10 @@
 #include "Object3d.h"
-#include <d3dcompiler.h>
 #include "../WinApp.h"
-#pragma comment (lib,"d3dcompiler.lib")
-
-#include "../general/Input.h"
 #include "FbxLoader.h"
+#include "../ResourceShader.h"
+
+#include <d3dcompiler.h>
+#pragma comment (lib,"d3dcompiler.lib")
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -28,54 +28,6 @@ void  JimaXengine::Object3d::CreateGraphicsPipline()
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 	assert(_dev);
-
-	// 頂点シェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shader/FBX/FBXVS.hlsl",    // シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "vs_5_0",    // エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&vsBlob, &errorBlob);
-	if (FAILED(result)) 
-	{
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
-
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shader/FBX/FBXPS.hlsl",    // シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "ps_5_0",    // エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&psBlob, &errorBlob);
-	if (FAILED(result)) 
-	{
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		exit(1);
-	}
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
@@ -104,8 +56,8 @@ void  JimaXengine::Object3d::CreateGraphicsPipline()
 
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
-	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+	gpipeline.VS = CD3DX12_SHADER_BYTECODE(ResourceShader::GetShaders("FBX/FBXVS.hlsl").Get());
+	gpipeline.PS = CD3DX12_SHADER_BYTECODE(ResourceShader::GetShaders("FBX/FBXPS.hlsl").Get());
 
 	// サンプルマスク
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
@@ -198,7 +150,7 @@ void JimaXengine::Object3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(constBufferTranceform.GetAddressOf())
 	);
-	assert(!result);
+	assert(SUCCEEDED(result));
 
 	result = _dev->CreateCommittedResource
 	(
@@ -209,7 +161,7 @@ void JimaXengine::Object3d::Initialize()
 		nullptr,
 		IID_PPV_ARGS(constBufferSkin.GetAddressOf())
 	);
-	assert(!result);
+	assert(SUCCEEDED(result));
 
 	// スキン無し用
 	SkinData* constMapSkin = nullptr;
@@ -219,7 +171,7 @@ void JimaXengine::Object3d::Initialize()
 		constMapSkin->bones[i] = XMMatrixIdentity();
 	}
 	constBufferSkin->Unmap(0, nullptr);
-	assert(!result);
+	assert(SUCCEEDED(result));
 
 	eye = { 0, 0, -20 };
 	target = { 0, 0, 0 };

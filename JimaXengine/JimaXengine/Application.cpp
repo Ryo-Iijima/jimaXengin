@@ -23,6 +23,8 @@ void JimaXengine::Application::Initialize()
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
 
+	ResourceShader::CompileShader("FBX/FBXVS.hlsl", "main", "vs_5_0");
+	ResourceShader::CompileShader("FBX/FBXPS.hlsl", "main", "ps_5_0");
 	ResourceShader::CompileShader("Sprite/SpritePixelShader.hlsl", "main", "ps_5_0");
 	ResourceShader::CompileShader("Sprite/SpriteVertexShader.hlsl", "main", "vs_5_0");
 	ResourceShader::CompileShader("Geometory/ParticleVS.hlsl", "main", "vs_5_0");

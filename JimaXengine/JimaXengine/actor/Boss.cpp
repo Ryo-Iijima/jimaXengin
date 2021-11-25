@@ -98,7 +98,7 @@ void JimaXengine::Boss::Draw()
 	object->Draw();
 
 	hpBarLength = hpBarMaxLength * hp / Maxhp;
-	hpSprite->DrawOriginal("white1x1.png", Vector2(WinApp::WINDOW_WIDTH / 2 - 250, 20), 0.0f, Vector2(hpBarLength, 50.0f), "ALPHA");
+	hpSprite->DrawOriginal("white1x1.png", Vector2(WinApp::WINDOW_WIDTH / 2 - 250, 20), 0.0f, Vector2(hpBarLength, 50.0f), "ALPHA", Vector2(), Vector4(0, 1, 0, 1));
 }
 
 void JimaXengine::Boss::Dead()

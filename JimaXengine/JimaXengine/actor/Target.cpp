@@ -81,7 +81,7 @@ void JimaXengine::Target::HitCheck()
 		}
 
 		// プレイヤーより後ろに行ったら
-		if (pos.z <= -30)
+		if (pos.z <= -20)
 		{
 			Dead();
 			Delete();
@@ -100,6 +100,7 @@ void JimaXengine::Target::HitCheck()
 			object->SetColor(Vector4(0, 0, 0, 1));
 			boss->Damage();
 			Dead();
+			Delete();
 		}
 	}
 }
@@ -114,40 +115,43 @@ JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, float spee
 
 JimaXengine::Target::~Target()
 {
+	delete model;
+	delete object;
 }
 
 void JimaXengine::Target::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("ball");
 	
-	object = new Object3d;
-	object->Initialize();
-	object->SetModel(model);
-	object->SetColor(Vector4(1, 1, 1, 1));
-	float sca = 0.3f;
-	object->SetScale(Vector3(sca, sca, sca));
-	sphereCol.radius = sca;
-	//vel = Vector3(0, 0, -0.2f);
+	//object = new Object3d;
+	//object->Initialize();
+	//object->SetModel(model);
+	//object->SetColor(Vector4(1, 1, 1, 1));
+	//float sca = 0.3f;
+	//object->SetScale(Vector3(sca, sca, sca));
+	//sphereCol.radius = sca;
 
-	reflection = false;
+	//reflection = false;
+
+	Delete();
 }
 
 void JimaXengine::Target::Update()
 {
-	HitCheck();
-	Move();
+	//HitCheck();
+	//Move();
 
-	object->SetPosition(pos);
-	object->SetRotation(rotation);
-	object->SetCamera(pCamera);
-	object->Update();
+	//object->SetPosition(pos);
+	//object->SetRotation(rotation);
+	//object->SetCamera(pCamera);
+	//object->Update();
 
-	sphereCol.center = pos.ConvertXMVECTOR();
+	//sphereCol.center = pos.ConvertXMVECTOR();
 }
 
 void JimaXengine::Target::Draw()
 {
-	object->Draw();
+	//object->Draw();
 }
 
 JimaXengine::GameObject::TYPE JimaXengine::Target::GetType()

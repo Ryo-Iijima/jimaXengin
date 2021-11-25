@@ -3,7 +3,7 @@
 JimaXengine::Model::~Model()
 {
 	// FBXシーンの解放
-	//fbxScene->Destroy();
+	fbxScene->Destroy();
 }
 
 void JimaXengine::Model::CreateBuffers(ID3D12Device* _dev)
@@ -57,6 +57,7 @@ void JimaXengine::Model::CreateBuffers(ID3D12Device* _dev)
 
 	std::copy(indices.begin(), indices.end(), indexMap);
 	indexBuff->Unmap(0, nullptr);
+
 	// インデックスバッファビューの作成
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
@@ -65,6 +66,7 @@ void JimaXengine::Model::CreateBuffers(ID3D12Device* _dev)
 	// テクスチャ画像データ
 	const DirectX::Image* img = materialData.scrachImg.GetImage(0, 0, 0);
 	assert(img);
+
 	// リソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D
 	(
@@ -104,6 +106,7 @@ void JimaXengine::Model::CreateBuffers(ID3D12Device* _dev)
 	descHeapDesc.NodeMask = 0;	// マスク0
 	descHeapDesc.NumDescriptors = 1;
 	result = _dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(descHeapSRV.GetAddressOf()));
+
 	// シェーダーリソースビュー作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();

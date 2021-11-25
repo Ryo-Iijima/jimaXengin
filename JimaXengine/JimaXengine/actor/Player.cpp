@@ -441,7 +441,7 @@ void JimaXengine::Player::Initialize()
 
     leftRacket = std::make_unique<Racket>();
 
-    leftRacket->pos = Vector3(-5, 0, -15);
+    leftRacket->pos = Vector3(-5, 2.5f, -15);
 
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
@@ -457,7 +457,7 @@ void JimaXengine::Player::Initialize()
 
     rightRacket = std::make_unique<Racket>();
 
-    rightRacket->pos = Vector3(5, 0, -15);
+    rightRacket->pos = Vector3(5, 2.5f, -15);
 
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
@@ -503,7 +503,8 @@ void JimaXengine::Player::Update()
 {    
     if (Input::KeyTrigger(DIK_V))
     {
-        Damage();
+        //Damage();
+        Delete();
     }
 
     Move();

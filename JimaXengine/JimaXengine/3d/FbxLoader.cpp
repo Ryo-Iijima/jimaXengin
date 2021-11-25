@@ -9,8 +9,8 @@ const std::string JimaXengine::FbxLoader::DEFAULT_TEXTURE_FILENAME = "white1x1.p
 
 void JimaXengine::FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
 {
-    // ノード名を取得
-    string neme = fbxNode->GetName();
+    //// ノード名を取得
+    //string neme = fbxNode->GetName();
     // モデルにノードを追加
     model->nodes.emplace_back();
     Node& node = model->nodes.back();
@@ -44,6 +44,7 @@ void JimaXengine::FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, 
     if (parent)
     {
         node.parent = parent;
+        // 親の変形を乗算
         node.globalTransform *= parent->globalTransform;
     }
 
@@ -63,7 +64,7 @@ void JimaXengine::FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, 
     // 子ノードに対して再帰呼び出し
     for (int i = 0; i < fbxNode->GetChildCount(); i++)
     {
-        ParseNodeRecursive(model, fbxNode->GetChild(i));
+        ParseNodeRecursive(model, fbxNode->GetChild(i), &node);
     }
 }
 
@@ -342,7 +343,7 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
     // 2次元行列（ジャグ配列）
     // list:頂点が影響を受けるボーンの全リスト
     // vector:それを全頂点分
-    std::vector<std::list<WeightSet>>weightLists(model->vertices.size());
+    std::vector<std::list<WeightSet>> weightLists(model->vertices.size());
 
     // 全ボーンで
     for (int i = 0; i < clusterCount; i++)
@@ -363,7 +364,7 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
             // スキンウェイト
             float weight = (float)controlPointWeights[j];
             // その頂点に影響を与えるボーンリストに、ボーンとウェイトのペアを追加
-            weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i,weight });
+            weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i, weight });
         }
     }
     
@@ -426,6 +427,7 @@ JimaXengine::FbxLoader& JimaXengine::FbxLoader::GetInstance()
 
 void JimaXengine::FbxLoader::Initialize(ID3D12Device* device)
 {
+    // 初期化チェック
     assert(fbxmanager == nullptr);
     this->device = device;
     // マネージャーの生成
@@ -439,6 +441,7 @@ void JimaXengine::FbxLoader::Initialize(ID3D12Device* device)
 
 void JimaXengine::FbxLoader::Finalize()
 {
+    // FBXインスタンスの破棄
     fbxImporter->Destroy();
     fbxmanager->Destroy();
 }
@@ -470,7 +473,7 @@ JimaXengine::Model* JimaXengine::FbxLoader::LoadModelFromFile(const string& mode
     model->nodes.reserve(nodeCount);
     // ルートノードから順に解析してモデルに入れる
     ParseNodeRecursive(model, fbxScene->GetRootNode());
-    // FBXシーン解放
+    // FBXシーン設定
     model->fbxScene = fbxScene;
 
     // バッファ生成

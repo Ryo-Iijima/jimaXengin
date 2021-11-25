@@ -31,9 +31,19 @@ void JimaXengine::Play::Initialize()
 	oManager = new GameObjectManager();
 	oManager->Initialize();
 	oManager->Add(new Player(camera.get()));
-	oManager->Add(new Boss(camera.get(),oManager));
-	oManager->Add(new BackGround(camera.get()));
+	//oManager->Add(new Boss(camera.get(),oManager));
+	//oManager->Add(new BackGround(camera.get()));
 	//oManager->Add(new JoyconTest());
+
+	model = FbxLoader::GetInstance().LoadModelFromFile("ball");
+
+	for (int i = 0; i < 10000; i++)
+	{
+		object3d[i] = new Object3d();
+		object3d[i]->Initialize();
+		//object3d[i]->SetModel(model);
+		delete object3d[i];
+	}
 
 	isEnd = false;
 	nowScene = "Play";

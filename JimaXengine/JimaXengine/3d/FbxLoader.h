@@ -21,8 +21,8 @@ namespace JimaXengine
 		static const string BASE_DIRECTORY_TEX;
 		// マテリアル用デフォルトテクスチャ
 		static const string DEFAULT_TEXTURE_FILENAME;
-	private:	// 変数
 
+	private:	// 変数
 		ID3D12Device* device = nullptr;
 		FbxManager* fbxmanager = nullptr;
 		FbxImporter* fbxImporter = nullptr;
