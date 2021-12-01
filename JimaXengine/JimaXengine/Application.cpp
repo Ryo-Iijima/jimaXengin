@@ -48,6 +48,8 @@ void JimaXengine::Application::Initialize()
 	//
 	Texture::Initialize(dxCommon);
 	//
+	Sound::Initialize();
+	//
 	GeometoryObject3D::PreInitialize(dxCommon);
 	//
 	ParticleManager::StaticInitialize();
@@ -60,27 +62,37 @@ void JimaXengine::Application::Initialize()
 	Texture::LoadTexture("white1x1.png");
 	Texture::LoadTexture("colorGrid.png");
 	Texture::LoadTexture("test_256x256.png");
+
+	Texture::LoadTexture("buttonfront.png");
 	Texture::LoadTexture("pushstart.png");
+	Texture::LoadTexture("pushbutton.png");
 	Texture::LoadTexture("title.png");
-	Texture::LoadTexture("Stand_Tex.png");
 	Texture::LoadTexture("damagefilter.png");
-
-
-	//object->SetInput(input);
+	Texture::LoadTexture("playerUI_0.png");
+	Texture::LoadTexture("playerUI_1.png");
+	Texture::LoadTexture("playerUI_2.png");
+	Texture::LoadTexture("playerUI_3.png");
+	Texture::LoadTexture("scorebord.png");
+	Texture::LoadTexture("stamp_S.png");
+	Texture::LoadTexture("stamp_A.png");
+	Texture::LoadTexture("stamp_B.png");
+	Texture::LoadTexture("stamp_C.png");
+	Texture::LoadTexture("stamp_D.png");
+	Texture::LoadTexture("title_bg.png");
+	Texture::LoadTexture("title_bg2.png");
 
 	// サウンドの読み込みと再生
-	sound = new Sound;
-	sound->Initialize();
-	//sound->LoadFile("Resources/sound/Alarm01.wav");
-	//sound->Play();
+	Sound::LoadWav("Alarm01.wav");
+	Sound::LoadWav("_title.wav");
+	Sound::LoadWav("_hit.wav");
 
 	// シーンの設定
 	sceneManager = new SceneManager;
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
 
-	//sceneManager->Change("Title");
-	sceneManager->Change("Play");
+	sceneManager->Change("Title");
+	//sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);

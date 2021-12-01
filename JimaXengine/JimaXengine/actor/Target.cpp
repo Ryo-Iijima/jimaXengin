@@ -123,35 +123,33 @@ void JimaXengine::Target::Initialize()
 {
 	model = FbxLoader::GetInstance().LoadModelFromFile("ball");
 	
-	//object = new Object3d;
-	//object->Initialize();
-	//object->SetModel(model);
-	//object->SetColor(Vector4(1, 1, 1, 1));
-	//float sca = 0.3f;
-	//object->SetScale(Vector3(sca, sca, sca));
-	//sphereCol.radius = sca;
+	object = new Object3d;
+	object->Initialize();
+	object->SetModel(model);
+	object->SetColor(Vector4(1, 1, 1, 1));
+	float sca = 0.3f;
+	object->SetScale(Vector3(sca, sca, sca));
+	sphereCol.radius = sca;
 
-	//reflection = false;
-
-	Delete();
+	reflection = false;
 }
 
 void JimaXengine::Target::Update()
 {
-	//HitCheck();
-	//Move();
+	HitCheck();
+	Move();
 
-	//object->SetPosition(pos);
-	//object->SetRotation(rotation);
-	//object->SetCamera(pCamera);
-	//object->Update();
+	object->SetPosition(pos);
+	object->SetRotation(rotation);
+	object->SetCamera(pCamera);
+	object->Update();
 
-	//sphereCol.center = pos.ConvertXMVECTOR();
+	sphereCol.center = pos.ConvertXMVECTOR();
 }
 
 void JimaXengine::Target::Draw()
 {
-	//object->Draw();
+	object->Draw();
 }
 
 JimaXengine::GameObject::TYPE JimaXengine::Target::GetType()
@@ -163,5 +161,4 @@ void JimaXengine::Target::DrawImGui()
 {
 	//ImGui::Begin("TargetInfomation");
 	//ImGui::End();
-
 }

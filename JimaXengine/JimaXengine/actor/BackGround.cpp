@@ -57,7 +57,7 @@ void JimaXengine::BackGround::Initialize()
 #pragma region ãqê»
 	for (int i = 0; i < sizeof(seat) / sizeof(seat[0]); i++)
 	{
-		seat[i] = std::make_unique<Seat>(pCamera, Vector3(i * 10 - 70, 5, 45), Vector3(0, 180, 0));
+		seat[i] = std::make_unique<Seat>(pCamera, Vector3((float)(i * 10 - 70), 5, 45), Vector3(0, 180, 0));
 	}
 #pragma endregion 
 

@@ -7,6 +7,7 @@ namespace JimaXengine
 	class Camera;
 	class Model;
 	class Object3d;
+	class Object2d;
 
 	class Player : public GameObject
 	{
@@ -25,7 +26,14 @@ namespace JimaXengine
 		bool half = false;							// 往復用
 		const int damageTime = 20;					// 点滅時間
 		int damageCount = 0;						// 点滅カウント用
-		int a = 1;
+		int increase = 1;
+
+		// playerUI
+		//std::array<std::unique_ptr<Object2d>, 4> HP_UI;
+		std::unique_ptr<Object2d> hpUi_0;
+		std::unique_ptr<Object2d> hpUi_1;
+		std::unique_ptr<Object2d> hpUi_2;
+		std::unique_ptr<Object2d> hpUi_3;
 
 	public:
 		struct Racket

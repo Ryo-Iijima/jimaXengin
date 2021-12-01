@@ -17,7 +17,7 @@ namespace JimaXengine
 
 		Object2d* object2d;
 
-		Object3d* object3d[10000];
+		//Object3d* object3d[10000];
 
 		std::unique_ptr<Camera> camera;
 

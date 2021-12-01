@@ -63,6 +63,11 @@ namespace JimaXengine
 		bool attackchoseed;			// 攻撃抽選完了フラグ
 		bool attacked;				// 攻撃完了フラグ
 		bool attackUnDuplicate[3];	// 攻撃の重複回避用
+		const float blurredWidth = 1.0f;	// 球発射時のずらし
+		const int shotInterval = 100;		// 連続発射の間隔
+		int shotIntervalTimer;		// 
+		int shotTime = 3;			// 発射回数
+		int shotCounter;			// 発射回数カウント
 
 		// プレイヤーの方を向く用
 		Vector3 playerPos;

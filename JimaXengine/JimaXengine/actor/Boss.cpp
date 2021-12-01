@@ -26,8 +26,9 @@ void JimaXengine::Boss::Initialize()
 	rotation = Vector3(0, 180, 0);
 	object->SetRotation(rotation);
 
-	aabb3dCol.maxPos = Vector3(pos.x + 10, pos.y + 10, pos.z + 10);
-	aabb3dCol.minPos = Vector3(pos.x - 10, pos.y - 10, pos.z - 10);
+	Vector3 colscale = { 5,5,5 };
+	aabb3dCol.maxPos = pos + colscale;
+	aabb3dCol.minPos = pos - colscale;
 
 	state = State::WAIT;
 	hp = Maxhp;
@@ -142,6 +143,10 @@ void JimaXengine::Boss::Damage()
 {
 	damaged = true;
 	hp--;
+	if (hp <= 0)
+	{
+		hp = 0;
+	}
 }
 
 void JimaXengine::Boss::Move()
@@ -240,10 +245,10 @@ void JimaXengine::Boss::Move()
 			{
 			case JimaXengine::Boss::AttackType::SINGLESHOT:
 				SingleShot();
+
 				break;
 			case JimaXengine::Boss::AttackType::RAPIDFIRE:
-				//RapidFire();
-				SingleShot();
+				RapidFire();
 
 				break;
 			case JimaXengine::Boss::AttackType::EACHSHOT:
@@ -277,7 +282,6 @@ void JimaXengine::Boss::SingleShot()
 	// プレイヤーの位置を参考に球の発射方向を決定
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
 	// 目標地点をランダムにずらす
-	float blurredWidth = 1.0f;
 	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
 	targetPos.x += random;
 	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
@@ -294,10 +298,33 @@ void JimaXengine::Boss::RapidFire()
 {
 	// プレイヤーの位置を参考に球の発射方向を決定
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
-	Vector3 bollVel = targetPos - pos;
 
-	pOManager->Insert(new Target(pCamera, pos, bollVel));
-	attacked = true;
+	shotIntervalTimer--;
+	// 行動間隔が0になったら
+	if (shotIntervalTimer <= 0)
+	{
+		// 目標地点をランダムにずらす
+		random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+		targetPos.x += random;
+		random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+		targetPos.y += random;
+
+		Vector3 bollVel = targetPos - pos;
+
+		pOManager->Insert(new Target(pCamera, pos, bollVel));
+
+		// 発射回数の加算
+		shotCounter++;
+		// 発射間隔のリセット
+		shotIntervalTimer = shotInterval;
+	}
+
+	// 攻撃回数が目標になったら
+	if (shotCounter >= shotTime)
+	{
+		shotCounter = 0;
+		attacked = true;
+	}
 }
 
 void JimaXengine::Boss::EachShot()

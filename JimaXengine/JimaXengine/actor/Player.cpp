@@ -403,6 +403,10 @@ void JimaXengine::Player::Damage()
 {
     damaged = true;
     hp--;
+    if (hp <= 0)
+    {
+        hp = 0;
+    }
 }
 
 JimaXengine::Player::Player(Camera* camera)
@@ -481,6 +485,21 @@ void JimaXengine::Player::Initialize()
     damageSprite = std::make_unique<Object2d>();
     damageSprite->CreateSprite();
 
+    //for (int i = 0; i < sizeof(HP_UI) / sizeof(HP_UI[0]); i++)
+    //{
+    //    HP_UI[i] = std::make_unique<Object2d>();
+    //    HP_UI[i]->CreateSprite();
+    //}
+    
+    hpUi_0 = std::make_unique<Object2d>();
+    hpUi_0->CreateSprite();
+    hpUi_1 = std::make_unique<Object2d>();
+    hpUi_1->CreateSprite();
+    hpUi_2 = std::make_unique<Object2d>();
+    hpUi_2->CreateSprite();
+    hpUi_3 = std::make_unique<Object2d>();
+    hpUi_3->CreateSprite();
+
     hp = Maxhp;
 }
 
@@ -503,8 +522,7 @@ void JimaXengine::Player::Update()
 {    
     if (Input::KeyTrigger(DIK_V))
     {
-        //Damage();
-        Delete();
+        Damage();
     }
 
     Move();
@@ -546,20 +564,28 @@ void JimaXengine::Player::Draw()
 #pragma endregion
     //object->Draw();
 
+    //HP_UI[0]->DrawOriginal("playerUI_0.png", Vector2(500, 500), 0.0f, Vector2(0, 0), "ALPHA");
+
+    Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
+    hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
+    hpUi_1->DrawOriginal("playerUI_1.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
+    hpUi_2->DrawOriginal("playerUI_2.png", uiPos+Vector2(85,114.5f), 0.0f, Vector2(1.0f / 6.0f * ((float)hp / (float)Maxhp), 1.0f / 6.0f), "ALPHA");
+    hpUi_3->DrawOriginal("playerUI_3.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
+
     if (damaged)
     {
         if (!half && damageCount > damageTime)
         {
-            a *= -1;
+            increase *= -1;
             half = true;
         }
 
-        damageCount += a;
+        damageCount += increase;
 
         if (damageCount < -1)
         {
             damageCount = 0;
-            a = 1;
+            increase = 1;
             damaged = false;
             half = false;
         }

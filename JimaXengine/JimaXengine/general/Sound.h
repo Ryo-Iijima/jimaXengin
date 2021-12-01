@@ -4,6 +4,7 @@
 #include <wrl.h>
 #include <cstdint>
 #include <fstream>
+#include <unordered_map>
 
 #pragma comment(lib,"xaudio2.lib")
 
@@ -11,9 +12,6 @@ namespace JimaXengine
 {
 	class Sound
 	{
-	private:	// エイリアス
-		template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
-
 	private:	// サブクラス
 		// チャンクヘッダ
 		struct Chunk
@@ -35,23 +33,30 @@ namespace JimaXengine
 		};
 
 	private:	// 変数
-		ComPtr<IXAudio2> xAudio2;
-		IXAudio2MasteringVoice* masterVoice = nullptr;
+		static std::string soundpass;
 
-		FormatChunc format;
-		Chunk data;
-		char* pBuffer;
+		static Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
+		static IXAudio2MasteringVoice* masterVoice;
+
+		// wavバッファ
+		static std::unordered_map<std::string,FormatChunc> formatBuffer;
+		static std::unordered_map<std::string, Chunk> dataBuffer;
+		static std::unordered_map<std::string, char*> pBuffers;
+
+		static FormatChunc GetFormatBuffer(const std::string& filename);
+		static Chunk GetDataBuffer(const std::string& filename);
+		static char* GetpBuffers(const std::string& filename);
 
 	public:		// 関数
 		Sound();
 
-		void Initialize();
+		static void Initialize();
 
-		// 音データの読み込み
-		void LoadFile(const char* filename);
+		// バッファにwav登録
+		static void LoadWav(const std::string& filename);
 
 		// 再生
-		void Play();
+		void PlayforBuff(const std::string& filename);
 
 	};
 }
