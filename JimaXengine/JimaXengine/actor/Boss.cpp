@@ -52,6 +52,8 @@ void JimaXengine::Boss::Initialize()
 
 	hpSprite = std::make_unique<Object2d>();
 	hpSprite->CreateSprite();
+
+
 }
 
 void JimaXengine::Boss::Update()
@@ -92,7 +94,9 @@ void JimaXengine::Boss::Update()
 
 	object->SetCamera(pCamera);
 	object->Update();
-}
+
+
+}			  
 
 void JimaXengine::Boss::Draw()
 {

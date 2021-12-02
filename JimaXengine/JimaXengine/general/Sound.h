@@ -39,13 +39,15 @@ namespace JimaXengine
 		static IXAudio2MasteringVoice* masterVoice;
 
 		// wavバッファ
-		static std::unordered_map<std::string,FormatChunc> formatBuffer;
-		static std::unordered_map<std::string, Chunk> dataBuffer;
-		static std::unordered_map<std::string, char*> pBuffers;
+		struct SoundData
+		{
+			FormatChunc format;
+			Chunk data;
+			char* pBuffer;
+		};
+		static std::unordered_map<std::string, SoundData> soundDataBuffer;
 
-		static FormatChunc GetFormatBuffer(const std::string& filename);
-		static Chunk GetDataBuffer(const std::string& filename);
-		static char* GetpBuffers(const std::string& filename);
+		static SoundData GetSoundDataBuffer(const std::string& filename);
 
 	public:		// 関数
 		Sound();

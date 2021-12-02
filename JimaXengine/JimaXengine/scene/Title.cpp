@@ -1,30 +1,22 @@
 #include "Title.h"
 #include "../3d/Object3d.h"
 #include "../3d/FbxLoader.h"
+#include "../2d/Texture.h"
 
 void JimaXengine::Title::BgScroll()
 {
-	// éËëOÇÃë—
-	for (int i = 0; i < sizeof(bgBand) / sizeof(bgBand[0]); i++)
+	//// éËëOÇÃë—
+	bg.uvPos += bg.vel;
+	if (bg.uvPos.x >= Texture::GetMetadata("title_bg.png").width)
 	{
-		if (bgBand[i].pos.x <= -WinApp::WINDOW_WIDTH)
-		{
-			bgBand[i].pos = Vector2(WinApp::WINDOW_WIDTH, 0);
-		}
-		bgBand[i].pos += bgBand[i].vel;
+		bg.uvPos = Vector2(0, 0);
 	}
 
-	// å„ÇÎÇÃésèºñÕól
-	for (int i = 0; i < sizeof(bg) / sizeof(bg[0]); i++)
+	//// å„ÇÎÇÃésèºñÕól
+	band.uvPos += band.vel;
+	if (band.uvPos.x >= Texture::GetMetadata("title_bg2.png").width)
 	{
-		if (bg[i].pos.y >= WinApp::WINDOW_HEIGHT)
-		{
-			bg[0].pos = Vector2(0, 0 );
-			bg[1].pos = Vector2(WinApp::WINDOW_WIDTH, 0 );
-			bg[2].pos = Vector2( 0, -WinApp::WINDOW_HEIGHT );
-			bg[3].pos = Vector2( WinApp::WINDOW_WIDTH, -WinApp::WINDOW_HEIGHT );
-		}
-		bg[i].pos += bg[i].vel;
+		band.uvPos = Vector2(0, 0);
 	}
 }
 
@@ -43,27 +35,18 @@ void JimaXengine::Title::Initialize()
 	nextScene = "Play";
 
 	// å„ÇÎÇÃésèºñÕól
-	for (int i = 0; i < sizeof(bg) / sizeof(bg[0]); i++)
-	{
-		bg[i].obj2d.CreateSprite();
-		bg[i].vel = Vector2(10.0f / -9, 10.0f / 16);
-		bg[i].scale = Vector2(1.0f * 2.0f / 3.0f, 1.0f * 2.0f / 3.0f);
-	}
-	bg[0].pos = Vector2( 0, 0 );
-	bg[1].pos = Vector2( WinApp::WINDOW_WIDTH, 0 );
-	bg[2].pos = Vector2( 0, -WinApp::WINDOW_HEIGHT );
-	bg[3].pos = Vector2( WinApp::WINDOW_WIDTH, -WinApp::WINDOW_HEIGHT );
+	bg.obj2d.CreateSprite();
+	bg.pos = Vector2(0, 0);
+	bg.uvPos = Vector2(0, 0);
+	bg.vel = Vector2(10.0f / 9, 10.0f / -16);
+	bg.scale = Vector2(1.0f * 2.0f / 3.0f, 1.0f * 2.0f / 3.0f);
 
 	// éËëOÇÃë—
-	for (int i = 0; i < sizeof(bgBand) / sizeof(bgBand[0]); i++)
-	{
-		bgBand[i].obj2d.CreateSprite();
-		bgBand[i].vel = Vector2(-1, 0);
-		bgBand[i].scale = Vector2(1.0f * 2.0f / 3.0f, 1.0f * 2.0f / 3.0f);
-
-	}
-	bgBand[0].pos = Vector2(0, 0);
-	bgBand[1].pos = Vector2(WinApp::WINDOW_WIDTH, 0);
+	band.obj2d.CreateSprite();
+	band.pos = Vector2(0, 0);
+	band.uvPos = Vector2(0, 0);
+	band.vel = Vector2(1, 0);
+	band.scale = Vector2(1.0f * 2.0f / 3.0f, 1.0f * 2.0f / 3.0f);
 
 	pushStartTex = std::make_unique<Object2d>();
 	pushStartTex->CreateSprite();
@@ -76,25 +59,25 @@ void JimaXengine::Title::Initialize()
 
 	titleTex = std::make_unique<Object2d>();
 	titleTex->CreateSprite();
-	titleTexPos = Vector2(WinApp::WINDOW_WIDTH / 2,WinApp::WINDOW_HEIGHT / 4 );
+	titleTexScale= Vector2(1.0f * 2.0f / 3.0f, 1.0f * 2.0f / 3.0f);
+	titleTexPos = Vector2(0, 0);
 	
 	selected = false;
 
 	sound = new Sound;
-	//sound->PlayforBuff("Resources/sound/Alarm01.wav");
-	sound->PlayforBuff("_title.wav");
+	sound->PlayforBuff("_UI_select.wav");
 
+	//sound->PlayforBuff("_title.wav");
 }
 
 void JimaXengine::Title::Update()
 {
-	sound->PlayforBuff("_hit.wav");
-
 	BgScroll();
 
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
 		selected = true;
+		sound->PlayforBuff("_UI_decision.wav");
 	}
 
 	if (selected)
@@ -112,20 +95,18 @@ void JimaXengine::Title::Update()
 	{
 		ShutDown();
 	}
+
 }
 
 void JimaXengine::Title::Draw()
 {
 	// ésèºñÕól
-	for (int i = 0; i < sizeof(bg) / sizeof(bg[0]); i++)
-	{
-		bg[i].obj2d.DrawOriginal("title_bg.png", bg[i].pos, 0.0f, bg[i].scale, "ALPHA");
-	}
+	Vector2 a = Vector2(Texture::GetMetadata("title_bg.png").width, Texture::GetMetadata("title_bg.png").height);
+	bg.obj2d.DrawRect("title_bg.png", bg.pos, bg.uvPos, a, a * bg.scale, 0, "ALPHA");
+
 	// ë—
-	for (int i = 0; i < sizeof(bgBand) / sizeof(bgBand[0]); i++)
-	{
-		bgBand[i].obj2d.DrawOriginal("title_bg2.png", bgBand[i].pos, 0.0f, bgBand[i].scale, "ALPHA");
-	}
+	a = Vector2(Texture::GetMetadata("title_bg2.png").width, Texture::GetMetadata("title_bg2.png").height);
+	band.obj2d.DrawRect("title_bg2.png", band.pos, band.uvPos, a, a * band.scale, 0.0f, "ALPHA");
 
 	pushStartTex->DrawOriginal("pushstart.png", pushStartTexPos, 0.0f, pushStartTexScale, "ALPHA", Vector2(0.5f, 0.5f));
 
@@ -134,6 +115,6 @@ void JimaXengine::Title::Draw()
 		buttonFrontTex->DrawOriginal("buttonfront.png", pushStartTexPos, 0.0f, pushStartTexScale, "ADD", Vector2(0.5f, 0.5f));
 	}
 
-	titleTex->DrawOriginal("title.png", titleTexPos, 0.0f, Vector2(1.0f, 1.0f), "ALPHA", Vector2(0.5f, 0.5f));
+	titleTex->DrawOriginal("title.png", titleTexPos, 0.0f, titleTexScale, "ALPHA");
 
 }

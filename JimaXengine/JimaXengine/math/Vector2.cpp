@@ -53,6 +53,11 @@ JimaXengine::Vector2 JimaXengine::Vector2::operator-(const Vector2 & v) const
 	return Vector2(x - v.x, y - v.y);
 }
 
+JimaXengine::Vector2 JimaXengine::Vector2::operator*(const Vector2& v) const
+{
+	return Vector2(x * v.x, y * v.y);
+}
+
 JimaXengine::Vector2 JimaXengine::Vector2::operator*(const float scalar) const
 {
 	return Vector2(x * scalar, y * scalar);

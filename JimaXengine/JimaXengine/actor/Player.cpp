@@ -186,8 +186,8 @@ void JimaXengine::Player::JoyConUpdate()
 void JimaXengine::Player::Move()
 {
 #pragma region Stick
-    float defaultvel = 0.01f;
-    float maxacc = 0.1f;    // Å‘å‰Á‘¬“x
+    float defaultvel = 0.005f;
+    float maxacc = 0.05f;    // Å‘å‰Á‘¬“x
     float xLimit = 100.0f;    // ‰æ–Ê“à‚É§ŒÀ‚·‚é—p
     float yLimit = 100.0f;
 
@@ -562,9 +562,7 @@ void JimaXengine::Player::Draw()
     leftRacket->object->Draw();
     rightRacket->object->Draw();
 #pragma endregion
-    //object->Draw();
-
-    //HP_UI[0]->DrawOriginal("playerUI_0.png", Vector2(500, 500), 0.0f, Vector2(0, 0), "ALPHA");
+    object->Draw();
 
     Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
     hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");

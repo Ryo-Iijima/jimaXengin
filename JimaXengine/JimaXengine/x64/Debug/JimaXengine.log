@@ -1,16 +1,4 @@
 ﻿  Application.cpp
-  GameObject.cpp
-  GameObjectManager.cpp
-  HomingGeometryParticle.cpp
-  ParticleEmitter.cpp
-  BackGround.cpp
-  Boss.cpp
-  JoyconTest.cpp
-  Player.cpp
-  Target.cpp
-  Sound.cpp
-  main.cpp
   Play.cpp
-  Title.cpp
   コードを生成中...
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

@@ -17,10 +17,12 @@ namespace JimaXengine
 		{
 			Object2d obj2d;
 			Vector2 pos;
+			Vector2 uvPos;
 			Vector2 vel;
 			Vector2 scale;
 		};
 
+		// ボタン関連
 		std::unique_ptr<Object2d> pushStartTex;
 		std::unique_ptr<Object2d> buttonFrontTex;
 		Vector2 pushStartTexPos;
@@ -30,13 +32,18 @@ namespace JimaXengine
 		int increase = 1;
 		bool selected = false;
 
+		// タイトル
 		std::unique_ptr<Object2d> titleTex;
 		Vector2 titleTexPos;
+		Vector2 titleTexScale;
 
-		Bg bg[4];
-		Bg bgBand[2];
+		Bg bg;
+		Bg band;
 
 		Sound* sound = nullptr;
+
+		Vector2 texPos = { 0,0 };
+
 	private:
 		void BgScroll();
 

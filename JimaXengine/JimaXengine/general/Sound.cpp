@@ -9,24 +9,11 @@ string JimaXengine::Sound::soundpass="Resources/sound/";
 ComPtr<IXAudio2> JimaXengine::Sound::xAudio2;
 IXAudio2MasteringVoice* JimaXengine::Sound::masterVoice;
 
-unordered_map<string, JimaXengine::Sound::FormatChunc> JimaXengine::Sound::formatBuffer;
-unordered_map<string, JimaXengine::Sound::Chunk> JimaXengine::Sound::dataBuffer;
-unordered_map<string, char*> JimaXengine::Sound::pBuffers;
+unordered_map<std::string, JimaXengine::Sound::SoundData> JimaXengine::Sound::soundDataBuffer;
 
-
-JimaXengine::Sound::FormatChunc JimaXengine::Sound::GetFormatBuffer(const std::string& filename)
+JimaXengine::Sound::SoundData JimaXengine::Sound::GetSoundDataBuffer(const std::string& filename)
 {
-	return formatBuffer[filename];
-}
-
-JimaXengine::Sound::Chunk JimaXengine::Sound::GetDataBuffer(const std::string& filename)
-{
-	return dataBuffer[filename];
-}
-
-char* JimaXengine::Sound::GetpBuffers(const std::string& filename)
-{
-	return pBuffers[filename];
+	return soundDataBuffer[filename];
 }
 
 JimaXengine::Sound::Sound()
@@ -86,16 +73,19 @@ void JimaXengine::Sound::LoadWav(const std::string& filename)
 
 	file.close();
 
-	formatBuffer.emplace(filename, tFormat);
-	dataBuffer.emplace(filename, tData);
-	pBuffers.emplace(filename, tpBuffer);
+	SoundData registData;
+	registData.format = tFormat;
+	registData.data = tData;
+	registData.pBuffer = tpBuffer;
+
+	soundDataBuffer.emplace(filename, registData);
 }
 
 void JimaXengine::Sound::PlayforBuff(const std::string& filename)
 {
-	FormatChunc tFormat = GetFormatBuffer(filename);
-	Chunk tData = GetDataBuffer(filename);
-	char* tpBuffer = GetpBuffers(filename);
+	FormatChunc tFormat = GetSoundDataBuffer(filename).format;
+	Chunk tData = GetSoundDataBuffer(filename).data;
+	char* tpBuffer = GetSoundDataBuffer(filename).pBuffer;
 
 	HRESULT result;
 	WAVEFORMATEX wfex{};

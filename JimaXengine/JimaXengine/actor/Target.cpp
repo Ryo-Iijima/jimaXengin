@@ -132,6 +132,8 @@ void JimaXengine::Target::Initialize()
 	sphereCol.radius = sca;
 
 	reflection = false;
+
+
 }
 
 void JimaXengine::Target::Update()

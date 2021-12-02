@@ -81,18 +81,28 @@ void JimaXengine::Application::Initialize()
 	Texture::LoadTexture("title_bg.png");
 	Texture::LoadTexture("title_bg2.png");
 
-	// サウンドの読み込みと再生
+	// サウンドの読み込み
 	Sound::LoadWav("Alarm01.wav");
 	Sound::LoadWav("_title.wav");
-	Sound::LoadWav("_hit.wav");
+	Sound::LoadWav("_stamp.wav");
+	Sound::LoadWav("_UI_decision.wav");
+	Sound::LoadWav("_UI_select.wav");
+	Sound::LoadWav("_Boss_attack.wav");
+	Sound::LoadWav("_Boss_damage.wav");
+	Sound::LoadWav("_Boss_tentacles.wav");
+	Sound::LoadWav("_Player_damage.wav");
+	Sound::LoadWav("_Player_hit.wav");
+	Sound::LoadWav("_Player_justmeet.wav");
+	Sound::LoadWav("_Player_swing.wav");
+
 
 	// シーンの設定
 	sceneManager = new SceneManager;
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
 
-	sceneManager->Change("Title");
-	//sceneManager->Change("Play");
+	//sceneManager->Change("Title");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);

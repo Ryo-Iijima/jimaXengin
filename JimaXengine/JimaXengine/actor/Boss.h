@@ -79,6 +79,8 @@ namespace JimaXengine
 		float floatingOffsetWidth;	// ã‰ºˆÚ“®‚Ì•
 		float a = 0.02f;
 
+
+
 	private:
 		void Move();
 		void SingleShot();

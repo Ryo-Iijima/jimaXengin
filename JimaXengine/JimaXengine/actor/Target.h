@@ -19,6 +19,7 @@ namespace JimaXengine
 		// “–‚½‚Á‚½Œã‚Ì•ûŒü’²®—p
 		Player::Racket* hitRacket = nullptr;
 
+
 	private:
 		void Move();
 		void HitCheck();
