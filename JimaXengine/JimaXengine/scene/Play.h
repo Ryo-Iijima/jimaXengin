@@ -25,6 +25,10 @@ namespace JimaXengine
 
 		JoyconTest* jcTest = nullptr;
 
+	private:
+		
+		// ŠÈˆÕ‰æ–Ê“]Š·
+		void simpleStaging();
 
 	public:
 		Play(WinApp* winapp);
@@ -32,6 +36,5 @@ namespace JimaXengine
 		void Initialize() override;
 		void Update() override;
 		void Draw() override;
-
 	};
 }

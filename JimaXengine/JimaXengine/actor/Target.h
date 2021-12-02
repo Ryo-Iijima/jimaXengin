@@ -6,11 +6,11 @@ namespace JimaXengine
 {
 	class Model;
 	class Object3d;
+	class StrikeMark;
 
 	class Target : public GameObject
 	{
 	private:
-		Model* model = nullptr;
 		Object3d* object = nullptr;
 
 		// ’µ‚Ë•Ô‚µ‚½Œã‚©
@@ -19,6 +19,7 @@ namespace JimaXengine
 		// “–‚½‚Á‚½Œã‚Ì•ûŒü’²®—p
 		Player::Racket* hitRacket = nullptr;
 
+		bool markInserted = false;
 
 	private:
 		void Move();

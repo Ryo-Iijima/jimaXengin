@@ -129,6 +129,9 @@ void JimaXengine::GameObjectManager::Remove()
 		if (!(*it)->GetIsDelete()) { ++it; continue; }
 		delete (*it);
 		it = gameObjects.erase(it);
+
+		int a = 0;
+		a++;
 	}
 }
 

@@ -20,6 +20,16 @@ void JimaXengine::Title::BgScroll()
 	}
 }
 
+void JimaXengine::Title::simpleStaging()
+{
+	fadeTexColor.w += 0.05f;
+	if (fadeTexColor.w >= 1)
+	{
+		fadeTexColor.w = 1;
+		stagingEnd = true;
+	}
+}
+
 JimaXengine::Title::Title(WinApp* winapp)
 {
 }
@@ -67,6 +77,12 @@ void JimaXengine::Title::Initialize()
 	sound = new Sound;
 	sound->PlayforBuff("_UI_select.wav");
 
+	fadeTex = std::make_unique<Object2d>();
+	fadeTex->CreateSprite();
+
+	fadeTexColor = Vector4(1, 1, 1, 0);
+	stagingStart = false;
+	stagingEnd = false;
 	//sound->PlayforBuff("_title.wav");
 }
 
@@ -74,7 +90,7 @@ void JimaXengine::Title::Update()
 {
 	BgScroll();
 
-	if (Input::KeyTrigger(DIK_SPACE))
+	if (Input::KeyTrigger(DIK_1)||Input::KeyTrigger(DIK_SPACE))
 	{
 		selected = true;
 		sound->PlayforBuff("_UI_decision.wav");
@@ -88,14 +104,20 @@ void JimaXengine::Title::Update()
 		{
 			damageCount = 1;
 			selected = false;
+			stagingStart = true;
 		}
 	}
 
-	if (Input::KeyTrigger(DIK_1))
+	if (stagingStart)
+	{
+		simpleStaging();
+	}
+
+	// ‘JˆÚ‰‰o‚ªI—¹‚µ‚½‚ç
+	if (stagingEnd)
 	{
 		ShutDown();
 	}
-
 }
 
 void JimaXengine::Title::Draw()
@@ -117,4 +139,5 @@ void JimaXengine::Title::Draw()
 
 	titleTex->DrawOriginal("title.png", titleTexPos, 0.0f, titleTexScale, "ALPHA");
 
+	fadeTex->DrawOriginal("white1x1.png", Vector2(0, 0), 0.0f, Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT), "ALPHA", Vector2(0, 0), fadeTexColor);
 }

@@ -1,2 +1,6 @@
-﻿  Application.cpp
+﻿  Title.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\scene\Title.cpp(126,102): warning C4244: '引数': 'size_t' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\scene\Title.cpp(126,58): warning C4244: '引数': 'size_t' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\scene\Title.cpp(130,96): warning C4244: '引数': 'size_t' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\scene\Title.cpp(130,51): warning C4244: '引数': 'size_t' から 'float' への変換です。データが失われる可能性があります。
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

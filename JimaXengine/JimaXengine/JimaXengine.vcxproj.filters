@@ -260,7 +260,7 @@
     <ClCompile Include="actor\Seat.cpp">
       <Filter>ソース ファイル\app\actor\backGround</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject\StrikeMark.cpp">
+    <ClCompile Include="actor\StrikeMark.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -433,8 +433,8 @@
     <ClInclude Include="actor\Seat.h">
       <Filter>ヘッダー ファイル\app\actor\backGround</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\StrikeMark.h">
-      <Filter>ソース ファイル\app\actor</Filter>
+    <ClInclude Include="actor\StrikeMark.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

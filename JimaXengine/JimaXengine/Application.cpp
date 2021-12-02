@@ -96,11 +96,11 @@ void JimaXengine::Application::Initialize()
 	Sound::LoadWav("_Player_swing.wav");
 
 	// ÉÇÉfÉãÇÃì«Ç›çûÇ›
-	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultBox");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("wall");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("ground");
-	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("AimMark");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("seat");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("ball");

@@ -2,6 +2,7 @@
 #include "../3d/FbxLoader.h"
 #include "Player.h"
 #include "../GameObject/GameObjectManager.h"
+#include "StrikeMark.h"
 
 void JimaXengine::Target::Move()
 {
@@ -115,7 +116,6 @@ JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, float spee
 
 JimaXengine::Target::~Target()
 {
-	delete model;
 	delete object;
 }
 
@@ -131,11 +131,17 @@ void JimaXengine::Target::Initialize()
 
 	reflection = false;
 
-
+	markInserted = false;
 }
 
 void JimaXengine::Target::Update()
 {
+	if (!markInserted)
+	{
+		oManager->Insert(new StrikeMark(pCamera, this));
+		markInserted = true;
+	}
+
 	HitCheck();
 	Move();
 

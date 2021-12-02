@@ -183,6 +183,7 @@
     <ClCompile Include="actor\JoyconTest.cpp" />
     <ClCompile Include="actor\Player.cpp" />
     <ClCompile Include="actor\Seat.cpp" />
+    <ClCompile Include="actor\StrikeMark.cpp" />
     <ClCompile Include="actor\Target.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
@@ -192,7 +193,6 @@
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="GameObject\GameObjectManager.cpp" />
-    <ClCompile Include="GameObject\StrikeMark.cpp" />
     <ClCompile Include="general\FPSManager.cpp" />
     <ClCompile Include="general\General.cpp" />
     <ClCompile Include="general\imGuiDevice.cpp" />
@@ -242,6 +242,7 @@
     <ClInclude Include="actor\JoyconTest.h" />
     <ClInclude Include="actor\Player.h" />
     <ClInclude Include="actor\Seat.h" />
+    <ClInclude Include="actor\StrikeMark.h" />
     <ClInclude Include="actor\Target.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="camera\Camera.h" />
@@ -251,7 +252,6 @@
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\GameObjectManager.h" />
-    <ClInclude Include="GameObject\StrikeMark.h" />
     <ClInclude Include="general\FPSManager.h" />
     <ClInclude Include="general\General.h" />
     <ClInclude Include="general\imGuiDevice.h" />

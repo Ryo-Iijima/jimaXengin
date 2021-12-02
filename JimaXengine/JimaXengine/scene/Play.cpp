@@ -73,3 +73,9 @@ void JimaXengine::Play::Draw()
 	oManager->Draw();
 
 }
+
+void JimaXengine::Play::simpleStaging()
+{
+
+
+}
