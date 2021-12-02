@@ -7,6 +7,8 @@ const std::string JimaXengine::FbxLoader::BASE_DIRECTORY_MODEL = "Resources/mode
 const std::string JimaXengine::FbxLoader::BASE_DIRECTORY_TEX = "Resources/texture/";
 const std::string JimaXengine::FbxLoader::DEFAULT_TEXTURE_FILENAME = "white1x1.png";
 
+JimaXengine::FbxLoader* JimaXengine::FbxLoader::instance = nullptr;
+
 void JimaXengine::FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
 {
     //// ノード名を取得
@@ -421,8 +423,11 @@ void JimaXengine::FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, FbxAMa
 
 JimaXengine::FbxLoader& JimaXengine::FbxLoader::GetInstance()
 {
-    static FbxLoader instance;
-    return instance;
+    if (instance == nullptr)
+    {
+        instance = new FbxLoader();
+    }
+    return *instance;
 }
 
 void JimaXengine::FbxLoader::Initialize(ID3D12Device* device)
@@ -446,7 +451,7 @@ void JimaXengine::FbxLoader::Finalize()
     fbxmanager->Destroy();
 }
 
-JimaXengine::Model* JimaXengine::FbxLoader::LoadModelFromFile(const string& modelName)
+void JimaXengine::FbxLoader::LoadModelFromFiletoBuff(const string& modelName)
 {
     const string directorypath = BASE_DIRECTORY_MODEL + modelName + "/";
     const string fileName = modelName + ".fbx";
@@ -467,17 +472,26 @@ JimaXengine::Model* JimaXengine::FbxLoader::LoadModelFromFile(const string& mode
     // モデル生成
     Model* model = new Model();
     model->name = modelName;
+
     // FBXノード数を取得
     int nodeCount = fbxScene->GetNodeCount();
+
     // 必要数分メモリを確保
     model->nodes.reserve(nodeCount);
+
     // ルートノードから順に解析してモデルに入れる
     ParseNodeRecursive(model, fbxScene->GetRootNode());
+
     // FBXシーン設定
     model->fbxScene = fbxScene;
 
     // バッファ生成
     model->CreateBuffers(device);
 
-    return model;
+    models.emplace(modelName, model);
+}
+
+JimaXengine::Model* JimaXengine::FbxLoader::GetFbxModel(const std::string& modelName)
+{
+    return models[modelName];
 }

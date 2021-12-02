@@ -4,10 +4,9 @@
 
 void JimaXengine::StrikeMark::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
 	object = std::make_unique<Object3d>();
 	object->Initialize();
-	object->SetModel(model);
+	object->SetModelforBuff("DefaultBox");
 	object->SetScale(Vector3(0.3f, 0.3f, 0.01f));
 	object->SetColor(Vector4(1, 0, 0, 1.0f));
 

@@ -35,6 +35,8 @@ namespace JimaXengine
 		FbxLoader(const FbxLoader& obj) = delete;
 		void operator=(const FbxLoader& obj) = delete;
 
+		static FbxLoader* instance;
+
 	private:	// 関数
 
 		/// <summary>
@@ -65,6 +67,8 @@ namespace JimaXengine
 		// スキニング情報の読み取り
 		void ParseSkin(Model* model, FbxMesh* fbxMesh);
 
+		// モデル保持用
+		std::unordered_map<std::string, Model*> models;
 
 	public:		// 関数
 		/// <summary>
@@ -77,12 +81,11 @@ namespace JimaXengine
 
 		void Finalize();
 
-		/// <summary>
-		/// モデルファイル読み込み
-		/// </summary>
-		/// <param name="modelName">ファイル名</param>
-		/// <returns>モデルデータ</returns>
-		Model* LoadModelFromFile(const string& modelName);
+		// 先読み用モデルロード
+		void LoadModelFromFiletoBuff(const string& modelName);
+
+		// モデルバッファからデータを取得
+		Model* GetFbxModel(const std::string& modelName);
 
 		/// <summary>
 		/// FBX行列をXMMATRIXに変換

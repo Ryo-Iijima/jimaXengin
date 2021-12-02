@@ -120,12 +120,10 @@ JimaXengine::Target::~Target()
 }
 
 void JimaXengine::Target::Initialize()
-{
-	model = FbxLoader::GetInstance().LoadModelFromFile("ball");
-	
+{	
 	object = new Object3d;
 	object->Initialize();
-	object->SetModel(model);
+	object->SetModelforBuff("ball");
 	object->SetColor(Vector4(1, 1, 1, 1));
 	float sca = 0.3f;
 	object->SetScale(Vector3(sca, sca, sca));

@@ -281,6 +281,11 @@ void JimaXengine::Object3d::Draw()
 	model->Draw(Object3d::dxCommon->GetCommandList());
 }
 
+void JimaXengine::Object3d::SetModelforBuff(const std::string& modelName)
+{
+	model = FbxLoader::GetInstance().GetFbxModel(modelName);
+}
+
 void JimaXengine::Object3d::PlayAnimation()
 {
 	FbxScene* fbxScene = model->GetFbxScene();

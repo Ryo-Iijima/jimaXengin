@@ -15,10 +15,11 @@ JimaXengine::Boss::~Boss()
 
 void JimaXengine::Boss::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("boss");
+	//model = FbxLoader::GetInstance().LoadModelFromFile("boss");
 	object = std::make_unique<Object3d>();
 	object->Initialize();
-	object->SetModel(model);
+	//object->SetModel(model);
+	object->SetModelforBuff("boss");
 
 	pos = Vector3(0, 6, 0);
 	object->SetPosition(pos);

@@ -7,10 +7,9 @@ JimaXengine::Seat::Seat(Camera* camera, Vector3 pos, Vector3 rot)
 	seatPos = pos;
 	seatRot = rot;
 
-	model = FbxLoader::GetInstance().LoadModelFromFile("seat");
 	seat = std::make_unique<Object3d>();
 	seat->Initialize();
-	seat->SetModel(model);
+	seat->SetModelforBuff("seat");
 
 	seat->SetPosition(seatPos);
 	seat->SetScale(Vector3(1, 1, 1));

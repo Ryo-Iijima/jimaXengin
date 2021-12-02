@@ -128,7 +128,7 @@ namespace JimaXengine
 		void Draw();
 
 		// setter
-		void SetModel(Model* model) { this->model = model; }
+		void SetModelforBuff(const std::string& modelName);
 
 		void SetColor(Vector4& color) { this->color = color; }
 		void SetScale(Vector3& scale) { this->scale = scale; }

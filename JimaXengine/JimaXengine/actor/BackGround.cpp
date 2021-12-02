@@ -16,20 +16,17 @@ JimaXengine::BackGround::~BackGround()
 void JimaXengine::BackGround::Initialize()
 {
 	// モデルのセット
-	model = FbxLoader::GetInstance().LoadModelFromFile("wall");
 	wall = std::make_unique<Object3d>();
 	wall->Initialize();
-	wall->SetModel(model);
+	wall->SetModelforBuff("wall");
 
-	model = FbxLoader::GetInstance().LoadModelFromFile("ground");
 	ground = std::make_unique<Object3d>();
 	ground->Initialize();
-	ground->SetModel(model);
+	ground->SetModelforBuff("ground");
 		
-	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultPlane");
 	groundDart = std::make_unique<Object3d>();
 	groundDart->Initialize();
-	groundDart->SetModel(model);
+	groundDart->SetModelforBuff("DefaultPlane");
 	groundDart->SetPosition(Vector3(0, -0.1f, 0));
 	groundDart->SetScale(Vector3(100, 100, 100));
 

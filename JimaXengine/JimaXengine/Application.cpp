@@ -95,14 +95,23 @@ void JimaXengine::Application::Initialize()
 	Sound::LoadWav("_Player_justmeet.wav");
 	Sound::LoadWav("_Player_swing.wav");
 
+	// ƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultBox");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("wall");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("ground");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("AimMark");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("seat");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("ball");
 
 	// ƒV[ƒ“‚ÌÝ’è
 	sceneManager = new SceneManager;
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
 
-	//sceneManager->Change("Title");
-	sceneManager->Change("Play");
+	sceneManager->Change("Title");
+	//sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);

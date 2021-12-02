@@ -424,11 +424,9 @@ JimaXengine::Player::~Player()
 
 void JimaXengine::Player::Initialize()
 {
-	model = FbxLoader::GetInstance().LoadModelFromFile("DefaultBox");
-	//model = FbxLoader::GetInstance().LoadModelFromFile("Stand");
 	object = new Object3d;
 	object->Initialize();
-	object->SetModel(model);
+    object->SetModelforBuff("DefaultBox");
     
     pos = Vector3(0, 1, -17);
 	object->SetPosition(pos);
@@ -441,15 +439,13 @@ void JimaXengine::Player::Initialize()
 #pragma region ÉâÉPÉbÉgèâä˙âª
     racketScale = Vector3(0.5f, 0.5f, 0.01f);
 
-    model = FbxLoader::GetInstance().LoadModelFromFile("AimMark");
-
     leftRacket = std::make_unique<Racket>();
 
     leftRacket->pos = Vector3(-5, 2.5f, -15);
 
     leftRacket->object = std::make_unique<Object3d>();
     leftRacket->object->Initialize();
-    leftRacket->object->SetModel(model);
+    leftRacket->object->SetModelforBuff("AimMark");
     leftRacket->object->SetColor(Vector4(1, 0.0f, 0.0f, 1));
     leftRacket->object->SetScale(racketScale);
 
@@ -457,15 +453,13 @@ void JimaXengine::Player::Initialize()
     leftRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
 
 
-    model = FbxLoader::GetInstance().LoadModelFromFile("AimMark");
-
     rightRacket = std::make_unique<Racket>();
 
     rightRacket->pos = Vector3(5, 2.5f, -15);
 
     rightRacket->object = std::make_unique<Object3d>();
     rightRacket->object->Initialize();
-    rightRacket->object->SetModel(model);
+    rightRacket->object->SetModelforBuff("AimMark");
     rightRacket->object->SetColor(Vector4(0.0f, 0.0f, 1, 1));
     rightRacket->object->SetScale(racketScale);
 
@@ -473,14 +467,6 @@ void JimaXengine::Player::Initialize()
     rightRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
 
 #pragma endregion
-
-    layObj = new Object3d;
-    layObj->Initialize();
-    layObj->SetModel(model);
-
-    layObj->SetPosition(pos);
-    layObj->SetScale(Vector3(1, 1, 1));
-    layObj->SetColor(Vector4(1, 0, 0, 1));
 
     damageSprite = std::make_unique<Object2d>();
     damageSprite->CreateSprite();
@@ -530,11 +516,6 @@ void JimaXengine::Player::Update()
     object->SetPosition(pos);
     object->SetCamera(pCamera);
     object->Update();
-
-    layObj->SetPosition(pos);
-    layObj->SetRotation(Vector3(rotation.x, rotation.z, rotation.y));
-    layObj->SetCamera(pCamera);
-    layObj->Update();
 
     sphereCol.center = pos.ConvertXMVECTOR();
 
