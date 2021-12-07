@@ -4,6 +4,7 @@
 #include "2d/Object2d.h"
 #include "scene/Title.h"
 #include "scene/Play.h"
+#include "scene/End.h"
 #include "2d/Texture.h"
 #include "ResourceShader.h"
 
@@ -80,6 +81,7 @@ void JimaXengine::Application::Initialize()
 	Texture::LoadTexture("stamp_D.png");
 	Texture::LoadTexture("title_bg.png");
 	Texture::LoadTexture("title_bg2.png");
+	Texture::LoadTexture("number.png");
 
 	// ƒTƒEƒ“ƒh‚Ì“Ç‚Ýž‚Ý
 	Sound::LoadWav("Alarm01.wav");
@@ -109,13 +111,12 @@ void JimaXengine::Application::Initialize()
 	sceneManager = new SceneManager;
 	sceneManager->Add("Title", new Title(winApp));
 	sceneManager->Add("Play", new Play(winApp));
+	sceneManager->Add("End", new End(winApp));
 
 	sceneManager->Change("Title");
-	//sceneManager->Change("Play");
 
 	// imgui
-	imguiDev.Initialize(winApp, dxCommon);
-	
+	imguiDev.Initialize(winApp, dxCommon);	
 }
 
 void JimaXengine::Application::Finalize()

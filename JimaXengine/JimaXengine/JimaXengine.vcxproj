@@ -226,6 +226,7 @@
     <ClCompile Include="Particle\ParticleManager.cpp" />
     <ClCompile Include="Particle\ParticleObj.cpp" />
     <ClCompile Include="ResourceShader.cpp" />
+    <ClCompile Include="scene\End.cpp" />
     <ClCompile Include="scene\Play.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
     <ClCompile Include="scene\Title.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="Particle\ParticleObj.h" />
     <ClInclude Include="Particle\ParticleParam.h" />
     <ClInclude Include="ResourceShader.h" />
+    <ClInclude Include="scene\End.h" />
     <ClInclude Include="scene\Play.h" />
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />

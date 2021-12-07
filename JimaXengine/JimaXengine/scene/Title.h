@@ -1,14 +1,14 @@
 #pragma once
-#include "Scene.h"
 #include <memory>
+#include "Scene.h"
+#include "../math/Vector4.h"
 #include "../2d/Object2d.h"
-#include "../general/Sound.h"
 
 namespace JimaXengine
 {
-	class Model;
 	class Object3d;
 	class Object2d;
+	class Sound;
 
 	class Title : public Scene
 	{

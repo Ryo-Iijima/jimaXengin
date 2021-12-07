@@ -14,6 +14,7 @@
 #include "../math/Vector2.h"
 #include "../math/Vector3.h"
 #include "../math/Vector4.h"
+#include "Texture.h"
 
 namespace JimaXengine
 {
@@ -25,11 +26,26 @@ namespace JimaXengine
 			Vector3 pos;
 			Vector2 uv;
 		};
+
 		struct SpriteConstBufferData
 		{
 			Vector4 color;
 			DirectX::XMMATRIX matWP;
 		};
+
+		struct DrawTextureData
+		{
+			std::string name;
+			Vector2 pos = { 0,0 };		// 画像の表示座標
+			Vector2 uvPos = { 0,0 };	// 画像切り出しの左上座標
+			Vector2 length = Vector2((float)(Texture::GetMetadata(name).width), (float)(Texture::GetMetadata(name).height));	// 左上からの長さ
+			Vector2 size = { 0,0 };		// ピクセル単位での大きさ
+			float angle = 0;
+			std::string type = "ALPHA";
+			Vector2 anchor = { 0.0f,0.0f };
+			Vector4 color = { 1,1,1,1 };
+		};
+
 	private:
 		//インスタンス間で共有したい変数
 		static DirectXCommon* dxCommon;
@@ -70,15 +86,20 @@ namespace JimaXengine
 			Vector2 anchor = { 0.0f,0.0f },
 			Vector4 color = { 1,1,1,1 });
 
+		void DrawOriginal(DrawTextureData data);
+
 		void DrawRect(const std::string& filename,
-			Vector2 position,	//画像の表示座標
-			Vector2 texpos,		//画像切り出しの左上座標
-			Vector2 texlength,	//左上からの長さ
-			Vector2 size,		//ピクセル単位での大きさ
+			Vector2 position,						// 画像の表示座標
+			Vector2 texpos,							// 画像切り出しの左上座標
+			Vector2 texlength,						// 左上からの長さ
+			Vector2 size,							// ピクセル単位での大きさ
 			float angle,
 			std::string blendtype,
 			Vector2 anchor = { 0.0f,0.0f },
 			Vector4 color = { 1,1,1,1 });
+
+		void DrawRect(DrawTextureData data);
+
 
 	};
 }

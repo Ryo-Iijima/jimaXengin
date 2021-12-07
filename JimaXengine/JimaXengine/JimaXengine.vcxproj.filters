@@ -263,6 +263,9 @@
     <ClCompile Include="actor\StrikeMark.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
+    <ClCompile Include="scene\End.cpp">
+      <Filter>ソース ファイル\app\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -435,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="actor\StrikeMark.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\End.h">
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

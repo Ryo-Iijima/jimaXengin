@@ -299,6 +299,37 @@ void JimaXengine::Object2d::DrawOriginal(const std::string& filename, Vector2 po
 	DrawCommands(filename, "Basic2D", blendtype);
 }
 
+void JimaXengine::Object2d::DrawOriginal(DrawTextureData data)
+{
+	D3D12_RESOURCE_DESC resDesc = Texture::GetTexture(data.name)->GetDesc();
+	float width = (float)resDesc.Width;
+	float height = (float)resDesc.Height;
+
+	float left = (0.0f - data.anchor.x) * width;
+	float right = (1.0f - data.anchor.x) * width;
+	float top = (0.0f - data.anchor.y) * height;
+	float bottom = (1.0f - data.anchor.y) * height;
+
+	SpriteVertex vertices[4];
+	enum { LB, LT, RB, RT };
+	vertices[LB] = { {  left, bottom, 0.0f },{ 0.0f, 1.0f } };
+	vertices[LT] = { {  left,    top, 0.0f },{ 0.0f, 0.0f } };
+	vertices[RB] = { { right, bottom, 0.0f },{ 1.0f, 1.0f } };
+	vertices[RT] = { { right,    top, 0.0f },{ 1.0f, 0.0f } };
+
+	SpriteVertex* vertMap = nullptr;
+	spriteVertBuff->Map(0, nullptr, (void**)&vertMap);
+	for (int i = 0; i < _countof(vertices); i++)
+	{
+		vertMap[i] = vertices[i];
+	}
+	spriteVertBuff->Unmap(0, nullptr);
+
+	MatrixUpdate(data.pos, data.angle, data.size);
+	TransferConstBuffer(data.color);
+	DrawCommands(data.name, "Basic2D", data.type);
+}
+
 void JimaXengine::Object2d::DrawRect(const std::string& filename, Vector2 position, Vector2 texpos, Vector2 texlength, Vector2 size, float angle, string blendtype, Vector2 anchor, Vector4 color)
 {
 	D3D12_RESOURCE_DESC resDesc = Texture::GetTexture(filename)->GetDesc();
@@ -335,6 +366,44 @@ void JimaXengine::Object2d::DrawRect(const std::string& filename, Vector2 positi
 	MatrixUpdate(position, angle, { 1,1 });
 	TransferConstBuffer({ color.x,color.y,color.z,color.w });
 	DrawCommands(filename, "Basic2D", blendtype);
+}
+
+void JimaXengine::Object2d::DrawRect(DrawTextureData data)
+{
+	D3D12_RESOURCE_DESC resDesc = Texture::GetTexture(data.name)->GetDesc();
+	float width = (float)resDesc.Width;
+	float height = (float)resDesc.Height;
+
+	//position
+	float left = (0.0f - data.anchor.x) * data.size.x;
+	float right = (1.0f - data.anchor.x) * data.size.x;
+	float top = (0.0f - data.anchor.y) * data.size.y;
+	float bottom = (1.0f - data.anchor.y) * data.size.y;
+
+	//UV
+	float tex_left = data.uvPos.x / width;
+	float tex_right = (data.uvPos.x + data.length.x) / width;
+	float tex_top = data.uvPos.y / height;
+	float tex_bottom = (data.uvPos.y + data.length.y) / height;
+
+	SpriteVertex vertices[4];
+	enum { LB, LT, RB, RT };
+	vertices[LB] = { {  left, bottom, 0.0f },{ tex_left, tex_bottom } };
+	vertices[LT] = { {  left,    top, 0.0f },{ tex_left, tex_top } };
+	vertices[RB] = { { right, bottom, 0.0f },{ tex_right, tex_bottom } };
+	vertices[RT] = { { right,    top, 0.0f },{ tex_right, tex_top } };
+
+	SpriteVertex* vertMap = nullptr;
+	spriteVertBuff->Map(0, nullptr, (void**)&vertMap);
+	for (int i = 0; i < _countof(vertices); i++)
+	{
+		vertMap[i] = vertices[i];
+	}
+	spriteVertBuff->Unmap(0, nullptr);
+
+	MatrixUpdate(data.pos, data.angle, { 1,1 });
+	TransferConstBuffer(data.color);
+	DrawCommands(data.name, "Basic2D", data.type);
 }
 
 void JimaXengine::Object2d::MatrixUpdate(Vector2 position, float angle, Vector2 scale)

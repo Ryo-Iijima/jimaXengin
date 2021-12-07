@@ -2,6 +2,7 @@
 #include "../3d/Object3d.h"
 #include "../3d/FbxLoader.h"
 #include "../2d/Texture.h"
+#include "../general/Sound.h"
 
 void JimaXengine::Title::BgScroll()
 {
@@ -123,11 +124,11 @@ void JimaXengine::Title::Update()
 void JimaXengine::Title::Draw()
 {
 	// Žs¼–Í—l
-	Vector2 a = Vector2(Texture::GetMetadata("title_bg.png").width, Texture::GetMetadata("title_bg.png").height);
+	Vector2 a = Vector2((float)(Texture::GetMetadata("title_bg.png").width), (float)(Texture::GetMetadata("title_bg.png").height));
 	bg.obj2d.DrawRect("title_bg.png", bg.pos, bg.uvPos, a, a * bg.scale, 0, "ALPHA");
 
 	// ‘Ñ
-	a = Vector2(Texture::GetMetadata("title_bg2.png").width, Texture::GetMetadata("title_bg2.png").height);
+	a = Vector2((float)(Texture::GetMetadata("title_bg2.png").width), (float)(Texture::GetMetadata("title_bg2.png").height));
 	band.obj2d.DrawRect("title_bg2.png", band.pos, band.uvPos, a, a * band.scale, 0.0f, "ALPHA");
 
 	pushStartTex->DrawOriginal("pushstart.png", pushStartTexPos, 0.0f, pushStartTexScale, "ALPHA", Vector2(0.5f, 0.5f));
