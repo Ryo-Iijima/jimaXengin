@@ -78,10 +78,27 @@ namespace JimaXengine
 			DirectX::XMFLOAT3 ambient = { 1,1,1 };
 			// ディフューズ係数
 			DirectX::XMFLOAT3 diffuse = { 1,1,1 };
+			// スペキュラー係数
+			DirectX::XMFLOAT3 specular = { 1,1,1 };
 			// テクスチャメタデータ
 			DirectX::TexMetadata metadata = {};
 			// スクラッチイメージ
 			DirectX::ScratchImage scrachImg = {};
+		};
+
+		// 定数バッファ用構造体（マテリアル）
+		struct CBDataMaterial
+		{
+			// アンビエント係数
+			DirectX::XMFLOAT3 ambient = { 1,1,1 };
+			float pad1; // パディング
+			// ディフューズ係数
+			DirectX::XMFLOAT3 diffuse = { 1,1,1 };
+			float pad2; // パディング
+			// スペキュラー係数
+			DirectX::XMFLOAT3 specular = { 1,1,1 };
+			// アルファ
+			float alpha = 1.0f;
 		};
 
 		// ボーン構造体
@@ -129,6 +146,9 @@ namespace JimaXengine
 		// SRV用デスクリプタヒープ
 		ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 
+		// 定数バッファ（マテリアル）
+		ComPtr<ID3D12Resource> constBufferMaterial;
+
 	public:		// 関数
 		~Model();
 
@@ -142,5 +162,6 @@ namespace JimaXengine
 		const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 		std::vector<Bone>& GetBonse() { return bones; }
 		FbxScene* GetFbxScene() { return fbxScene; }
+		ComPtr<ID3D12Resource> GetCBMaterial() { return constBufferMaterial; }
 	};
 }

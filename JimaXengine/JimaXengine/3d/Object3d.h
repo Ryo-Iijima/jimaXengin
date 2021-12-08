@@ -41,6 +41,7 @@ namespace JimaXengine
 			texture,
 			skin,
 			light,
+			material,
 		};
 	public:		// サブクラス
 		// 座標変換行列(CB0)用構造体

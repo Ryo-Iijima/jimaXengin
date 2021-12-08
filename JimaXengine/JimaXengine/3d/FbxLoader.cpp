@@ -203,20 +203,25 @@ void JimaXengine::FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
             // FbxSurfaceLambertクラスかどうかを調べる
             if (material->GetClassId().Is(FbxSurfaceLambert::ClassId))
             {
-                FbxSurfaceLambert* lambert = static_cast<FbxSurfaceLambert*>(material);
+                FbxSurfacePhong* phon = static_cast<FbxSurfacePhong*>(material);
 
                 // 環境光係数
-                FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
+                FbxPropertyT<FbxDouble3> ambient = phon->Ambient;
                 model->materialData.ambient.x = (float)ambient.Get()[0];
                 model->materialData.ambient.y = (float)ambient.Get()[1];
                 model->materialData.ambient.z = (float)ambient.Get()[2];
 
                 // 拡散反射光係数
-                FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
+                FbxPropertyT<FbxDouble3> diffuse = phon->Diffuse;
                 model->materialData.diffuse.x = (float)diffuse.Get()[0];
                 model->materialData.diffuse.y = (float)diffuse.Get()[1];
                 model->materialData.diffuse.z = (float)diffuse.Get()[2];
 
+                //// 鏡面反射光係数
+                //FbxPropertyT<FbxDouble3> specular = phon->Specular;
+                //model->materialData.specular.x = (float)specular.Get()[0];
+                //model->materialData.specular.y = (float)specular.Get()[1];
+                //model->materialData.specular.z = (float)specular.Get()[2];
             }
 
             // ディフューズテクスチャを取り出す

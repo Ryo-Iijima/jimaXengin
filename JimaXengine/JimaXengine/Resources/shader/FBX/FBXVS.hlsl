@@ -59,7 +59,6 @@ VSOutput main(VSInput input)
 	float4 wnormal = normalize(mul(world, float4(skinned.normal, 0)));
 	// s—ñ‚É‚æ‚éÀ•W•ÏŠ·
 	output.svpos = mul(mul(viewproj, world), skinned.pos);
-
 	output.normal = wnormal.xyz;
 	output.uv = input.uv;
 

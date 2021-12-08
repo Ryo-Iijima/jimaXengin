@@ -103,7 +103,7 @@ void  JimaXengine::Object3d::CreateGraphicsPipline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[4];
+	CD3DX12_ROOT_PARAMETER rootparams[5];
 	// CBV（座標変換行列用）
 	rootparams[(int)ViewName::transform].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
@@ -112,6 +112,8 @@ void  JimaXengine::Object3d::CreateGraphicsPipline()
 	rootparams[(int)ViewName::skin].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// CBV（ライト）
 	rootparams[(int)ViewName::light].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
+	// CBV（マテリアル）
+	rootparams[(int)ViewName::material].InitAsConstantBufferView(4, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -280,7 +282,9 @@ void JimaXengine::Object3d::Draw()
 	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTranceform->GetGPUVirtualAddress());
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
+	//dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::light, constBufferSkin->GetGPUVirtualAddress());
 	light->Draw((int)ViewName::light);
+	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::material, model->GetCBMaterial().Get()->GetGPUVirtualAddress());	// 無理やり引っ張って来た感あっていびつ
 
 	model->Draw(dxCommon->GetCommandList());
 }

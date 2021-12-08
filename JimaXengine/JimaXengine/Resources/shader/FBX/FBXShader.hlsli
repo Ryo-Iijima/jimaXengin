@@ -12,6 +12,14 @@ cbuffer cbuff2 : register(b2)
 	float3 lightcolor;	// ライトの色
 }
 
+cbuffer cbuff4 : register(b4)
+{
+	float3 m_ambient;	// アンビエント係数
+	float3 m_diffuse;	// ディフューズ係数
+	float3 m_specular;	// スペキュラー係数
+	float m_alpha;	// アルファ
+}
+
 // ボーンの最大数
 static const int MAX_BONES = 32;
 cbuffer skinning:register(b3)

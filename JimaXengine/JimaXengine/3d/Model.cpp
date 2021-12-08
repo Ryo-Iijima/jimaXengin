@@ -99,6 +99,27 @@ void JimaXengine::Model::CreateBuffers(ID3D12Device* _dev)
 	);
 	assert(SUCCEEDED(result));
 
+	// 定数バッファの生成
+	result = _dev->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(CBDataMaterial) + 0xff) & ~0Xff),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBufferMaterial)
+	);
+
+	// 定数バッファへデータ転送
+	CBDataMaterial* constMapMaterial = nullptr;
+	result = constBufferMaterial->Map(0, nullptr, (void**)&constMapMaterial);
+	if (SUCCEEDED(result))
+	{
+		constMapMaterial->ambient = materialData.ambient;
+		constMapMaterial->diffuse = materialData.diffuse;
+		constMapMaterial->specular = materialData.specular;
+		constMapMaterial->alpha = 1.0f;
+	}
+
 	// SRV用デスクリプタヒープを生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;	// シェーダーリソースビュー用
