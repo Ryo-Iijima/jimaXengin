@@ -12,6 +12,7 @@
 #include "../math/Vector4.h"
 #include "../general/Input.h"
 #include "../DirectXCommon.h"
+#include "../Light.h"
 
 namespace JimaXengine
 {
@@ -39,9 +40,10 @@ namespace JimaXengine
 			transform,
 			texture,
 			skin,
+			light,
 		};
 	public:		// サブクラス
-		// 座標変換行列(CB)用構造体
+		// 座標変換行列(CB0)用構造体
 		struct TransformData
 		{
 			Vector4 color;
@@ -49,7 +51,7 @@ namespace JimaXengine
 			XMMATRIX world;
 			XMFLOAT3 cameraPos;
 		};
-		// スキニング情報(CB)用構造体
+		// スキニング情報(CB3)用構造体
 		struct SkinData
 		{
 			XMMATRIX bones[MAX_BONES];
@@ -81,6 +83,8 @@ namespace JimaXengine
 		// パイプラインステート
 		static ComPtr<ID3D12PipelineState> piplineState;
 
+		//ライト
+		static Light* light;
 
 	public:		// static関数
 		static void StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp);
@@ -89,6 +93,7 @@ namespace JimaXengine
 
 		// setter
 		static void SetDevice(ID3D12Device* device) { Object3d::_dev = device; }
+		static void SetLight(Light* plight) { light = plight; }
 
 	private:	// 変数
 
@@ -98,8 +103,6 @@ namespace JimaXengine
 		Vector3 eye;
 		Vector3 target;
 		Vector3 up;
-
-		Input* input;
 
 		// アニメーション再生関連
 		// 1フレームの時間
@@ -136,6 +139,5 @@ namespace JimaXengine
 		void SetPosition(Vector3& position) { this->position = position; }
 
 		void SetCamera(Camera* camera) { this->camera = camera; }
-		void SetInput(Input* input) { this->input = input; }
 	};
 }

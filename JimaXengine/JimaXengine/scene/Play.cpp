@@ -12,6 +12,7 @@ JimaXengine::Play::~Play()
 {
 	delete object2d;
 	delete oManager;
+	delete light;
 }
 
 void JimaXengine::Play::Initialize()
@@ -52,11 +53,26 @@ void JimaXengine::Play::Initialize()
 
 	object2d = new Object2d();
 	object2d->CreateSprite();
+
+	light = Light::Create();
+	light->SetColor({ 1,1,1 });
+	Object3d::SetLight(light);
 }
 
 void JimaXengine::Play::Update()
 {
 	camera->Move();
+
+	{
+		static XMVECTOR lightDir = { 0,1,5,0 };
+		if (Input::KeyPress(DIK_UP)) { lightDir.m128_f32[1] += 1.0f; }
+		if (Input::KeyPress(DIK_DOWN)) { lightDir.m128_f32[1] -= 1.0f; }
+		if (Input::KeyPress(DIK_RIGHT)) { lightDir.m128_f32[0] += 1.0f; }
+		if (Input::KeyPress(DIK_LEFT)) { lightDir.m128_f32[0] -= 1.0f; }
+
+		light->SetDir(lightDir);
+	}
+	light->Update();
 
 	oManager->Update();
 

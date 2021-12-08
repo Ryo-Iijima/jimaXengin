@@ -6,6 +6,12 @@ cbuffer cbuff0 : register(b0)
 	float3 cameraPos;	// カメラ座標
 };
 
+cbuffer cbuff2 : register(b2)
+{
+	float3 lightv;		// ライトへの方向の単位ベクトル
+	float3 lightcolor;	// ライトの色
+}
+
 // ボーンの最大数
 static const int MAX_BONES = 32;
 cbuffer skinning:register(b3)
@@ -17,8 +23,8 @@ cbuffer skinning:register(b3)
 struct VSInput
 {
 	float4 pos	  : POSITION;
-	float3 normal : NORMAL;		// 法線
-	float2 uv	  : TEXCOORD;	// テクスチャ座標
+	float3 normal : NORMAL;				// 法線
+	float2 uv	  : TEXCOORD;			// テクスチャ座標
 	uint4 boneIndices  : BONEINDICES;	// ボーンの番号
 	float4 boneWeight : BONEWEIGHTS;	// ボーンのスキンウェイト
 };

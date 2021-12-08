@@ -266,6 +266,9 @@
     <ClCompile Include="scene\End.cpp">
       <Filter>ソース ファイル\app\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>ソース ファイル\engin\3DObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -441,6 +444,9 @@
     </ClInclude>
     <ClInclude Include="scene\End.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include "scene/Play.h"
 #include "scene/End.h"
 #include "2d/Texture.h"
+#include "Light.h"
 #include "ResourceShader.h"
 
 JimaXengine::Application& JimaXengine::Application::GetInstance()
@@ -54,6 +55,8 @@ void JimaXengine::Application::Initialize()
 	GeometoryObject3D::PreInitialize(dxCommon);
 	//
 	ParticleManager::StaticInitialize();
+	// 
+	Light::StaticInitialize(dxCommon);
 
 	// 入力
 	input = new Input();
@@ -113,7 +116,7 @@ void JimaXengine::Application::Initialize()
 	sceneManager->Add("Play", new Play(winApp));
 	sceneManager->Add("End", new End(winApp));
 
-	sceneManager->Change("Title");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);	
@@ -155,14 +158,6 @@ void JimaXengine::Application::Run()
 		dxCommon->PreDraw();
 
 		sceneManager->Draw();
-
-		//// imgui描画
-		//{
-		//	ImGui::Begin("Test Window");	// ウィンドウの名前
-		//	float slider = fpsManager->GetFPS();
-		//	ImGui::SliderFloat("FPS", &slider, 0.0f, 100.0f);
-		//	ImGui::End();
-		//}
 
 		imguiDev.Draw();
 

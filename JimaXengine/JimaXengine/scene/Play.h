@@ -3,16 +3,19 @@
 #include "../GameObject/GameObjectManager.h"
 #include "../actor/JoyconTest.h"
 #include "../DebugCamera.h"
-
-class Object3d;
-class Object2d;
-class Model;
+#include "../Light.h"
 
 namespace JimaXengine
 {
+	class Object3d;
+	class Object2d;
+	class Model;
+
 	class Play : public Scene
 	{
 	private:
+		Light* light = nullptr;
+
 		Model* model = nullptr;
 
 		Object2d* object2d;

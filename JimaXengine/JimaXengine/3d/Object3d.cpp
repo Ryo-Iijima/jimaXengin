@@ -14,6 +14,7 @@ JimaXengine::DirectXCommon* JimaXengine::Object3d::dxCommon = nullptr;
 ID3D12Device* JimaXengine::Object3d::_dev = nullptr;
 ComPtr<ID3D12RootSignature> JimaXengine::Object3d::rootSignature;
 ComPtr<ID3D12PipelineState> JimaXengine::Object3d::piplineState;
+JimaXengine::Light* JimaXengine::Object3d::light=nullptr;
 
 void  JimaXengine::Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp)
 {
@@ -102,13 +103,15 @@ void  JimaXengine::Object3d::CreateGraphicsPipline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3];
+	CD3DX12_ROOT_PARAMETER rootparams[4];
 	// CBV（座標変換行列用）
 	rootparams[(int)ViewName::transform].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	// SRV（テクスチャ）
 	rootparams[(int)ViewName::texture].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 	// CBV（スキニング用）
 	rootparams[(int)ViewName::skin].InitAsConstantBufferView(3, 0, D3D12_SHADER_VISIBILITY_ALL);
+	// CBV（ライト）
+	rootparams[(int)ViewName::light].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -272,13 +275,14 @@ void JimaXengine::Object3d::Draw()
 		return;
 	}
 	
-	Object3d::dxCommon->GetCommandList()->SetPipelineState(piplineState.Get());
-	Object3d::dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
-	Object3d::dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTranceform->GetGPUVirtualAddress());
-	Object3d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
+	dxCommon->GetCommandList()->SetPipelineState(piplineState.Get());
+	dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTranceform->GetGPUVirtualAddress());
+	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
+	light->Draw((int)ViewName::light);
 
-	model->Draw(Object3d::dxCommon->GetCommandList());
+	model->Draw(dxCommon->GetCommandList());
 }
 
 void JimaXengine::Object3d::SetModelforBuff(const std::string& modelName)
