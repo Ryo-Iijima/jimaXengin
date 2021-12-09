@@ -46,7 +46,7 @@ namespace JimaXengine
 			Vector4 color = { 1,1,1,1 };
 		};
 
-	private:
+	protected:
 		//インスタンス間で共有したい変数
 		static DirectXCommon* dxCommon;
 		static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> spriteDescHeap;
@@ -74,7 +74,7 @@ namespace JimaXengine
 	public:
 		Object2d();
 		~Object2d();
-		static void Initialize(DirectXCommon* dxcommon, WinApp* winapp);
+		static void Initialize(DirectXCommon* dxcommon);
 		static void LoadTexture(const std::string& filename);
 		void CreateSprite();
 

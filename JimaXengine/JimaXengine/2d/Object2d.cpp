@@ -183,7 +183,7 @@ JimaXengine::Object2d::~Object2d()
 {
 }
 
-void JimaXengine::Object2d::Initialize(DirectXCommon* dxcommon, WinApp* winapp)
+void JimaXengine::Object2d::Initialize(DirectXCommon* dxcommon)
 {
 	Object2d::dxCommon = dxcommon;
 
@@ -194,8 +194,8 @@ void JimaXengine::Object2d::Initialize(DirectXCommon* dxcommon, WinApp* winapp)
 	//ŽË‰es—ñ‚Ì•ÏŠ·
 	spriteMatProjection = XMMatrixOrthographicOffCenterLH(
 		0.0f,
-		(float)winapp->GetWindowWidth(),
-		(float)winapp->GetWindowHeight(),
+		(float)WinApp::WINDOW_WIDTH,
+		(float)WinApp::WINDOW_HEIGHT,
 		0.0f,
 		0.0f,
 		1.0f);

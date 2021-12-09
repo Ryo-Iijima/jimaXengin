@@ -174,6 +174,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2d\Object2d.cpp" />
+    <ClCompile Include="2d\PostEffect.cpp" />
     <ClCompile Include="2d\Texture.cpp" />
     <ClCompile Include="3d\FbxLoader.cpp" />
     <ClCompile Include="3d\Model.cpp" />
@@ -235,6 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\Object2d.h" />
+    <ClInclude Include="2d\PostEffect.h" />
     <ClInclude Include="2d\Texture.h" />
     <ClInclude Include="3d\FbxLoader.h" />
     <ClInclude Include="3d\Model.h" />

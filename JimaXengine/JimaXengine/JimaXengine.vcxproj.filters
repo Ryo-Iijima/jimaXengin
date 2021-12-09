@@ -269,6 +269,9 @@
     <ClCompile Include="Light.cpp">
       <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
+    <ClCompile Include="2d\PostEffect.cpp">
+      <Filter>ソース ファイル\engin\2DObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -447,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>ヘッダー ファイル\engin\3DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="2d\PostEffect.h">
+      <Filter>ヘッダー ファイル\engin\2DObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

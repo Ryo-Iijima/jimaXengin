@@ -46,7 +46,10 @@ void JimaXengine::Application::Initialize()
 	Object3d::SetDevice(dxCommon->GetDevice());
 	Object3d::CreateGraphicsPipline();
 	//
-	Object2d::Initialize(dxCommon, winApp);
+	Object2d::Initialize(dxCommon);
+
+	postEffect = new PostEffect();
+	postEffect->Initialize(dxCommon);
 	//
 	Texture::Initialize(dxCommon);
 	//
@@ -62,6 +65,7 @@ void JimaXengine::Application::Initialize()
 	input = new Input();
 	input->Initialize(winApp);
 	//input->SetDeadZone(0, 0);
+
 
 	Texture::LoadTexture("white1x1.png");
 	Texture::LoadTexture("colorGrid.png");
@@ -104,6 +108,7 @@ void JimaXengine::Application::Initialize()
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultBox");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss_phon");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("wall");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("ground");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("AimMark");
@@ -124,6 +129,7 @@ void JimaXengine::Application::Initialize()
 
 void JimaXengine::Application::Finalize()
 {
+	delete postEffect;
 	// 各種解放処理
 	input->Finalize();
 
@@ -156,6 +162,9 @@ void JimaXengine::Application::Run()
 
 		// 描画前処理
 		dxCommon->PreDraw();
+
+		//// ポストエフェクトの描画
+		//postEffect->Draw();
 
 		sceneManager->Draw();
 

@@ -7,6 +7,7 @@
 #include "general/FPSManager.h"
 #include "general/Input.h"
 #include "scene/SceneManager.h"
+#include "2d/PostEffect.h"
 
 namespace JimaXengine
 {
@@ -21,6 +22,7 @@ namespace JimaXengine
 		Sound* sound = nullptr;
 		SceneManager* sceneManager = nullptr;
 		ImGuiDevice imguiDev;
+		PostEffect* postEffect = nullptr;
 
 	private:
 
