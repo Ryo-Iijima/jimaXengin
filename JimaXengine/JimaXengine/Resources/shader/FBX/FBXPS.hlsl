@@ -33,11 +33,10 @@ float4 main(VSOutput input) : SV_TARGET
 	// ŠgŽU”½ŽËŒõ
 	float3 diffuse = dotlightnormal * m_diffuse;
 	//// ‹¾–Ê”½ŽËŒõ
-	//float3 specular = pow(saturate(dot(reflect, eyedir)), shinines) * m_specular;
-	float3 specular = { 0.5,0.5,0.5 };
+	float3 specular = pow(saturate(dot(reflect, eyedir)), shinines) * m_specular;
+	//float3 specular = { 0.5,0.5,0.5 };
 
 	shadecolor.rgb = (ambient + diffuse + specular) * lightcolor;
-	//shadecolor.rgb = (ambient + diffuse) * lightcolor;
 	shadecolor.a = m_alpha;
 
 	return shadecolor * texcolor * color;

@@ -29,6 +29,8 @@ void JimaXengine::Application::Initialize()
 	ResourceShader::CompileShader("FBX/FBXPS.hlsl", "main", "ps_5_0");
 	ResourceShader::CompileShader("Sprite/SpritePixelShader.hlsl", "main", "ps_5_0");
 	ResourceShader::CompileShader("Sprite/SpriteVertexShader.hlsl", "main", "vs_5_0");
+	ResourceShader::CompileShader("PostEffectTest/PostEffectTestPS.hlsl", "main", "ps_5_0");
+	ResourceShader::CompileShader("PostEffectTest/PostEffectTestVS.hlsl", "main", "vs_5_0");
 	ResourceShader::CompileShader("Geometory/ParticleVS.hlsl", "main", "vs_5_0");
 	ResourceShader::CompileShader("Geometory/CubePS.hlsl", "main", "ps_5_0");
 	ResourceShader::CompileShader("Geometory/CubeGS.hlsl", "main", "gs_5_0");
@@ -107,6 +109,7 @@ void JimaXengine::Application::Initialize()
 	// モデルの読み込み
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultBox");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("smooth_sphere");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("boss_phon");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("wall");
@@ -160,18 +163,24 @@ void JimaXengine::Application::Run()
 
 		imguiDev.Update();
 
+		// レンダーテクスチャへの描画
+		postEffect->PreDrawScene();
+		
+		sceneManager->Draw();
+		
+		postEffect->PostDrawScene();
+		imguiDev.Draw();
+
 		// 描画前処理
 		dxCommon->PreDraw();
 
-		//// ポストエフェクトの描画
-		//postEffect->Draw();
+		// ポストエフェクトの描画
+		postEffect->Draw();
 
-		sceneManager->Draw();
-
-		imguiDev.Draw();
+		////元描画おいてた位置
+		//sceneManager->Draw();
 
 		// 描画後処理
 		dxCommon->PostDraw();
-
 	}
 }

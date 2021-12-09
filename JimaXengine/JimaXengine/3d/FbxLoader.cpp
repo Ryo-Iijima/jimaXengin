@@ -239,11 +239,11 @@ void JimaXengine::FbxLoader::ParseMaterial(Model* model, FbxNode* fbxNode)
                 model->materialData.diffuse.y = (float)diffuse.Get()[1];
                 model->materialData.diffuse.z = (float)diffuse.Get()[2];
 
-                //// 鏡面反射光係数
+                // 鏡面反射光係数
                 //FbxPropertyT<FbxDouble3> specular = phon->Specular;
-                //model->materialData.specular.x = (float)specular.Get()[0];
-                //model->materialData.specular.y = (float)specular.Get()[1];
-                //model->materialData.specular.z = (float)specular.Get()[2];
+                model->materialData.specular.x = 0.5f;
+                model->materialData.specular.y = 0.5f;
+                model->materialData.specular.z = 0.5f;
             }
 
             // ディフューズテクスチャを取り出す

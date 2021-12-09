@@ -19,8 +19,8 @@ void JimaXengine::Boss::Initialize()
 	object = std::make_unique<Object3d>();
 	object->Initialize();
 	//object->SetModel(model);
-	//object->SetModelforBuff("boss");
-	object->SetModelforBuff("boss_phon");
+	object->SetModelforBuff("boss");
+	//object->SetModelforBuff("smooth_sphere");
 
 	pos = Vector3(0, 6, 0);
 	object->SetPosition(pos);

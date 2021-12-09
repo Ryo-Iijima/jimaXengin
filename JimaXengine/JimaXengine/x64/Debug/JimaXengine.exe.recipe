@@ -34,6 +34,12 @@
       <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\QuadPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\PostEffectTestPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\PostEffectTestVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\SpritePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

@@ -105,6 +105,9 @@
     <Filter Include="ヘッダー ファイル\app\actor\backGround">
       <UniqueIdentifier>{fbeee76f-bd45-4660-8fb9-7324240a0d9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\PostEffectTest">
+      <UniqueIdentifier>{9509f567-26b9-47e5-b425-0a64d96d3025}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -489,6 +492,12 @@
     <FxCompile Include="Resources\shader\Geometory\QuadPS.hlsl">
       <Filter>シェーダーファイル\Geometory</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffectTest\PostEffectTestPS.hlsl">
+      <Filter>シェーダーファイル\PostEffectTest</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shader\PostEffectTest\PostEffectTestVS.hlsl">
+      <Filter>シェーダーファイル\PostEffectTest</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\FBX\FBXShader.hlsli">
@@ -502,6 +511,9 @@
     </None>
     <None Include="Resources\shader\Geometory\Particle.hlsli">
       <Filter>シェーダーファイル\Geometory</Filter>
+    </None>
+    <None Include="Resources\shader\PostEffectTest\PostEffectTest.hlsli">
+      <Filter>シェーダーファイル\PostEffectTest</Filter>
     </None>
   </ItemGroup>
 </Project>
