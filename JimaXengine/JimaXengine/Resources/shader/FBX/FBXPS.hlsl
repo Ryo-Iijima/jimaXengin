@@ -3,20 +3,21 @@
 Texture2D<float4> tex :register(t0);
 SamplerState smp : register(s0);
 
-float4 main(VSOutput input) : SV_TARGET
+struct PSOutput
 {
+	float4 target0 : SV_TARGET0;
+	float4 target1 : SV_TARGET1;
+};
+
+PSOutput main(VSOutput input) : SV_TARGET
+{
+	PSOutput output;
+
 	//return float4(1,0,0,1);
 
 	float4 texcolor = tex.Sample(smp,input.uv);
 
 	//return texcolor;
-
-	// Lambert反射
-	//float3 light = normalize(lightv);
-	//float diffuse = saturate(dot(-light, input.normal));
-	//float brightness = diffuse + 0.3f;
-	//float4 shadecolor = float4(brightness, brightness, brightness, 1.0f);
-	//return shadecolor * texcolor * color;
 
 	// シェーディングによる色
 	float4 shadecolor;
@@ -39,5 +40,8 @@ float4 main(VSOutput input) : SV_TARGET
 	shadecolor.rgb = (ambient + diffuse + specular) * lightcolor;
 	shadecolor.a = m_alpha;
 
-	return shadecolor * texcolor * color;
+	output.target0 = shadecolor * texcolor * color;
+	output.target1 = float4(1 - (shadecolor * texcolor * color).rgb, 1);
+
+	return output;
 }

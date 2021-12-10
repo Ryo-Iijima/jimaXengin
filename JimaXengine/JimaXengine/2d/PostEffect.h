@@ -50,7 +50,7 @@ namespace JimaXengine
 		D3D12_VERTEX_BUFFER_VIEW vBView;
 
 		// テクスチャバッファ
-		Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
+		Microsoft::WRL::ComPtr<ID3D12Resource> texBuff[2];
 		
 		// 深度バッファ
 		Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer;

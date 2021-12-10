@@ -1,6 +1,7 @@
 #include "PostEffect.h"
 #include "../ResourceShader.h"
 #include "Object2d.h"
+#include "../general/Input.h"
 
 using namespace Microsoft::WRL;
 using namespace std;
@@ -15,19 +16,30 @@ Microsoft::WRL::ComPtr<ID3D12RootSignature> JimaXengine::PostEffect::rootSignatu
 
 void JimaXengine::PostEffect::DrawCommands(const std::string& filename, const std::string& registername, const std::string& blendtype)
 {
-	PostEffect::dxCommon->GetCommandList()->SetPipelineState(pipelines[registername + blendtype].Get());
-	PostEffect::dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
-	PostEffect::dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	dxCommon->GetCommandList()->SetPipelineState(pipelines[registername + blendtype].Get());
+	dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
 	PostEffect::dxCommon->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	PostEffect::dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &vBView);
+	dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &vBView);
 
-	PostEffect::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
-	PostEffect::dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
+	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
-	PostEffect::dxCommon->GetCommandList()->DrawInstanced(4, 1, 0, 0);
+	dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(1,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(),0,
+			dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+		)
+	);
+
+	dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(2,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeapSRV->GetGPUDescriptorHandleForHeapStart(),1,
+			dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+		)
+	);
+
+	dxCommon->GetCommandList()->DrawInstanced(4, 1, 0, 0);
 }
 
 void JimaXengine::PostEffect::CreateRootSignature()
@@ -35,13 +47,17 @@ void JimaXengine::PostEffect::CreateRootSignature()
 	HRESULT result;
 
 	//ディスクリプタレンジ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV = {};
-	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0 = {};
+	descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);	// t0レジスタ
+
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1 = {};
+	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);	// t1レジスタ
 
 	//ルートパラメータ(定数用、テクスチャ用)
-	CD3DX12_ROOT_PARAMETER rootParams[2] = {};
+	CD3DX12_ROOT_PARAMETER rootParams[3] = {};
 	rootParams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[1].InitAsDescriptorTable(1, &descRangeSRV0, D3D12_SHADER_VISIBILITY_ALL);
+	rootParams[2].InitAsDescriptorTable(1, &descRangeSRV1, D3D12_SHADER_VISIBILITY_ALL);
 
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
@@ -77,33 +93,37 @@ void JimaXengine::PostEffect::GenerateTexture()
 		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
 	);
 
-	// テクスチャバッファの生成
-	result = dxCommon->GetDevice()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
-		D3D12_HEAP_FLAG_NONE,
-		&texresDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM,clearColor),
-		IID_PPV_ARGS(&texBuff)
-	);
-	assert(SUCCEEDED(result));
-
-	{// テクスチャを赤クリア
-		// 画素数
-		const UINT pixelCount = WinApp::WINDOW_WIDTH * WinApp::WINDOW_HEIGHT;
-		// 画像１行分のデータサイズ
-		const UINT rowPitch = sizeof(UINT) * WinApp::WINDOW_WIDTH;
-		// 画像全体のデータサイズ
-		const UINT depthPitch = rowPitch * WinApp::WINDOW_HEIGHT;
-		// 画像イメージ
-		UINT* img = new UINT[pixelCount];
-		for (int i = 0; i < pixelCount; i++) { img[i] = 0xff0000ff; }
-
-		// テクスチャバッファにデータ転送
-		result = texBuff->WriteToSubresource(0, nullptr, img, rowPitch, depthPitch);
+	for (int i = 0; i < 2; i++)
+	{
+		// テクスチャバッファの生成
+		result = dxCommon->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
+			D3D12_HEAP_FLAG_NONE,
+			&texresDesc,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clearColor),
+			IID_PPV_ARGS(&texBuff[i])
+		);
 		assert(SUCCEEDED(result));
-		delete[] img;
+
+		{// テクスチャを赤クリア
+			// 画素数
+			const UINT pixelCount = WinApp::WINDOW_WIDTH * WinApp::WINDOW_HEIGHT;
+			// 画像１行分のデータサイズ
+			const UINT rowPitch = sizeof(UINT) * WinApp::WINDOW_WIDTH;
+			// 画像全体のデータサイズ
+			const UINT depthPitch = rowPitch * WinApp::WINDOW_HEIGHT;
+			// 画像イメージ
+			UINT* img = new UINT[pixelCount];
+			for (int j = 0; j < pixelCount; j++) { img[j] = 0xff0000ff; }
+
+			// テクスチャバッファにデータ転送
+			result = texBuff[i]->WriteToSubresource(0, nullptr, img, rowPitch, depthPitch);
+			assert(SUCCEEDED(result));
+			delete[] img;
+		}
 	}
+
 }
 
 void JimaXengine::PostEffect::CreateSRV()
@@ -114,7 +134,7 @@ void JimaXengine::PostEffect::CreateSRV()
 	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
 	srvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	srvDescHeapDesc.NumDescriptors = 1;
+	srvDescHeapDesc.NumDescriptors = 2;
 	result = dxCommon->GetDevice()->CreateDescriptorHeap(&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV));
 	// SRV用デスクリプタヒープを生成
 	result = dxCommon->GetDevice()->CreateDescriptorHeap(&srvDescHeapDesc, IID_PPV_ARGS(&descHeapSRV));
@@ -125,11 +145,18 @@ void JimaXengine::PostEffect::CreateSRV()
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
-	dxCommon->GetDevice()->CreateShaderResourceView(
-		texBuff.Get(),
-		&srvDesc,
-		descHeapSRV->GetCPUDescriptorHandleForHeapStart()
-	);
+
+	for (int i = 0; i < 2; i++)
+	{
+		dxCommon->GetDevice()->CreateShaderResourceView(
+			texBuff[i].Get(),
+			&srvDesc,
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(
+				descHeapSRV->GetCPUDescriptorHandleForHeapStart(),
+				i,
+				dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))	
+		);
+	}
 }
 
 void JimaXengine::PostEffect::CreateRTV()
@@ -139,16 +166,23 @@ void JimaXengine::PostEffect::CreateRTV()
 	// RTV用デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescHeapDesc{};
 	rtvDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDescHeapDesc.NumDescriptors = 1;
+	rtvDescHeapDesc.NumDescriptors = 2;
 	// RTV用デスクリプタヒープを生成
 	result = dxCommon->GetDevice()->CreateDescriptorHeap(&rtvDescHeapDesc, IID_PPV_ARGS(&descHeapRTV));
 	assert(SUCCEEDED(result));
-	// デスクリプタヒープにRTV作成
-	dxCommon->GetDevice()->CreateRenderTargetView(
-		texBuff.Get(),
-		nullptr,
-		descHeapRTV->GetCPUDescriptorHandleForHeapStart()
-	);
+
+	for (int i = 0; i < 2; i++)
+	{
+		// デスクリプタヒープにRTV作成
+		dxCommon->GetDevice()->CreateRenderTargetView(
+			texBuff[i].Get(),
+			nullptr,
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(
+				descHeapRTV->GetCPUDescriptorHandleForHeapStart(),
+				i,
+				dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV))
+		);
+	}
 }
 
 void JimaXengine::PostEffect::GenerateDepthBuffer()
@@ -239,6 +273,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE; //ソースの値を100%使う
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO; //デストの値を0%使う
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&noblend));
 	assert(SUCCEEDED(result));
 
@@ -248,6 +283,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	ComPtr<ID3D12PipelineState> wireframe;
 	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&wireframe));
 	assert(SUCCEEDED(result));
 	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
@@ -261,6 +297,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; //ソースの値を100%使う
 	blenddesc.DestBlend = D3D12_BLEND_ONE; //デストの値を100%使う
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&add));
 	assert(SUCCEEDED(result));
 
@@ -272,6 +309,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.SrcBlend = D3D12_BLEND_ONE; //ソースの値を100%使う
 	blenddesc.DestBlend = D3D12_BLEND_ONE; //デストの値を100%使う
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sub));
 	assert(SUCCEEDED(result));
 
@@ -283,6 +321,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR; //1.0f-デストカラー値
 	blenddesc.DestBlend = D3D12_BLEND_ZERO; //使わない
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&invsrc));
 	assert(SUCCEEDED(result));
 
@@ -294,6 +333,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; //ソースのアルファ値
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; //1.0f-ソースのアルファ値
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&alpha));
 	assert(SUCCEEDED(result));
 
@@ -377,6 +417,26 @@ void JimaXengine::PostEffect::Initialize(DirectXCommon* dxcommon)
 
 void JimaXengine::PostEffect::Draw()
 {	
+	//if (Input::KeyTrigger(DIK_0))
+	//{
+	//	// デスクリプタヒープにSRVを作成
+	//	static int tex = 0;
+	//	// テクスチャ番号を0と1で切り替え
+	//	tex = (tex + 1) % 2;
+
+	//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	//	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	//	srvDesc.Texture2D.MipLevels = 1;
+
+	//	dxCommon->GetDevice()->CreateShaderResourceView(
+	//		texBuff[tex].Get(),
+	//		&srvDesc,
+	//		descHeapSRV->GetCPUDescriptorHandleForHeapStart()
+	//	);
+	//}
+
 	//定数バッファにデータ転送
 	JimaXengine::Object2d::SpriteConstBufferData* constMap = nullptr;
 	constBuff->Map(0, nullptr, (void**)&constMap);
@@ -389,35 +449,64 @@ void JimaXengine::PostEffect::Draw()
 
 void JimaXengine::PostEffect::PreDrawScene()
 {
-	// リソースバリアを変更（シェーダーリソース→描画可能）
-	dxCommon->GetCommandList()->ResourceBarrier(
-		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(texBuff.Get(),
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_RENDER_TARGET)
-	);
+	for (int i = 0; i < 2; i++)
+	{
+		// リソースバリアを変更（シェーダーリソース→描画可能）
+		dxCommon->GetCommandList()->ResourceBarrier(
+			1,
+			&CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
+				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+				D3D12_RESOURCE_STATE_RENDER_TARGET)
+		);
+	}
+
 	// レンダーターゲットビュー用デスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvH = descHeapRTV->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHs[2]; 
+	for (int i = 0; i < 2; i++)
+	{
+		rtvHs[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+			descHeapRTV->GetCPUDescriptorHandleForHeapStart(),
+			i,
+			dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)
+		);
+	}
+
 	// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvH = descHeapDSV->GetCPUDescriptorHandleForHeapStart();
 	// レンダーターゲットをセット
-	dxCommon->GetCommandList()->OMSetRenderTargets(1, &rtvH, false, &dsvH);
-	// ビューポートの設定
-	dxCommon->GetCommandList()->RSSetViewports(1, &CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT));
+	dxCommon->GetCommandList()->OMSetRenderTargets(2, rtvHs, false, &dsvH);
 
-	// 全画面クリア
-	dxCommon->GetCommandList()->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
+	CD3DX12_VIEWPORT viewports[2];
+	CD3DX12_RECT scissorRects[2];
+	for (int i = 0; i < 2; i++)
+	{
+		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+		scissorRects[i] = CD3DX12_RECT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+	}
+	// ビューポートの設定
+	dxCommon->GetCommandList()->RSSetViewports(2, viewports);
+	// シザリング矩形の設定
+	dxCommon->GetCommandList()->RSSetScissorRects(2, scissorRects);
+
+	for (int i = 0; i < 2; i++)
+	{
+		// 全画面クリア
+		dxCommon->GetCommandList()->ClearRenderTargetView(rtvHs[i], clearColor, 0, nullptr);
+	}
 	// 深度バッファのクリア
 	dxCommon->GetCommandList()->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void JimaXengine::PostEffect::PostDrawScene()
 {
-	// リソースバリアを変更（描画可能→シェーダーリソース）
-	dxCommon->GetCommandList()->ResourceBarrier(
-		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(texBuff.Get(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
-	);
+	for (int i = 0; i < 2; i++)
+	{
+		// リソースバリアを変更（描画可能→シェーダーリソース）
+		dxCommon->GetCommandList()->ResourceBarrier(
+			1,
+			&CD3DX12_RESOURCE_BARRIER::Transition(texBuff[i].Get(),
+				D3D12_RESOURCE_STATE_RENDER_TARGET,
+				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
+		);
+	}
 }

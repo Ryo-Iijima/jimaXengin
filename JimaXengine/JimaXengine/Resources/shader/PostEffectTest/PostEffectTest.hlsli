@@ -1,7 +1,5 @@
 cbuffer cbuff0 : register(b0)
 {
-	//float4 color; //色(RGBA)
-	//matrix matWP; //3D変換行列
 };
 
 //頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体
