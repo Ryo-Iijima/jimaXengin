@@ -169,7 +169,6 @@ void JimaXengine::Application::Run()
 		sceneManager->Draw();
 		
 		postEffect->PostDrawScene();
-		imguiDev.Draw();
 
 		// 描画前処理
 		dxCommon->PreDraw();
@@ -177,8 +176,7 @@ void JimaXengine::Application::Run()
 		// ポストエフェクトの描画
 		postEffect->Draw();
 
-		////元描画おいてた位置
-		//sceneManager->Draw();
+		imguiDev.Draw();
 
 		// 描画後処理
 		dxCommon->PostDraw();

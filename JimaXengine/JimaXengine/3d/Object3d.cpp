@@ -284,7 +284,6 @@ void JimaXengine::Object3d::Draw()
 	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTranceform->GetGPUVirtualAddress());
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
-	//dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::light, constBufferSkin->GetGPUVirtualAddress());
 	light->Draw((int)ViewName::light);
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::material, model->GetCBMaterial().Get()->GetGPUVirtualAddress());	// –³—‚â‚èˆø‚Á’£‚Á‚Ä—ˆ‚½Š´‚ ‚Á‚Ä‚¢‚Ñ‚Â
 

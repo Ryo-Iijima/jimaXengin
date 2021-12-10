@@ -296,6 +296,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD; //加算
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; //ソースの値を100%使う
 	blenddesc.DestBlend = D3D12_BLEND_ONE; //デストの値を100%使う
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&add));
@@ -308,6 +309,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT; //デストからソースを減算
 	blenddesc.SrcBlend = D3D12_BLEND_ONE; //ソースの値を100%使う
 	blenddesc.DestBlend = D3D12_BLEND_ONE; //デストの値を100%使う
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sub));
@@ -320,6 +322,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD; //加算
 	blenddesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR; //1.0f-デストカラー値
 	blenddesc.DestBlend = D3D12_BLEND_ZERO; //使わない
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&invsrc));
@@ -332,6 +335,7 @@ void JimaXengine::PostEffect::CreateGraphicsPiplineState(const std::string& vsfi
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD; //加算
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; //ソースのアルファ値
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; //1.0f-ソースのアルファ値
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
 	gpipeline.BlendState.RenderTarget[1] = blenddesc;
 	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&alpha));
@@ -417,26 +421,6 @@ void JimaXengine::PostEffect::Initialize(DirectXCommon* dxcommon)
 
 void JimaXengine::PostEffect::Draw()
 {	
-	//if (Input::KeyTrigger(DIK_0))
-	//{
-	//	// デスクリプタヒープにSRVを作成
-	//	static int tex = 0;
-	//	// テクスチャ番号を0と1で切り替え
-	//	tex = (tex + 1) % 2;
-
-	//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	//	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	//	srvDesc.Texture2D.MipLevels = 1;
-
-	//	dxCommon->GetDevice()->CreateShaderResourceView(
-	//		texBuff[tex].Get(),
-	//		&srvDesc,
-	//		descHeapSRV->GetCPUDescriptorHandleForHeapStart()
-	//	);
-	//}
-
 	//定数バッファにデータ転送
 	JimaXengine::Object2d::SpriteConstBufferData* constMap = nullptr;
 	constBuff->Map(0, nullptr, (void**)&constMap);

@@ -236,9 +236,6 @@
     <ClCompile Include="2d\Object2d.cpp">
       <Filter>ソース ファイル\engin\2DObject</Filter>
     </ClCompile>
-    <ClCompile Include="2d\Texture.cpp">
-      <Filter>ソース ファイル\engin\2DObject</Filter>
-    </ClCompile>
     <ClCompile Include="Joycon\Joycon.cpp">
       <Filter>ソース ファイル\Joycon</Filter>
     </ClCompile>
@@ -273,6 +270,9 @@
       <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
     <ClCompile Include="2d\PostEffect.cpp">
+      <Filter>ソース ファイル\engin\2DObject</Filter>
+    </ClCompile>
+    <ClCompile Include="2d\Texture.cpp">
       <Filter>ソース ファイル\engin\2DObject</Filter>
     </ClCompile>
   </ItemGroup>

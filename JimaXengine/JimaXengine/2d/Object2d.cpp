@@ -24,7 +24,7 @@ HRESULT JimaXengine::Object2d::CreateDescriptorHeap()
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descHeapDesc.NumDescriptors = spriteSRVCount;
-	result = Object2d::dxCommon->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&spriteDescHeap));
+	result = dxCommon->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&spriteDescHeap));
 
 	return result;
 }
@@ -57,7 +57,7 @@ HRESULT JimaXengine::Object2d::CreateRootSignature()
 		&rootSigBlob,
 		&errorBlob);
 
-	result = Object2d::dxCommon->GetDevice()->CreateRootSignature(
+	result = dxCommon->GetDevice()->CreateRootSignature(
 		0,
 		rootSigBlob->GetBufferPointer(),
 		rootSigBlob->GetBufferSize(),
@@ -87,8 +87,9 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	gpipeline.InputLayout.pInputElementDescs = inputLayout;
 	gpipeline.InputLayout.NumElements = _countof(inputLayout);
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	gpipeline.NumRenderTargets = 1;
+	gpipeline.NumRenderTargets = 2;
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	gpipeline.SampleDesc.Count = 1;
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	gpipeline.DepthStencilState.DepthEnable = false; //2Dのスプライト画像は深度テストをしないだけ(コードの順番で描画されていく)
@@ -107,7 +108,8 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE; //ソースの値を100%使う
 	blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO; //デストの値を0%使う
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	result = Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&noblend));
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&noblend));
 	if (FAILED(result))return result;
 
 	pipelines.emplace(registername + "NOBLEND", noblend);
@@ -116,7 +118,8 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	ComPtr<ID3D12PipelineState> wireframe;
 	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	result = Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&wireframe));
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&wireframe));
 	if (FAILED(result))return result;
 	gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	blenddesc.BlendEnable = true;
@@ -128,8 +131,10 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD; //加算
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; //ソースの値を100%使う
 	blenddesc.DestBlend = D3D12_BLEND_ONE; //デストの値を100%使う
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	result = Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&add));
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&add));
 	if (FAILED(result))return result;
 
 	pipelines.emplace(registername + "ADD", add);
@@ -139,8 +144,10 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT; //デストからソースを減算
 	blenddesc.SrcBlend = D3D12_BLEND_ONE; //ソースの値を100%使う
 	blenddesc.DestBlend = D3D12_BLEND_ONE; //デストの値を100%使う
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	result = Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sub));
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&sub));
 	if (FAILED(result))return result;
 
 	pipelines.emplace(registername + "SUB", sub);
@@ -150,8 +157,10 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD; //加算
 	blenddesc.SrcBlend = D3D12_BLEND_INV_DEST_COLOR; //1.0f-デストカラー値
 	blenddesc.DestBlend = D3D12_BLEND_ZERO; //使わない
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	result = Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&invsrc));
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&invsrc));
 	if (FAILED(result))return result;
 
 	pipelines.emplace(registername + "INVSRC", invsrc);
@@ -161,15 +170,18 @@ HRESULT JimaXengine::Object2d::CreatePipeline(const std::string& vsfilename, con
 	blenddesc.BlendOp = D3D12_BLEND_OP_ADD; //加算
 	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; //ソースのアルファ値
 	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; //1.0f-ソースのアルファ値
+	blenddesc.BlendEnable = true;
 	gpipeline.BlendState.RenderTarget[0] = blenddesc;
-	result = Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&alpha));
+	gpipeline.BlendState.RenderTarget[1] = blenddesc;
+
+	result = dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&alpha));
 	if (FAILED(result))return result;
 
 	pipelines.emplace(registername + "ALPHA", alpha);
 
 	ComPtr<ID3D12PipelineState> depthalpha;
 	gpipeline.DepthStencilState.DepthEnable = true;
-	Object2d::dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&depthalpha));
+	dxCommon->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&depthalpha));
 	pipelines.emplace(registername + "ALPHADEPTH", depthalpha);
 
 	return result;
@@ -185,7 +197,7 @@ JimaXengine::Object2d::~Object2d()
 
 void JimaXengine::Object2d::Initialize(DirectXCommon* dxcommon)
 {
-	Object2d::dxCommon = dxcommon;
+	dxCommon = dxcommon;
 
 	if (FAILED(CreateDescriptorHeap()))assert(0);
 	if (FAILED(CreateRootSignature()))assert(0);
@@ -225,13 +237,13 @@ void JimaXengine::Object2d::LoadTexture(const std::string& filename)
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	Object2d::dxCommon->GetDevice()->CreateShaderResourceView(
+	dxCommon->GetDevice()->CreateShaderResourceView(
 		Texture::GetTexture(filename).Get(),
 		&srvDesc,
 		CD3DX12_CPU_DESCRIPTOR_HANDLE(
 			spriteDescHeap->GetCPUDescriptorHandleForHeapStart(),
 			texNumber,
-			Object2d::dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+			dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 	textureMap.emplace(filename, texNumber);
 
@@ -245,7 +257,7 @@ void JimaXengine::Object2d::CreateSprite()
 	result = S_FALSE;
 
 	//頂点バッファ生成
-	result = Object2d::dxCommon->GetDevice()->CreateCommittedResource(
+	result = dxCommon->GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(SpriteVertex) * 4),
@@ -259,7 +271,7 @@ void JimaXengine::Object2d::CreateSprite()
 	spriteVBView.StrideInBytes = sizeof(SpriteVertex);
 
 	//定数バッファの生成
-	result = Object2d::dxCommon->GetDevice()->CreateCommittedResource(
+	result = dxCommon->GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(SpriteConstBufferData) + 0xff) & ~0xff),
@@ -426,20 +438,20 @@ void JimaXengine::Object2d::TransferConstBuffer(Vector4 color)
 
 void JimaXengine::Object2d::DrawCommands(const std::string& filename, const std::string& registername, const std::string& blendtype)
 {
-	Object2d::dxCommon->GetCommandList()->SetPipelineState(pipelines[registername + blendtype].Get());
-	Object2d::dxCommon->GetCommandList()->SetGraphicsRootSignature(spriteRootSignature.Get());
-	Object2d::dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	dxCommon->GetCommandList()->SetPipelineState(pipelines[registername + blendtype].Get());
+	dxCommon->GetCommandList()->SetGraphicsRootSignature(spriteRootSignature.Get());
+	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	ID3D12DescriptorHeap* ppHeaps[] = { spriteDescHeap.Get() };
-	Object2d::dxCommon->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	dxCommon->GetCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	Object2d::dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &spriteVBView);
+	dxCommon->GetCommandList()->IASetVertexBuffers(0, 1, &spriteVBView);
 
-	Object2d::dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, spriteConstBuff->GetGPUVirtualAddress());
-	Object2d::dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(1, CD3DX12_GPU_DESCRIPTOR_HANDLE(
+	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, spriteConstBuff->GetGPUVirtualAddress());
+	dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(1, CD3DX12_GPU_DESCRIPTOR_HANDLE(
 		spriteDescHeap->GetGPUDescriptorHandleForHeapStart(),
 		textureMap[filename],
-		Object2d::dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+		dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	Object2d::dxCommon->GetCommandList()->DrawInstanced(4, 1, 0, 0);
+	dxCommon->GetCommandList()->DrawInstanced(4, 1, 0, 0);
 }

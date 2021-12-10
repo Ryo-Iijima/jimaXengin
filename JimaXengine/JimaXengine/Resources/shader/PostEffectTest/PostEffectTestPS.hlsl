@@ -15,5 +15,6 @@ float4 main(VSOutput input) : SV_TARGET
 		color = texcolor1;
 	}
 
-	return float4(color.rgb, 1);
+	//return float4(color.rgb, 1);
+	return texcolor1;
 }

@@ -1,2 +1,4 @@
-﻿  compilation object save succeeded; see C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\PostEffectTestPS.cso
-  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+﻿C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Resources\shader\FBX\FBXPS.hlsl(12,13-41): warning X3576: semantics in type overridden by variable/function or enclosing type
+  
+  compilation object save succeeded; see C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXPS.cso
+  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
