@@ -232,6 +232,7 @@
     <ClCompile Include="scene\Play.cpp" />
     <ClCompile Include="scene\SceneManager.cpp" />
     <ClCompile Include="scene\Title.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -294,6 +295,7 @@
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />
     <ClInclude Include="scene\Title.h" />
+    <ClInclude Include="TestScene.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>

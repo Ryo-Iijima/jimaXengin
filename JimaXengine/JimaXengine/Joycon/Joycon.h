@@ -284,7 +284,7 @@ namespace JimaXengine
         void SendRumble(uint8_t* buf);                                                // Setしたものを送る？2つは抱き合わせ？
 
         uint8_t* Subcommand(uint8_t sc, uint8_t* buf, unsigned int len, bool print = true);  // サブコマンドを送る
-        void dump_calibration_data();   // 直訳->ゴミキャリブレーションデータ
+        void dump_calibration_data();   // キャリブレーションデータ捨てる？
 
         uint8_t* ReadSPI(uint8_t addr1, uint8_t addr2, unsigned int len, bool print = false);
 

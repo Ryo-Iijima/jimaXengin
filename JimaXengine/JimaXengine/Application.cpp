@@ -2,6 +2,7 @@
 #include "3d/FbxLoader.h"
 #include "3d/Object3d.h"
 #include "2d/Object2d.h"
+#include "TestScene.h"
 #include "scene/Title.h"
 #include "scene/Play.h"
 #include "scene/End.h"
@@ -120,11 +121,12 @@ void JimaXengine::Application::Initialize()
 
 	// ƒV[ƒ“‚ÌÝ’è
 	sceneManager = new SceneManager;
+	sceneManager->Add("TestScene", new TestScene());
 	sceneManager->Add("Title", new Title(winApp));
-	sceneManager->Add("Play", new Play(winApp));
+	sceneManager->Add("Play", new Play());
 	sceneManager->Add("End", new End(winApp));
 
-	sceneManager->Change("Play");
+	sceneManager->Change("TestScene");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);	

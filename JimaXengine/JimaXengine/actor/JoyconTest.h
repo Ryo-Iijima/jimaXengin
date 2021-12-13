@@ -28,15 +28,15 @@ namespace JimaXengine
 		// èÉêàâºëzä÷êî
 		JoyconTest();
 		~JoyconTest();
-		void Initialize();
-		void Update();
-		void Draw();
+		void Initialize() override;
+		void Update() override;
+		void Draw() override;
 		// âºëzä÷êî
-		void Dead();
-		void Delete();
-		TYPE GetType();
-		RENDER_TYPE GetRenderType();
-		void DrawImGui();
+		void Dead() override;
+		void Delete() override;
+		TYPE GetType() override;
+		RENDER_TYPE GetRenderType() override;
+		void DrawImGui() override;
 
 	};
 }

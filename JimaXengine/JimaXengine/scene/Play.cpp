@@ -4,7 +4,7 @@
 #include "../2d/Object2d.h"
 #include "../DebugCamera.h"
 
-JimaXengine::Play::Play(WinApp* winapp)
+JimaXengine::Play::Play()
 {
 }
 

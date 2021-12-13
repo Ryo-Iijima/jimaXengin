@@ -275,6 +275,9 @@
     <ClCompile Include="2d\Texture.cpp">
       <Filter>ソース ファイル\engin\2DObject</Filter>
     </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>ソース ファイル\app\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -456,6 +459,9 @@
     </ClInclude>
     <ClInclude Include="2d\PostEffect.h">
       <Filter>ヘッダー ファイル\engin\2DObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

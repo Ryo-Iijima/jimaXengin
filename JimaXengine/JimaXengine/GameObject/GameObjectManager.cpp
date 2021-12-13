@@ -55,7 +55,10 @@ void JimaXengine::GameObjectManager::Update()
 void JimaXengine::GameObjectManager::Draw()
 {
 	//深度テストありパーティクル
-	pManager->DrawDepth(GetPlayer()->GetCamera());
+	if (GetPlayer())
+	{
+		pManager->DrawDepth(GetPlayer()->GetCamera());
+	}
 
 	//通常ゲームオブジェクト描画
 	{
@@ -74,12 +77,13 @@ void JimaXengine::GameObjectManager::Draw()
 	}
 
 	//深度テストありアルファパーティクル
-	pManager->DrawDepthAlpha(GetPlayer()->GetCamera());
-
-	GetPlayer()->DrawAlphaObj();
-
-	//深度テストなしパーティクル
-	pManager->DrawDepthNone(GetPlayer()->GetCamera());
+	if (GetPlayer())
+	{
+		pManager->DrawDepthAlpha(GetPlayer()->GetCamera());
+		GetPlayer()->DrawAlphaObj();
+		//深度テストなしパーティクル
+		pManager->DrawDepthNone(GetPlayer()->GetCamera());
+	}
 }
 
 void JimaXengine::GameObjectManager::ResetObject()

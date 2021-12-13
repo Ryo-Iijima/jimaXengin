@@ -26,15 +26,13 @@ namespace JimaXengine
 
 		GameObjectManager* oManager = nullptr;
 
-		JoyconTest* jcTest = nullptr;
-
 	private:
 		
 		// ŠÈˆÕ‰æ–Ê“]Š·
 		void simpleStaging();
 
 	public:
-		Play(WinApp* winapp);
+		Play();
 		~Play();
 		void Initialize() override;
 		void Update() override;

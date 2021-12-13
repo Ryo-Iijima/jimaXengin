@@ -12,6 +12,9 @@ void JimaXengine::JoyconTest::Start()
 
 void JimaXengine::JoyconTest::OnGUI()
 {
+    ImGui::Begin("JoyconInfomation");
+    ImGui::SetNextTreeNodeOpen(true);
+
     for (auto itr = m_joycons.begin(); itr != m_joycons.end(); ++itr)
     {
         bool isLeft = (*itr)->GetIsLeft();
@@ -23,9 +26,6 @@ void JimaXengine::JoyconTest::OnGUI()
         Vector3 accel = (*itr)->GetAccel();
         Vector4 orientation = (*itr)->GetVector();
        
-        ImGui::Begin("JoyconInfomation");
-
-        ImGui::SetNextTreeNodeOpen(true);
         if (ImGui::TreeNode("group 1")) {
 
             ImGui::Text("name : %s", name);
@@ -40,9 +40,10 @@ void JimaXengine::JoyconTest::OnGUI()
             ImGui::TreePop();
         }
 
-        ImGui::End();
 
     }
+
+    ImGui::End();
 }
 
 void JimaXengine::JoyconTest::SetControllers()
