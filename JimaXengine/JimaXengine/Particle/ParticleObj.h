@@ -21,7 +21,7 @@ namespace JimaXengine
 		bool IsDead() { return isDead; }
 
 	private:
-		Object3d obj3d;
+		std::unique_ptr <Object3d> obj3d;
 		ParticleParam param;
 		bool isDead;
 		std::string modelname;

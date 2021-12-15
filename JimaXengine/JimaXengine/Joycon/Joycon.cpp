@@ -478,9 +478,6 @@ uint8_t* JimaXengine::Joycon::Subcommand(uint8_t sc, uint8_t* buf, unsigned int 
 	uint8_t* buf_ = new uint8_t[report_len];
 	uint8_t* response = new uint8_t[report_len];
 
-	//Array.Copy(default_buf, 0, buf_, 2, 8);
-	//Array.Copy(buf, 0, buf_, 11, len);
-
 	memcpy(buf_ + 2, default_buf, 8);
 	memcpy(buf_ + 11, buf, len);
 

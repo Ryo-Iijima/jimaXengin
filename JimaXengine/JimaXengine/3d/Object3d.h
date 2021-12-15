@@ -60,13 +60,14 @@ namespace JimaXengine
 	protected:
 
 		// 色
-		Vector4 color = { 1,1,1,1 };
+		Vector4& color;
 		// ローカルスケール
-		XMFLOAT3 scale = { 1,1,1 };
+		XMFLOAT3& scale;
 		// ローカル回転角
-		XMFLOAT3 rotation = { 0,0,0 };
+		XMFLOAT3& rotation;
 		// ローカル座標
-		XMFLOAT3 position = { 0,0,0 };
+		XMFLOAT3& position;
+
 		// ローカルワールド変換行列
 		XMMATRIX matWorld;
 		// モデル
@@ -82,7 +83,7 @@ namespace JimaXengine
 		// ルートシグネチャ
 		static ComPtr<ID3D12RootSignature> rootSignature;
 		// パイプラインステート
-		static ComPtr<ID3D12PipelineState> piplineState;
+		static ComPtr<ID3D12PipelineState> pipelineState;
 
 		//ライト
 		static Light* light;
@@ -90,7 +91,7 @@ namespace JimaXengine
 	public:		// static関数
 		static void StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp);
 
-		static void CreateGraphicsPipline();
+		static void CreateGraphicsPipeline();
 
 		// setter
 		static void SetDevice(ID3D12Device* device) { Object3d::_dev = device; }
@@ -98,12 +99,8 @@ namespace JimaXengine
 
 	private:	// 変数
 
-		ComPtr<ID3D12Resource> constBufferTranceform;
+		ComPtr<ID3D12Resource> constBufferTransform;
 		ComPtr<ID3D12Resource> constBufferSkin;
-
-		Vector3 eye;
-		Vector3 target;
-		Vector3 up;
 
 		// アニメーション再生関連
 		// 1フレームの時間
@@ -125,6 +122,9 @@ namespace JimaXengine
 
 	public:		// 関数
 
+		Object3d();
+		Object3d(Vector3& pos, Vector3& scale, Vector3& rot, Vector4& color);
+
 		void Initialize();
 
 		void Update();
@@ -134,10 +134,10 @@ namespace JimaXengine
 		// setter
 		void SetModelforBuff(const std::string& modelName);
 
-		void SetColor(Vector4& color) { this->color = color; }
-		void SetScale(Vector3& scale) { this->scale = scale; }
-		void SetRotation(Vector3& rotation) { this->rotation = rotation; }
-		void SetPosition(Vector3& position) { this->position = position; }
+		//void SetColor(const Vector4& color) { this->color = color; }
+		//void SetScale(const Vector3& scale) { this->scale = scale; }
+		//void SetRotation(const Vector3& rotation) { this->rotation = rotation; }
+		//void SetPosition(const Vector3& position) { this->position = position; }
 
 		void SetCamera(Camera* camera) { this->camera = camera; }
 	};

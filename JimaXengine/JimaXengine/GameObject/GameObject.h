@@ -73,16 +73,18 @@ namespace JimaXengine
 		ParticleEmitter* pEmitter;
 
 		// 位置・移動
-		Vector3 pos;
+		Vector3 pos = { 0,0,0 };
 		Vector3 vel;
 		Vector3 acc;
 		float speed;
 		// 大きさ
-		Vector3 scale;
+		Vector3 scale = { 1,1,1 };
 		float size;
 		float halfsize;
 		// 回転
-		Vector3 rotation;
+		Vector3 rotation = { 0,0,0 };
+		// 色
+		Vector4 color = { 1,1,1,1 };
 		// 生死・削除フラグ
 		bool isDead;
 		bool isDelete;

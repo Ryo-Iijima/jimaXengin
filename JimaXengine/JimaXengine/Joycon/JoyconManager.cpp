@@ -10,14 +10,14 @@ JimaXengine::JoyconManager* JimaXengine::JoyconManager::Instance()
 
 void JimaXengine::JoyconManager::Awake()
 {
-	int i = 0;
-
 	bool isLeft = false;
 	hid_init();
-
+	
+	// HIDを列挙
 	hid_device_info* pEnumrate = hid_enumerate(vendor_id, 0x0);
 	hid_device_info* top_ptr = pEnumrate;
 
+	// vender_idに「_」無くて通らなかったとき
 	if (pEnumrate == 0)
 	{
 		pEnumrate = hid_enumerate(vendor_id_, 0x0);
@@ -28,6 +28,7 @@ void JimaXengine::JoyconManager::Awake()
 		}
 	}
 
+	// 列挙されたデバイスからjoy-conを探す
 	while (pEnumrate != 0)
 	{
 		printf("productID:%d\n", pEnumrate->product_id);
@@ -45,9 +46,7 @@ void JimaXengine::JoyconManager::Awake()
 			}
 			hid_device* handle = hid_open_path(pEnumrate->path);
 			hid_set_nonblocking(handle, 1);
-			//j.push_back(nullptr);
 			j.push_back(new Joycon(handle, EnableIMU, EnableLocalize & EnableIMU, 0.05f, isLeft));
-			++i;
 		}
 		pEnumrate = pEnumrate->next;
 	}

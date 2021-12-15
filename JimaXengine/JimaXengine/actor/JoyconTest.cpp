@@ -12,7 +12,7 @@ void JimaXengine::JoyconTest::Start()
 
 void JimaXengine::JoyconTest::OnGUI()
 {
-    ImGui::Begin("JoyconInfomation");
+    ImGui::Begin("JoyconInformation");
     ImGui::SetNextTreeNodeOpen(true);
 
     for (auto itr = m_joycons.begin(); itr != m_joycons.end(); ++itr)

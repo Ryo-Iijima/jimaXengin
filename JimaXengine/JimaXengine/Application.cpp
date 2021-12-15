@@ -47,7 +47,7 @@ void JimaXengine::Application::Initialize()
 	// 
 	Object3d::StaticInitialize(dxCommon, winApp);
 	Object3d::SetDevice(dxCommon->GetDevice());
-	Object3d::CreateGraphicsPipline();
+	Object3d::CreateGraphicsPipeline();
 	//
 	Object2d::Initialize(dxCommon);
 
@@ -126,7 +126,7 @@ void JimaXengine::Application::Initialize()
 	sceneManager->Add("Play", new Play());
 	sceneManager->Add("End", new End(winApp));
 
-	sceneManager->Change("TestScene");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);	

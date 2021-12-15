@@ -16,15 +16,22 @@ namespace JimaXengine
 		// ï«
 		std::unique_ptr<Object3d> wall;
 		Vector3 wallPos;
+		Vector3 wallScale;
 		Vector3 wallRot;
+		Vector4 wallColor;
 
 		// ínñ 
 		std::unique_ptr<Object3d> ground;
 		Vector3 groundPos;
 		Vector3 groundScale;
 		Vector3 groundRot;
+		Vector4 groundColor;
 
 		std::unique_ptr<Object3d> groundDart;
+		Vector3 groundDartPos;
+		Vector3 groundDartScale;
+		Vector3 groundDartRot;
+		Vector4 groundDartColor;
 
 		// ãqê»
 		std::unique_ptr<Seat> seat[15];

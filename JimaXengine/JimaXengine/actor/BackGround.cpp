@@ -16,39 +16,49 @@ JimaXengine::BackGround::~BackGround()
 void JimaXengine::BackGround::Initialize()
 {
 	// モデルのセット
-	wall = std::make_unique<Object3d>();
+	wall = std::make_unique<Object3d>(wallPos, wallScale, wallRot, wallColor);
 	wall->Initialize();
 	wall->SetModelforBuff("wall");
 
-	ground = std::make_unique<Object3d>();
+	ground = std::make_unique<Object3d>(groundPos, groundScale, groundRot, groundColor);
 	ground->Initialize();
 	ground->SetModelforBuff("ground");
 		
-	groundDart = std::make_unique<Object3d>();
+	groundDart = std::make_unique<Object3d>(groundDartPos, groundDartScale, groundDartRot, groundDartColor);
 	groundDart->Initialize();
 	groundDart->SetModelforBuff("DefaultPlane");
-	groundDart->SetPosition(Vector3(0, -0.1f, 0));
-	groundDart->SetScale(Vector3(100, 100, 100));
+	//groundDart->SetPosition(Vector3(0, -0.1f, 0));
+	//groundDart->SetScale(Vector3(100, 100, 100));
+	groundDartPos = Vector3(0, -0.1f, 0);
+	groundDartScale = Vector3(100, 100, 100);
+	groundDartRot = Vector3(0, 0, 0);
+	groundDartColor = Vector4(1, 1, 1, 1);
 
 #pragma region 壁
 	wallPos = Vector3(0, 2.5f, 40);
 	wallRot = Vector3(0, 180, 0);
+	wallScale = Vector3(2, 1, 1);
+	wallColor = Vector4(1, 1, 1, 1);
 
-	wall->SetPosition(wallPos);
-	wall->SetScale(Vector3(2, 1, 1));
-	wall->SetColor(Vector4(1, 1, 1, 1));
-	wall->SetRotation(wallRot);
+	//wall->SetPosition(wallPos);
+	//wall->SetScale(Vector3(2, 1, 1));
+	//wall->SetColor(Vector4(1, 1, 1, 1));
+	//wall->SetRotation(wallRot);
+
+
 #pragma endregion
 
 #pragma region 地面
 	groundPos = Vector3(0, 0, 0);
 	groundScale = Vector3(1, 1, 1);
 	groundRot = Vector3(0, 180, 0);
+	groundColor = Vector4(1, 1, 1, 1);
 
-	ground->SetPosition(groundPos);
-	ground->SetScale(groundScale);
-	ground->SetColor(Vector4(1, 1, 1, 1));
-	ground->SetRotation(groundRot);
+	//ground->SetPosition(groundPos);
+	//ground->SetScale(groundScale);
+	//ground->SetColor(Vector4(1, 1, 1, 1));
+	//ground->SetRotation(groundRot);
+
 #pragma endregion
 
 #pragma region 客席
@@ -70,15 +80,15 @@ void JimaXengine::BackGround::Update()
 
 
 #pragma region 壁
-	wall->SetPosition(wallPos);
-	wall->SetRotation(wallRot);
+	//wall->SetPosition(wallPos);
+	//wall->SetRotation(wallRot);
 	wall->SetCamera(pCamera);
 	wall->Update();
 #pragma endregion
 
 #pragma region 地面
-	ground->SetPosition(groundPos);
-	ground->SetRotation(groundRot);
+	//ground->SetPosition(groundPos);
+	//ground->SetRotation(groundRot);
 	ground->SetCamera(pCamera);
 	ground->Update();
 

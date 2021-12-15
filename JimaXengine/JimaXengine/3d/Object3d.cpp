@@ -13,7 +13,7 @@ using namespace DirectX;
 JimaXengine::DirectXCommon* JimaXengine::Object3d::dxCommon = nullptr;
 ID3D12Device* JimaXengine::Object3d::_dev = nullptr;
 ComPtr<ID3D12RootSignature> JimaXengine::Object3d::rootSignature;
-ComPtr<ID3D12PipelineState> JimaXengine::Object3d::piplineState;
+ComPtr<ID3D12PipelineState> JimaXengine::Object3d::pipelineState;
 JimaXengine::Light* JimaXengine::Object3d::light=nullptr;
 
 void  JimaXengine::Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp)
@@ -21,7 +21,7 @@ void  JimaXengine::Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* w
 	Object3d::dxCommon = dxcommon;
 }
 
-void  JimaXengine::Object3d::CreateGraphicsPipline()
+void  JimaXengine::Object3d::CreateGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -137,11 +137,17 @@ void  JimaXengine::Object3d::CreateGraphicsPipline()
 	gpipeline.pRootSignature = rootSignature.Get();
 
 	// グラフィックスパイプラインの生成
-	result = _dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(piplineState.ReleaseAndGetAddressOf()));
+	result = _dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(pipelineState.ReleaseAndGetAddressOf()));
 	if (FAILED(result))
 	{ 
 		assert(0); 
 	}
+}
+
+JimaXengine::Object3d::Object3d(Vector3& pos, Vector3& scale, Vector3& rot, Vector4& color)
+	:position(pos), scale(scale), rotation(rot), color(color)
+{
+	matWorld = XMMatrixIdentity();
 }
 
 void JimaXengine::Object3d::Initialize()
@@ -155,7 +161,7 @@ void JimaXengine::Object3d::Initialize()
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(TransformData) + 0xff) & ~0xff),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(constBufferTranceform.GetAddressOf())
+		IID_PPV_ARGS(constBufferTransform.GetAddressOf())
 	);
 	assert(SUCCEEDED(result));
 
@@ -179,10 +185,6 @@ void JimaXengine::Object3d::Initialize()
 	}
 	constBufferSkin->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
-
-	eye = { 0, 0, -20 };
-	target = { 0, 0, 0 };
-	up = { 0, 1, 0 };
 
 	// 1フレーム分の時間を60FPSに設定
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
@@ -220,7 +222,7 @@ void JimaXengine::Object3d::Update()
 	HRESULT result;
 	// 定数バッファに転送
 	TransformData* constMap = nullptr;
-	result = constBufferTranceform->Map(0, nullptr, (void**)&constMap);
+	result = constBufferTransform->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
 		constMap->color = color;
@@ -228,7 +230,7 @@ void JimaXengine::Object3d::Update()
 		//constMap->world = matWorld * modelTransform;
 		constMap->world = matWorld;
 		constMap->cameraPos = cameraPos;
-		constBufferTranceform->Unmap(0, nullptr);
+		constBufferTransform->Unmap(0, nullptr);
 	}
 
 	////////////////////////////
@@ -279,10 +281,10 @@ void JimaXengine::Object3d::Draw()
 		return;
 	}
 	
-	dxCommon->GetCommandList()->SetPipelineState(piplineState.Get());
+	dxCommon->GetCommandList()->SetPipelineState(pipelineState.Get());
 	dxCommon->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTranceform->GetGPUVirtualAddress());
+	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTransform->GetGPUVirtualAddress());
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
 	light->Draw((int)ViewName::light);
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::material, model->GetCBMaterial().Get()->GetGPUVirtualAddress());	// 無理やり引っ張って来た感あっていびつ

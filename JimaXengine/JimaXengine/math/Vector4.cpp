@@ -10,6 +10,11 @@ JimaXengine::Vector4::Vector4(float x, float y, float z, float w)
 {
 }
 
+JimaXengine::Vector4::Vector4(Vector3 color, float alpha)
+	: x(color.x), y(color.y), z(color.z), w(alpha)
+{
+}
+
 JimaXengine::Vector4 JimaXengine::Vector4::operator+() const
 {
 	return *this;

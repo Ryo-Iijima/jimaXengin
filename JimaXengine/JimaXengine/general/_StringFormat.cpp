@@ -1,13 +1,13 @@
 #include "_StringFormat.h"
 
-std::string JimaXengine::_StringFormat::Format(std::string format, int data)
+std::string JimaXengine::_StringFormat::Format(const std::string& format, const int& data)
 {
 	std::string s;
 	s = std::to_string(data);
 	return s;
 }
 
-std::string JimaXengine::_StringFormat::Format(std::string format, std::string data)
+std::string JimaXengine::_StringFormat::Format(const std::string& format, const std::string& data)
 {
 	std::string s;
 	s = data;

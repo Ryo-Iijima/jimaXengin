@@ -30,7 +30,8 @@ void JimaXengine::Target::HitCheck()
 		if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
 			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
 		{
-			object->SetColor(Vector4(0, 1, 1, 1));
+			//object->SetColor(Vector4(0, 1, 1, 1));
+			color = Vector4(0, 1, 1, 1);
 			reflection = true;
 
 			// どっちのラケットに当たったか判定
@@ -98,7 +99,8 @@ void JimaXengine::Target::HitCheck()
 		// ボスに当たったら
 		if (Collision::CheckAABB3DToSphere(boss->GetAABB3DCol(), sphereCol))
 		{
-			object->SetColor(Vector4(0, 0, 0, 1));
+			//object->SetColor(Vector4(0, 0, 0, 1));
+			color = Vector4(0, 0, 0, 1);
 			boss->Damage();
 			Dead();
 			Delete();
@@ -121,13 +123,13 @@ JimaXengine::Target::~Target()
 
 void JimaXengine::Target::Initialize()
 {	
-	object = new Object3d;
+	object = new Object3d(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("ball");
-	object->SetColor(Vector4(1, 1, 1, 1));
-	float sca = 0.3f;
-	object->SetScale(Vector3(sca, sca, sca));
-	sphereCol.radius = sca;
+	//object->SetColor(Vector4(1, 1, 1, 1));
+	scale = { 0.3f,0.3f, 0.3f };
+	//object->SetScale(Vector3(sca, sca, sca));
+	sphereCol.radius = scale.x;
 
 	reflection = false;
 
@@ -145,8 +147,8 @@ void JimaXengine::Target::Update()
 	HitCheck();
 	Move();
 
-	object->SetPosition(pos);
-	object->SetRotation(rotation);
+	//object->SetPosition(pos);
+	//object->SetRotation(rotation);
 	object->SetCamera(pCamera);
 	object->Update();
 
@@ -165,6 +167,6 @@ JimaXengine::GameObject::TYPE JimaXengine::Target::GetType()
 
 void JimaXengine::Target::DrawImGui()
 {
-	//ImGui::Begin("TargetInfomation");
+	//ImGui::Begin("TargetInfromation");
 	//ImGui::End();
 }

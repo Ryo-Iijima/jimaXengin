@@ -22,7 +22,9 @@ namespace JimaXengine
 
 	public:
 		static JoyconManager* Instance();
+		// Joy-Con ê⁄ë±
 		void Awake();
+
 		void Start();
 		void Update();
 		void OnApplicationQuit();

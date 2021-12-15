@@ -76,7 +76,7 @@ void JimaXengine::End::Draw()
 	ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
 	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-	ImGui::Begin("BossInfomation");
+	ImGui::Begin("BossInformation");
 	ImGui::Text("pos : %f,%f", timeTexData.pos.x, timeTexData.pos.y);
 	ImGui::Text("size : %f,%f", timeTexData.size.x, timeTexData.size.y);
 

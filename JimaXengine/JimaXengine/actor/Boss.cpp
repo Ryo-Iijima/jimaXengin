@@ -16,17 +16,18 @@ JimaXengine::Boss::~Boss()
 void JimaXengine::Boss::Initialize()
 {
 	//model = FbxLoader::GetInstance().LoadModelFromFile("boss");
-	object = std::make_unique<Object3d>();
+	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
 	//object->SetModel(model);
 	object->SetModelforBuff("boss");
 	//object->SetModelforBuff("smooth_sphere");
 
 	pos = Vector3(0, 6, 0);
-	object->SetPosition(pos);
-	object->SetScale(Vector3(1.5f, 1.5f, 1.5f));
+	//object->SetPosition(pos);
+	scale = Vector3(1.5f, 1.5f, 1.5f);
+	//object->SetScale(Vector3(1.5f, 1.5f, 1.5f));
 	rotation = Vector3(0, 180, 0);
-	object->SetRotation(rotation);
+	//object->SetRotation(rotation);
 
 	Vector3 colscale = { 5,5,5 };
 	aabb3dCol.maxPos = pos + colscale;
@@ -75,22 +76,26 @@ void JimaXengine::Boss::Update()
 		}
 		if (i % 2 == 0)
 		{
-			object->SetColor(Vector4(1, 0.5f, 0.5f, 1));
+			//object->SetColor(Vector4(1, 0.5f, 0.5f, 1));
+			color = Vector4(1, 0.5f, 0.5f, 1);
 		}
 		else
 		{
-			object->SetColor(Vector4(1, 1, 1, 1));
+			//object->SetColor(Vector4(1, 1, 1, 1));
+			color = Vector4(1, 1, 1, 1);
 		}
 	}
 	else
 	{
-		object->SetColor(Vector4(1, 1, 1, 1));
+		//object->SetColor(Vector4(1, 1, 1, 1));
+		color = Vector4(1, 1, 1, 1);
 	}
 
 	Floating();
 
-	object->SetPosition(pos + floatingOffsetPos);
-	object->SetRotation(rotation);
+	//object->SetPosition(pos + floatingOffsetPos);
+	//pos = pos+floatingOffsetPos;
+	//object->SetRotation(rotation);
 	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
 	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
 
@@ -131,7 +136,7 @@ void JimaXengine::Boss::DrawImGui()
 	ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
 	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-	ImGui::Begin("BossInfomation");
+	ImGui::Begin("BossInformation");
 	ImGui::Text("hp : %d", hp);
 	ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
 	ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
@@ -364,4 +369,5 @@ void JimaXengine::Boss::Floating()
 	{
 		a *= -1;
 	}
+	pos.y += a;
 }
