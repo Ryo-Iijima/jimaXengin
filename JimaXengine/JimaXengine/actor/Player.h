@@ -67,31 +67,5 @@ namespace JimaXengine
 		void Move();
 		void Damage();	// ダメージを食らう
 
-
-	// joycon 周りここから
-	private:
-		Object3d* layObj = nullptr;
-
-		hid_device_info* device = nullptr;
-		hid_device* dev = nullptr;
-		uint8_t buff[0x40];
-		size_t size;
-
-		struct Int3
-		{
-			short x;
-			short y;
-			short z;
-		};
-
-		Int3 accel, gyro;
-
-	private:
-		void JoyConInitialize();
-		void JoyConUpdate();
-
-	// joycon 周りここまで
-
-
 	};
 }

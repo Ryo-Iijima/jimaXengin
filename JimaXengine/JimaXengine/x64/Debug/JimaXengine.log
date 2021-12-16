@@ -1,2 +1,10 @@
-﻿  Boss.cpp
+﻿  TestScene.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(126,32): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(127,32): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(128,32): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(151,31): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(152,31): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(153,31): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(193,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

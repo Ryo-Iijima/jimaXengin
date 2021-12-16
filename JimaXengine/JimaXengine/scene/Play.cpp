@@ -64,7 +64,7 @@ void JimaXengine::Play::Update()
 	camera->Move();
 
 	{
-		static XMVECTOR lightDir = { 0,1,5,0 };
+		static XMVECTOR lightDir = { 0,-5,5,0 };
 		if (Input::KeyPress(DIK_UP)) { lightDir.m128_f32[1] += 1.0f; }
 		if (Input::KeyPress(DIK_DOWN)) { lightDir.m128_f32[1] -= 1.0f; }
 		if (Input::KeyPress(DIK_RIGHT)) { lightDir.m128_f32[0] += 1.0f; }
