@@ -20,9 +20,22 @@ namespace JimaXengine
 			short z;
 		};
 
-		Vector3 row_accel, row_gyro;
+		// 一定以下の変化を無視する用
+		float deadZone = 0.01f;
+		// クランプ用、変化の最大値,最小値
+		Vector3 maxValue = { 0,0,0 };
+		Vector3 minValue = { 0,0,0 };
 
-		Vector3 position, velocity, accel, rotation;
+		float speed = 1.0f;
+
+		Vector3 row_accel, row_gyro;
+		Vector3 accel, gyro;
+		Vector3 prev_accel, prev_gyro;
+
+		Vector3 diff_accel, prev_diff_accel;
+		Vector3 diff_gyro;
+
+		Vector3 position, velocity, rotation;
 		Vector3 scale;
 		Vector4 color;
 

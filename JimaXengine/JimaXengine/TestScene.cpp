@@ -114,21 +114,28 @@ void JimaXengine::TestScene::JoyConInitialize()
 
 void JimaXengine::TestScene::JoyConUpdate()
 {
-    // input report を受けとる。
     if (dev)
     {
+        // 前フレームの状態を保持
+        prev_accel = accel;
+        prev_gyro = gyro;
+
+        // input report を受けとる。
         int ret = hid_read(dev, buff, size);
 
         // ボタン
         //printf("button byte 1: %d\n", buff[1]);
 
-        // accel
+        /////////////////////////////////////////////////////
+        //// accel 
+        /////////////////////////////////////////////////////
+
+        // 値の取得
         row_accel.x = buff[13] | buff[14] << 8;
         row_accel.y = buff[15] | buff[16] << 8;
         row_accel.z = buff[17] | buff[18] << 8;
 
-        //printf("%d\n", accel.z);
-
+        // 補正用の計算（上半分は毎回計算する必要はない）
         Vector3 cal_acc_coeff = { 350,0,4081 };       // オフセット量
         Vector3 cal_acc_origin = { 18,75,4100 };      // コントローラー水平時のセンサーの値
         Vector3 acc_coeff;
@@ -142,16 +149,21 @@ void JimaXengine::TestScene::JoyConUpdate()
         acc_vector_component.y = acc_raw_component.y * acc_coeff.y;
         acc_vector_component.z = acc_raw_component.z * acc_coeff.z;
 
+        // 結果
         accel.x = acc_vector_component.x / 50;
         accel.y = acc_vector_component.z / 10000;
         accel.z = acc_vector_component.y / -500;
 
+        /////////////////////////////////////////////////////
+        //// gyro
+        /////////////////////////////////////////////////////
 
-        // gyro
+        // 値の取得
         row_gyro.x = buff[19] | buff[20] << 8;
         row_gyro.y = buff[21] | buff[22] << 8;
         row_gyro.z = buff[23] | buff[24] << 8;
 
+        // 補正用の計算（上半分は毎回計算する必要はない）
         Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量
         Vector3 cal_gyro_offset = { 24,-19,-27 };     // コントローラー水平時のセンサーの値
         Vector3 gyro_cal_coeff;
@@ -165,17 +177,69 @@ void JimaXengine::TestScene::JoyConUpdate()
         gyro_vector_component.y = (gyro_raw_component.y - cal_gyro_offset.y) * gyro_cal_coeff.y;
         gyro_vector_component.z = (gyro_raw_component.z - cal_gyro_offset.z) * gyro_cal_coeff.z;
 
-        rotation.x += (gyro_vector_component.x / 500);
-        rotation.y += (gyro_vector_component.y / 5000);
-        rotation.z += (gyro_vector_component.z / -100);
+        // 結果
+        gyro.x = (gyro_vector_component.x / 500);
+        gyro.y = (gyro_vector_component.y / 5000);
+        gyro.z = (gyro_vector_component.z / -100);
 
         //Sleep(500);
     }
 
-    //velocity += accel;
-    //position += velocity;
-    //object->SetRotation(Vector3(rotation.x, rotation.z, rotation.y));
-    //object->SetPosition(pos);
+    diff_accel = prev_accel - accel;
+    diff_gyro = prev_gyro - gyro;
+
+    // 一定以下の変化量を無視
+    if (fabs(diff_accel.x) < deadZone )
+    {
+        diff_accel = Vector3().Zero;
+    }
+
+    //// 符号が変わる変化だった場合0までにしとく
+    ////  　- ～ ＋                                      + ～ -
+    //if ((prev_diff_accel.x < 0 && diff_accel.x > 0) || (prev_diff_accel.x > 0 && diff_accel.x < 0))
+    //{
+    //    diff_accel = prev_diff_accel;
+    //}
+
+    // １キーでリセット
+    if (Input::KeyTrigger(DIK_1))
+    {
+        position = Vector3().Zero;
+
+        maxValue = Vector3().Zero;
+        minValue = Vector3().Zero;
+    }
+
+    // 変化量の最大、最小、を記録
+    if (diff_accel.x > maxValue.x)
+    {
+        maxValue.x = diff_accel.x;
+    }
+    if (diff_accel.x < minValue.x)
+    {
+        minValue.x = diff_accel.x;
+    }
+
+    // diff_accelが+か-かで移動量を変更
+    if (diff_accel.x > 0)
+    {
+        velocity = Vector3(1, 0, 0);
+    }
+    else if(diff_accel.x < 0)
+    {
+        velocity = Vector3(-1, 0, 0);
+    }
+    else
+    {
+        velocity = Vector3(0, 0, 0);
+    }
+
+    //// 差分を保存
+    //prev_diff_accel = diff_accel;
+
+    //diff_accel.Normalize();
+    velocity.x += diff_accel.x * speed;
+    position += velocity;
 
 }
 
@@ -197,7 +261,7 @@ void JimaXengine::TestScene::Initialize()
 {
 	// カメラ
 	Vector3 eye, target, up;
-	eye = { 0, 3, -23 };
+	eye = { 0, 3, -50 };
 	target = { 0, 3, 10 };
 	up = { 0, 1, 0 };
 	camera = std::make_unique<DebugCamera>();
@@ -228,9 +292,11 @@ void JimaXengine::TestScene::Initialize()
     object->SetModelforBuff("DefaultBox");
 
     position = Vector3(0, 0, 0);
-    scale = Vector3(1, 1, 1);
+    scale = Vector3(10, 10, 10);
     rotation = Vector3(0, 0, 0);
     color = Vector4(1, 1, 1, 1);
+
+    velocity = Vector3(0, 0, 0);
 
     JoyConInitialize();
 }
@@ -268,11 +334,21 @@ void JimaXengine::TestScene::Draw()
     ImGui::SetNextWindowSize(ImVec2(400, 300), 1 << 1);
 
     ImGui::Begin("joyconparam");
-    ImGui::Text("row_acc : %f,%f,%f", row_accel.x, row_accel.y, row_accel.z);
-    ImGui::Text("row_gyro : %f,%f,%f", row_gyro.x, row_gyro.y, row_gyro.z);
+    ImGui::Text(" row_accel : [%+010.3f], [%+010.3f], [%+010.3f]", row_accel.x, row_accel.y, row_accel.z);
+    ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
 
-    ImGui::Text("accel : %f,%f,%f", accel.x, accel.y, accel.z);
-    ImGui::Text("rotation : %f,%f,%f", rotation.x, rotation.y, rotation.z);
+    ImGui::Text("     accel : [%+010.3f], [%+010.3f], [%+010.3f]", accel.x, accel.y, accel.z);
+    ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
+
+    ImGui::Text("diff_accel : [%+010.3f], [%+010.3f], [%+010.3f]", diff_accel.x, diff_accel.y, diff_accel.z);
+    ImGui::Text("diff_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", diff_gyro.x, diff_gyro.y, diff_gyro.z);
+   
+    ImGui::Text(" maxValue  : [%+010.3f], [%+010.3f], [%+010.3f]", maxValue.x, maxValue.y, maxValue.z);
+    ImGui::Text(" minValue  : [%+010.3f], [%+010.3f], [%+010.3f]", minValue.x, minValue.y, minValue.z);
+   
+    static float slider1 = 0.0f;
+    ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 1.0f);
+    ImGui::SliderFloat("speed", &speed, 0.0f, 100.0f);
 
     ImGui::End();
 
