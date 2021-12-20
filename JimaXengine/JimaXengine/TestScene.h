@@ -1,6 +1,7 @@
 #pragma once
 #include "scene/Scene.h"
 #include "GameObject/GameObjectManager.h"
+#include "hidapi/hidapi.h"
 
 namespace JimaXengine
 {
@@ -34,6 +35,7 @@ namespace JimaXengine
 
 		Vector3 diff_accel, prev_diff_accel;
 		Vector3 diff_gyro;
+		Vector3 add_gyro;
 
 		Vector3 position, velocity, rotation;
 		Vector3 scale;

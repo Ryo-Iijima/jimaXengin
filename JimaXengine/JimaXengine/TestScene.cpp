@@ -131,116 +131,102 @@ void JimaXengine::TestScene::JoyConUpdate()
         /////////////////////////////////////////////////////
 
         // 値の取得
-        row_accel.x = buff[13] | buff[14] << 8;
-        row_accel.y = buff[15] | buff[16] << 8;
-        row_accel.z = buff[17] | buff[18] << 8;
+        row_accel.x = (float)(buff[13] | buff[14] << 8);
+        row_accel.y = (float)(buff[15] | buff[16] << 8);
+        row_accel.z = (float)(buff[17] | buff[18] << 8);
 
-        // 補正用の計算（上半分は毎回計算する必要はない）
-        Vector3 cal_acc_coeff = { 350,0,4081 };       // オフセット量
-        Vector3 cal_acc_origin = { 18,75,4100 };      // コントローラー水平時のセンサーの値
-        Vector3 acc_coeff;
-        acc_coeff.x = (float)((1.0 / (cal_acc_coeff.x - cal_acc_origin.x)) * 4.0f);
-        acc_coeff.y = (float)((1.0 / (cal_acc_coeff.y - cal_acc_origin.y)) * 4.0f);
-        acc_coeff.z = (float)((1.0 / (cal_acc_coeff.z - cal_acc_origin.z)) * 4.0f);
+        accel.x = row_accel.x * 0.00025f;
+        accel.y = row_accel.y * 0.00025f;
+        accel.z = row_accel.z * 0.00025f;
 
-        Vector3 acc_raw_component = { (float)row_accel.x ,(float)row_accel.y ,(float)row_accel.z };
-        Vector3 acc_vector_component;
-        acc_vector_component.x = acc_raw_component.x * acc_coeff.x;
-        acc_vector_component.y = acc_raw_component.y * acc_coeff.y;
-        acc_vector_component.z = acc_raw_component.z * acc_coeff.z;
 
-        // 結果
-        accel.x = acc_vector_component.x / 50;
-        accel.y = acc_vector_component.z / 10000;
-        accel.z = acc_vector_component.y / -500;
+        //// 補正用の計算（上半分は毎回計算する必要はない）
+        //Vector3 cal_acc_coeff = { 350,0,4081 };       // オフセット量
+        //Vector3 cal_acc_origin = { 18,75,4100 };      // コントローラー水平時のセンサーの値
+        //Vector3 acc_coeff;
+        //acc_coeff.x = (float)((1.0 / (cal_acc_coeff.x - cal_acc_origin.x)) * 4.0f);
+        //acc_coeff.y = (float)((1.0 / (cal_acc_coeff.y - cal_acc_origin.y)) * 4.0f);
+        //acc_coeff.z = (float)((1.0 / (cal_acc_coeff.z - cal_acc_origin.z)) * 4.0f);
+
+        //Vector3 acc_raw_component = { (float)row_accel.x ,(float)row_accel.y ,(float)row_accel.z };
+        //Vector3 acc_vector_component;
+        //acc_vector_component.x = acc_raw_component.x * acc_coeff.x;
+        //acc_vector_component.y = acc_raw_component.y * acc_coeff.y;
+        //acc_vector_component.z = acc_raw_component.z * acc_coeff.z;
+
+        //// 結果
+        //accel.x = acc_vector_component.x / 50;
+        //accel.y = acc_vector_component.z / 10000;
+        //accel.z = acc_vector_component.y / -500;
 
         /////////////////////////////////////////////////////
         //// gyro
         /////////////////////////////////////////////////////
 
         // 値の取得
-        row_gyro.x = buff[19] | buff[20] << 8;
-        row_gyro.y = buff[21] | buff[22] << 8;
-        row_gyro.z = buff[23] | buff[24] << 8;
+        row_gyro.x = (float)(buff[19] | buff[20] << 8);
+        row_gyro.y = (float)(buff[21] | buff[22] << 8);
+        row_gyro.z = (float)(buff[23] | buff[24] << 8);
 
-        // 補正用の計算（上半分は毎回計算する必要はない）
-        Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量
-        Vector3 cal_gyro_offset = { 24,-19,-27 };     // コントローラー水平時のセンサーの値
-        Vector3 gyro_cal_coeff;
-        gyro_cal_coeff.x = (936.0f / (cal_gyro_coeff.x - cal_gyro_offset.x));
-        gyro_cal_coeff.y = (936.0f / (cal_gyro_coeff.y - cal_gyro_offset.y));
-        gyro_cal_coeff.z = (936.0f / (cal_gyro_coeff.z - cal_gyro_offset.z));
+        Vector3 gyr_neutral = { 330, 65495, 65520 };
+        //gyro.x = (row_gyro.x - gyr_neutral.x) * 0.00122187695f;
+        //gyro.y = (row_gyro.y - gyr_neutral.y) * 0.00122187695f;
+        //gyro.z = (row_gyro.z - gyr_neutral.z) * 0.00122187695f;
+        gyro.x = (row_gyro.x - gyr_neutral.x) / 0xffff * 360.0f;
+        gyro.y = (row_gyro.y - gyr_neutral.y) / 0xffff * 360.0f;
+        gyro.z = (row_gyro.z - gyr_neutral.z) / 0xffff * 360.0f;
 
-        Vector3 gyro_raw_component = { (float)row_gyro.x, (float)row_gyro.y, (float)row_gyro.z };
-        Vector3 gyro_vector_component;
-        gyro_vector_component.x = (gyro_raw_component.x - cal_gyro_offset.x) * gyro_cal_coeff.x;
-        gyro_vector_component.y = (gyro_raw_component.y - cal_gyro_offset.y) * gyro_cal_coeff.y;
-        gyro_vector_component.z = (gyro_raw_component.z - cal_gyro_offset.z) * gyro_cal_coeff.z;
 
-        // 結果
-        gyro.x = (gyro_vector_component.x / 500);
-        gyro.y = (gyro_vector_component.y / 5000);
-        gyro.z = (gyro_vector_component.z / -100);
+        //// 補正用の計算（上半分は毎回計算する必要はない）
+        //Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量
+        //Vector3 cal_gyro_offset = { 24,-19,-27 };     // コントローラー水平時のセンサーの値
+        //Vector3 gyro_cal_coeff;
+        //gyro_cal_coeff.x = (936.0f / (cal_gyro_coeff.x - cal_gyro_offset.x));
+        //gyro_cal_coeff.y = (936.0f / (cal_gyro_coeff.y - cal_gyro_offset.y));
+        //gyro_cal_coeff.z = (936.0f / (cal_gyro_coeff.z - cal_gyro_offset.z));
+
+        //Vector3 gyro_raw_component = { (float)row_gyro.x, (float)row_gyro.y, (float)row_gyro.z };
+        //Vector3 gyro_vector_component;
+        //gyro_vector_component.x = (gyro_raw_component.x - cal_gyro_offset.x) * gyro_cal_coeff.x;
+        //gyro_vector_component.y = (gyro_raw_component.y - cal_gyro_offset.y) * gyro_cal_coeff.y;
+        //gyro_vector_component.z = (gyro_raw_component.z - cal_gyro_offset.z) * gyro_cal_coeff.z;
+
+        //// 結果
+        //gyro.x = (gyro_vector_component.x / 500);
+        //gyro.y = (gyro_vector_component.y / 5000);
+        //gyro.z = (gyro_vector_component.z / -100);
 
         //Sleep(500);
     }
 
+    // 前フレームとの差分
     diff_accel = prev_accel - accel;
-    diff_gyro = prev_gyro - gyro;
 
-    // 一定以下の変化量を無視
-    if (fabs(diff_accel.x) < deadZone )
-    {
-        diff_accel = Vector3().Zero;
-    }
-
-    //// 符号が変わる変化だった場合0までにしとく
-    ////  　- ～ ＋                                      + ～ -
-    //if ((prev_diff_accel.x < 0 && diff_accel.x > 0) || (prev_diff_accel.x > 0 && diff_accel.x < 0))
-    //{
-    //    diff_accel = prev_diff_accel;
-    //}
-
-    // １キーでリセット
     if (Input::KeyTrigger(DIK_1))
     {
-        position = Vector3().Zero;
-
         maxValue = Vector3().Zero;
         minValue = Vector3().Zero;
     }
 
-    // 変化量の最大、最小、を記録
-    if (diff_accel.x > maxValue.x)
+    add_gyro.x = std::clamp(gyro.x, -1.0f, 1.0f);
+    add_gyro.y = std::clamp(gyro.y, -1.0f, 1.0f);
+    add_gyro.z = std::clamp(gyro.z, -1.0f, 1.0f);
+
+    if (add_gyro.x < deadZone)
     {
-        maxValue.x = diff_accel.x;
+        add_gyro.x = 0;
     }
-    if (diff_accel.x < minValue.x)
+    if (add_gyro.y < deadZone)
     {
-        minValue.x = diff_accel.x;
+        add_gyro.y = 0;
+    }
+    if (add_gyro.z < deadZone)
+    {
+        add_gyro.z = 0;
     }
 
-    // diff_accelが+か-かで移動量を変更
-    if (diff_accel.x > 0)
-    {
-        velocity = Vector3(1, 0, 0);
-    }
-    else if(diff_accel.x < 0)
-    {
-        velocity = Vector3(-1, 0, 0);
-    }
-    else
-    {
-        velocity = Vector3(0, 0, 0);
-    }
-
-    //// 差分を保存
-    //prev_diff_accel = diff_accel;
-
-    //diff_accel.Normalize();
-    velocity.x += diff_accel.x * speed;
-    position += velocity;
-
+    //rotation += gyro;
+    rotation += Vector3(0, 0, gyro.z);
 }
 
 JimaXengine::TestScene::TestScene()
@@ -289,7 +275,7 @@ void JimaXengine::TestScene::Initialize()
 
     object = new Object3d(position, scale, rotation, color);
     object->Initialize();
-    object->SetModelforBuff("DefaultBox");
+    object->SetModelforBuff("cube");
 
     position = Vector3(0, 0, 0);
     scale = Vector3(10, 10, 10);
@@ -341,14 +327,14 @@ void JimaXengine::TestScene::Draw()
     ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
 
     ImGui::Text("diff_accel : [%+010.3f], [%+010.3f], [%+010.3f]", diff_accel.x, diff_accel.y, diff_accel.z);
-    ImGui::Text("diff_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", diff_gyro.x, diff_gyro.y, diff_gyro.z);
+    ImGui::Text(" add_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", add_gyro.x, add_gyro.y, add_gyro.z);
    
     ImGui::Text(" maxValue  : [%+010.3f], [%+010.3f], [%+010.3f]", maxValue.x, maxValue.y, maxValue.z);
     ImGui::Text(" minValue  : [%+010.3f], [%+010.3f], [%+010.3f]", minValue.x, minValue.y, minValue.z);
    
     static float slider1 = 0.0f;
     ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 1.0f);
-    ImGui::SliderFloat("speed", &speed, 0.0f, 100.0f);
+    ImGui::SliderFloat("speed", &speed, 0.0f, 1.0f);
 
     ImGui::End();
 
