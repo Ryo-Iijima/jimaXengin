@@ -223,17 +223,36 @@ void JimaXengine::TestScene::JoyConUpdate()
 #pragma region ‰Á‘¬“x‰ÁZ
 
     // ’¼‹ß10‰ñ•ª‚Ì’l‚ğ•½‹Ï‚µ‚Ä‰ÁZ‚·‚é
+    Vector3 average;
+    
+    // ·•ª‚ğ‹L˜^
+    arr.push_back(diff_accel);
+    // —v‘f”‚ª10ŒÂ’´‚¦‚½‚ç10ŒÂ‚É‚·‚é
+    if (arr.size() > 10)
+    {
+        arr.erase(arr.begin());
+    }
+    // •½‹Ï‚ğæ‚é
+    for (auto itr = arr.begin(); itr != arr.end(); itr++)
+    {
+        average += (*itr);
+    }
+    average /= arr.size();
 
-
+    // •Ï‰»‚ª¬‚³‚©‚Á‚½‚ç–³‹
+    if (average.x < deadZone)
+    {
+        average = Vector3().Zero;
+    }
 
     Vector3 add_accel;
 
     // diff_accel‚ª+‚©-‚©‚Å‰Á‘¬“xŒˆ’è
-    if (diff_accel.x > 0)
+    if (average.x > 0)
     {
         add_accel.x = 0.1f;
     }
-    else if (diff_accel.x < 0)
+    else if (average.x < 0)
     {
         add_accel.x = -0.1f;
     }
@@ -242,7 +261,7 @@ void JimaXengine::TestScene::JoyConUpdate()
         add_accel.x = 0;
     }
 
-    velocity += add_accel;
+    velocity = add_accel;
     position.x += velocity.x;
 
     //position += accel;

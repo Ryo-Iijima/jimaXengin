@@ -2,6 +2,7 @@
 #include "scene/Scene.h"
 #include "GameObject/GameObjectManager.h"
 #include "hidapi/hidapi.h"
+#include <vector>
 
 namespace JimaXengine
 {
@@ -40,6 +41,8 @@ namespace JimaXengine
 		Vector3 position, velocity, rotation;
 		Vector3 scale;
 		Vector4 color;
+
+		std::vector<Vector3> arr;
 
 	private:
 		void JoyConInitialize();
