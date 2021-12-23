@@ -206,8 +206,50 @@ void JimaXengine::TestScene::JoyConUpdate()
     {
         maxValue = Vector3().Zero;
         minValue = Vector3().Zero;
+
+        position = Vector3().Zero;
+        
     }
 
+    if (maxValue.x < diff_accel.x)
+    {
+        maxValue.x = diff_accel.x;
+    }
+    if (minValue.x > diff_accel.x)
+    {
+        minValue.x = diff_accel.x;
+    }
+
+#pragma region ‰Á‘¬“x‰ÁŽZŽž
+
+    // ’¼‹ß10‰ñ•ª‚Ì’l‚ð•½‹Ï‚µ‚Ä‰ÁŽZ‚·‚é
+
+
+
+    Vector3 add_accel;
+
+    // diff_accel‚ª+‚©-‚©‚Å‰Á‘¬“xŒˆ’è
+    if (diff_accel.x > 0)
+    {
+        add_accel.x = 0.1f;
+    }
+    else if (diff_accel.x < 0)
+    {
+        add_accel.x = -0.1f;
+    }
+    else
+    {
+        add_accel.x = 0;
+    }
+
+    velocity += add_accel;
+    position.x += velocity.x;
+
+    //position += accel;
+
+#pragma endregion
+
+#pragma region ƒWƒƒƒCƒ‰ÁŽZŽž
     add_gyro.x = std::clamp(gyro.x, -1.0f, 1.0f);
     add_gyro.y = std::clamp(gyro.y, -1.0f, 1.0f);
     add_gyro.z = std::clamp(gyro.z, -1.0f, 1.0f);
@@ -226,7 +268,8 @@ void JimaXengine::TestScene::JoyConUpdate()
     }
 
     //rotation += gyro;
-    rotation += Vector3(0, 0, gyro.z);
+#pragma endregion
+
 }
 
 JimaXengine::TestScene::TestScene()
@@ -321,19 +364,21 @@ void JimaXengine::TestScene::Draw()
 
     ImGui::Begin("joyconparam");
     ImGui::Text(" row_accel : [%+010.3f], [%+010.3f], [%+010.3f]", row_accel.x, row_accel.y, row_accel.z);
-    ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
+    //ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
 
     ImGui::Text("     accel : [%+010.3f], [%+010.3f], [%+010.3f]", accel.x, accel.y, accel.z);
-    ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
+    //ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
 
     ImGui::Text("diff_accel : [%+010.3f], [%+010.3f], [%+010.3f]", diff_accel.x, diff_accel.y, diff_accel.z);
-    ImGui::Text(" add_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", add_gyro.x, add_gyro.y, add_gyro.z);
+    //ImGui::Text(" add_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", add_gyro.x, add_gyro.y, add_gyro.z);
    
     ImGui::Text(" maxValue  : [%+010.3f], [%+010.3f], [%+010.3f]", maxValue.x, maxValue.y, maxValue.z);
     ImGui::Text(" minValue  : [%+010.3f], [%+010.3f], [%+010.3f]", minValue.x, minValue.y, minValue.z);
+
+    //ImGui::Text(" Length  : [%+010.3f]", diff_accel.Length());
    
     static float slider1 = 0.0f;
-    ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 1.0f);
+    ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 20.0f);
     ImGui::SliderFloat("speed", &speed, 0.0f, 1.0f);
 
     ImGui::End();
