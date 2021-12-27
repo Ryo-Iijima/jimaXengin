@@ -126,9 +126,7 @@ void JimaXengine::Target::Initialize()
 	object = new Object3d(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("ball");
-	//object->SetColor(Vector4(1, 1, 1, 1));
 	scale = { 0.3f,0.3f, 0.3f };
-	//object->SetScale(Vector3(sca, sca, sca));
 	sphereCol.radius = scale.x;
 
 	reflection = false;
@@ -146,9 +144,9 @@ void JimaXengine::Target::Update()
 
 	HitCheck();
 	Move();
+	
+	pEmitter->RandomCube(pos);
 
-	//object->SetPosition(pos);
-	//object->SetRotation(rotation);
 	object->SetCamera(pCamera);
 	object->Update();
 

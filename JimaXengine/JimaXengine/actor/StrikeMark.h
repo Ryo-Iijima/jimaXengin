@@ -10,6 +10,8 @@ namespace JimaXengine
 	{
 	private:
 		std::unique_ptr<Object3d> object;
+		Vector3 scale;
+		Vector4 color;
 
 		// —\‘ª‚ð•\Ž¦‚·‚é‹…
 		Target* pTarget;

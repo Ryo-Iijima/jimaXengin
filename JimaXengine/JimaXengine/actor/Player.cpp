@@ -249,8 +249,9 @@ void JimaXengine::Player::Initialize()
 	object->Initialize();
     object->SetModelforBuff("DefaultBox");
     
-    pos = Vector3(0, 1, -17);
-	//object->SetPosition(pos);
+    pos = Vector3(0, 1, -15);
+    scale = Vector3(1, 1, 0.01f);
+    color = Vector4(1, 1, 1, 0.3f);
  //   object->SetScale(Vector3(1, 1, 0.01f));
  //   object->SetColor(Vector4(1, 1, 1, 0.3f));
 
@@ -267,8 +268,8 @@ void JimaXengine::Player::Initialize()
     leftRacket->object = std::make_unique<Object3d>(leftRacket->pos, leftRacket->scale, leftRacket->rot, leftRacket->color);
     leftRacket->object->Initialize();
     leftRacket->object->SetModelforBuff("AimMark");
-    //leftRacket->object->SetColor(Vector4(1, 0.0f, 0.0f, 1));
-    //leftRacket->object->SetScale(racketScale);
+    leftRacket->color = Vector4(1, 0.0f, 0.0f, 1);
+    leftRacket->scale = racketScale;
 
     leftRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
     leftRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
@@ -281,8 +282,8 @@ void JimaXengine::Player::Initialize()
     rightRacket->object = std::make_unique<Object3d>(rightRacket->pos, rightRacket->scale, rightRacket->rot, rightRacket->color);
     rightRacket->object->Initialize();
     rightRacket->object->SetModelforBuff("AimMark");
-    //rightRacket->object->SetColor(Vector4(0.0f, 0.0f, 1, 1));
-    //rightRacket->object->SetScale(racketScale);
+    rightRacket->color = Vector4(0.0f, 0.0f, 1, 1);
+    rightRacket->scale = racketScale;
 
     rightRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
     rightRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
@@ -291,12 +292,6 @@ void JimaXengine::Player::Initialize()
 
     damageSprite = std::make_unique<Object2d>();
     damageSprite->CreateSprite();
-
-    //for (int i = 0; i < sizeof(HP_UI) / sizeof(HP_UI[0]); i++)
-    //{
-    //    HP_UI[i] = std::make_unique<Object2d>();
-    //    HP_UI[i]->CreateSprite();
-    //}
     
     hpUi_0 = std::make_unique<Object2d>();
     hpUi_0->CreateSprite();
@@ -334,7 +329,6 @@ void JimaXengine::Player::Update()
 
     Move();
 
-    //object->SetPosition(pos);
     object->SetCamera(pCamera);
     object->Update();
 
@@ -342,14 +336,12 @@ void JimaXengine::Player::Update()
 
 #pragma region ƒ‰ƒPƒbƒg
     // left
-    //leftRacket->object->SetPosition(leftRacket->pos);
     leftRacket->object->SetCamera(pCamera);
     leftRacket->object->Update();
 
     leftRacket->col.minPos = Vector3(leftRacket->pos - racketScale);
     leftRacket->col.maxPos = Vector3(leftRacket->pos + racketScale);
     // right
-    //rightRacket->object->SetPosition(rightRacket->pos);
     rightRacket->object->SetCamera(pCamera);
     rightRacket->object->Update();
 
@@ -364,7 +356,7 @@ void JimaXengine::Player::Draw()
     leftRacket->object->Draw();
     rightRacket->object->Draw();
 #pragma endregion
-    object->Draw();
+    //object->Draw();
 
     Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
     hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");

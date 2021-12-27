@@ -67,6 +67,7 @@ namespace JimaXengine
 		void SetGameObjectManager(GameObjectManager* oManager) { this->oManager = oManager; }
 
 		void InitializeParticleEmitter(ParticleManager* pManager);
+
 	protected:
 		Camera* pCamera;
 		GameObjectManager* oManager;

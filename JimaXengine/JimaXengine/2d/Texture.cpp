@@ -5,6 +5,7 @@
 #include "../3d/Object3d.h"
 #include "../general/General.h"
 #include "../general/ConsoleOutput.h"
+#include "../Particle/GeometoryObject3D.h"
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -130,6 +131,7 @@ void JimaXengine::Texture::LoadTexture(const std::string& filename)
 
 	Object2d::LoadTexture(filename);
 	// Object3d::LoadResourceTexture(filename);
+	GeometoryObject3D::LoadTexture(filename);
 }
 
 void JimaXengine::Texture::CreateSimpleTexture(const std::string& filename, Vector4 color, int texWidth, int texHeight)
@@ -195,6 +197,7 @@ void JimaXengine::Texture::CreateSimpleTexture(const std::string& filename, Vect
 
 	Object2d::LoadTexture(filename);
 	//Object3d::LoadResourceTexture(filename);
+	GeometoryObject3D::LoadTexture(filename);
 
 	delete[] texturedata;
 }

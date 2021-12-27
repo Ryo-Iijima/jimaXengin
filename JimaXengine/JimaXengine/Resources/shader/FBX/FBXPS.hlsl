@@ -40,6 +40,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	shadecolor.a = m_alpha;
 
 	output.target0 = shadecolor * texcolor * color;
+	//output.target0 = float4(1, 0, 0, 1);
 	output.target1 = output.target0;
 
 	return output;

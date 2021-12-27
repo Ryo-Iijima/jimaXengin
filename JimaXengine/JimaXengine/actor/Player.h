@@ -14,6 +14,7 @@ namespace JimaXengine
 	private:
 		Model* model = nullptr;
 		Object3d* object = nullptr;
+
 		Vector3 eye, target;
 
 		Vector3 racketScale;

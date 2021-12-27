@@ -215,7 +215,7 @@ void JimaXengine::Boss::Move()
 			toDestinationVelocity.y = 0;
 		}
 		// ˆÚ“®æ‚É‚Â‚¢‚½‚ç
-		if (pos == nextPos)
+		if (abs(pos.x - nextPos.x)<0.5 && abs(pos.y - nextPos.y) < 0.5)
 		{
 			// UŒ‚ó‘Ô‚É•ÏX
 			state = State::ATTACK;

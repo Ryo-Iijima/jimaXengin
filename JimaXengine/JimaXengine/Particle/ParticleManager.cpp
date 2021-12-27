@@ -75,7 +75,7 @@ void JimaXengine::ParticleManager::Update()
 
 void JimaXengine::ParticleManager::DrawDepth(Camera* camera)
 {
-	c_alp_geo->Draw(camera, cube_alpha_particle, "white", "cube_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
+	c_alp_geo->Draw(camera, cube_alpha_particle, "white1x1.png", "cube_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
 
 	auto end = particleObj.end();
 	for (auto itr = particleObj.begin(); itr != end; itr++)
@@ -86,7 +86,7 @@ void JimaXengine::ParticleManager::DrawDepth(Camera* camera)
 
 void JimaXengine::ParticleManager::DrawDepthAlpha(Camera* camera)
 {
-	c_add_geo->Draw(camera, cube_add_particle, "white", "cube_add", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
+	c_add_geo->Draw(camera, cube_add_particle, "white1x1.png", "cube_add", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
 }
 
 void JimaXengine::ParticleManager::DrawDepthNone(Camera* camera)

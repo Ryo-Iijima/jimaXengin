@@ -54,11 +54,11 @@ void JimaXengine::Application::Initialize()
 	postEffect = new PostEffect();
 	postEffect->Initialize(dxCommon);
 	//
+	GeometoryObject3D::PreInitialize(dxCommon);
+	//
 	Texture::Initialize(dxCommon);
 	//
 	Sound::Initialize();
-	//
-	GeometoryObject3D::PreInitialize(dxCommon);
 	//
 	ParticleManager::StaticInitialize();
 	// 
@@ -73,6 +73,7 @@ void JimaXengine::Application::Initialize()
 	Texture::LoadTexture("white1x1.png");
 	Texture::LoadTexture("colorGrid.png");
 	Texture::LoadTexture("test_256x256.png");
+	Texture::LoadTexture("particle.png");
 
 	Texture::LoadTexture("buttonfront.png");
 	Texture::LoadTexture("pushstart.png");
@@ -127,7 +128,7 @@ void JimaXengine::Application::Initialize()
 	sceneManager->Add("Play", new Play());
 	sceneManager->Add("End", new End(winApp));
 
-	sceneManager->Change("TestScene");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);	

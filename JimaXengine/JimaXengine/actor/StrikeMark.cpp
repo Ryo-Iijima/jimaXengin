@@ -18,10 +18,9 @@ void JimaXengine::StrikeMark::Initialize()
 	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("ball");
-	//object->SetScale(Vector3(0.3f, 0.3f, 0.01f));
-	//object->SetColor(Vector4(1, 0, 0, 1.0f));
+
 	scale = Vector3(0.3f, 0.3f, 0.01f);
-	color = Vector4(1, 0, 0, 1.0f);
+	color = Vector4(1, 0, 0, 0.8f);
 }
 
 void JimaXengine::StrikeMark::Update()
@@ -34,7 +33,6 @@ void JimaXengine::StrikeMark::Update()
 	}
 
 	// ‹…“¹‚©‚çˆÊ’u‚ð—\‘z
-	//object->SetPosition(oManager->GetPlayer()->GetPos());
 	pos = oManager->GetPlayer()->GetPos();
 
 	object->SetCamera(pCamera);

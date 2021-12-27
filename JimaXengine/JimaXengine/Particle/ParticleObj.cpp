@@ -54,7 +54,6 @@ void JimaXengine::ParticleObj::Draw(Camera* camera)
 	if (!isDead)
 	{
 		Vector4 rgba = { param.color.x,param.color.y,param.color.z,param.alpha };
-		//obj3d.Draw(camera, modelname, filename, shadername, blendname, pipelinename, rgba);
 		obj3d->Draw();
 	}
 }
