@@ -352,11 +352,11 @@ void JimaXengine::ParticleEmitter::RandomCube(const Vector3& pos)
 		//寿命
 		param.life = 60;
 		//色
-		param.color.x = (0.0f / 255.0f);
-		param.color.y = (255.0f / 255.0f);
-		param.color.z = (255.0f / 255.0f);
+		param.color.x = (255.0f / 255.0f);
+		param.color.y = (0.0f / 255.0f);
+		param.color.z = (0.0f / 255.0f);
 		//透明度
-		param.alpha = 1.0f;
+		param.alpha = 0.5f;
 		param.add_alpha = 0.0f;
 		//パーティクルを増やす
 		manager->AddCubeAlpha(new DefaultGeometryParticle(param));

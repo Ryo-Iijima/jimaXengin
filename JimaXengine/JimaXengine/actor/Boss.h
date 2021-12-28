@@ -11,7 +11,6 @@ namespace JimaXengine
 	class Boss : public GameObject
 	{
 	private:
-		Model* model;
 		std::unique_ptr<Object3d> object;
 
 		GameObjectManager* pOManager = nullptr;
@@ -79,7 +78,16 @@ namespace JimaXengine
 		float floatingOffsetWidth;	// 上下移動の幅
 		float a = 0.02f;
 
+		// 何発発射したか
+		int shotBallCount;
 
+		// ボールの発射地点へのオフセット
+		Vector3 shotPosOffset;
+		std::unique_ptr<Object3d> offsetPosObj;
+		Vector3 p, s, r;
+		Vector4 c;
+
+		float bollSpeed;		// ボールのスピード
 
 	private:
 		void Move();
@@ -105,5 +113,9 @@ namespace JimaXengine
 		void DrawImGui()override;
 
 		void Damage();	// ダメージを食らう
+
+		// Getter
+		int GetShotBallCount() { return shotBallCount; }
+
 	};
 }

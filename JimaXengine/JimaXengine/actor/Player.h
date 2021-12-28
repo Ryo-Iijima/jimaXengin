@@ -30,11 +30,28 @@ namespace JimaXengine
 		int increase = 1;
 
 		// playerUI
-		//std::array<std::unique_ptr<Object2d>, 4> HP_UI;
 		std::unique_ptr<Object2d> hpUi_0;
 		std::unique_ptr<Object2d> hpUi_1;
 		std::unique_ptr<Object2d> hpUi_2;
 		std::unique_ptr<Object2d> hpUi_3;
+
+		///////////////////////////
+		//// 数字表示関連　↓
+		///////////////////////////
+		int hitBollCount;									// ボスに球を当てた数
+
+		static const int digit = 2;							// 桁
+		// ボスが打った数
+		std::unique_ptr<Object2d> shotBollCountTex[digit];	// 桁数分のスプライト管理
+		int shotBollCountEachNum[digit];					// 各桁の数値
+		// ボスに当てた数
+		std::unique_ptr<Object2d> hitBollCountTex[digit];	// 桁数分のスプライト管理
+		int hitBollCountEachNum[digit];						// 各桁の数値
+
+		///////////////////////////
+		//// 数字表示関連　↑
+		///////////////////////////
+
 
 	public:
 		struct Racket
@@ -67,6 +84,9 @@ namespace JimaXengine
 		void DrawAlphaObj();
 		void Move();
 		void Damage();	// ダメージを食らう
+
+		// 敵に球を当てた回数を加算
+		void AddHitBollCount() { hitBollCount++; }
 
 	};
 }

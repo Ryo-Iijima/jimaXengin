@@ -38,7 +38,7 @@ namespace JimaXengine
 			std::string name;
 			Vector2 pos = { 0,0 };		// 画像の表示座標
 			Vector2 uvPos = { 0,0 };	// 画像切り出しの左上座標
-			Vector2 length = Vector2((float)(Texture::GetMetadata(name).width), (float)(Texture::GetMetadata(name).height));	// 左上からの長さ
+			Vector2 length = Vector2((float)(Texture::GetMetadata(name).width), (float)(Texture::GetMetadata(name).height));	// 切り出しの左上からの長さ
 			Vector2 size = { 0,0 };		// ピクセル単位での大きさ
 			float angle = 0;
 			std::string type = "ALPHA";

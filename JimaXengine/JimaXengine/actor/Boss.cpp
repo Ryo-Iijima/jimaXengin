@@ -15,19 +15,13 @@ JimaXengine::Boss::~Boss()
 
 void JimaXengine::Boss::Initialize()
 {
-	//model = FbxLoader::GetInstance().LoadModelFromFile("boss");
 	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
-	//object->SetModel(model);
 	object->SetModelforBuff("boss");
-	//object->SetModelforBuff("smooth_sphere");
 
 	pos = Vector3(0, 6, 0);
-	//object->SetPosition(pos);
 	scale = Vector3(1.5f, 1.5f, 1.5f);
-	//object->SetScale(Vector3(1.5f, 1.5f, 1.5f));
 	rotation = Vector3(0, 180, 0);
-	//object->SetRotation(rotation);
 
 	Vector3 colscale = { 5,5,5 };
 	aabb3dCol.maxPos = pos + colscale;
@@ -56,7 +50,18 @@ void JimaXengine::Boss::Initialize()
 	hpSprite = std::make_unique<Object2d>();
 	hpSprite->CreateSprite();
 
+	shotBallCount = 0;
 
+	offsetPosObj = std::make_unique<Object3d>(p, s, r, c);
+	offsetPosObj->Initialize();
+	offsetPosObj->SetModelforBuff("smooth_sphere");
+
+	shotPosOffset = { 0, 0, -5 };
+	p = pos + shotPosOffset;
+	s = Vector3(1, 1, 1);
+	c = Vector4(1, 0, 0, 1);
+
+	bollSpeed = 0.3f;
 }
 
 void JimaXengine::Boss::Update()
@@ -76,38 +81,34 @@ void JimaXengine::Boss::Update()
 		}
 		if (i % 2 == 0)
 		{
-			//object->SetColor(Vector4(1, 0.5f, 0.5f, 1));
 			color = Vector4(1, 0.5f, 0.5f, 1);
 		}
 		else
 		{
-			//object->SetColor(Vector4(1, 1, 1, 1));
 			color = Vector4(1, 1, 1, 1);
 		}
 	}
 	else
 	{
-		//object->SetColor(Vector4(1, 1, 1, 1));
 		color = Vector4(1, 1, 1, 1);
 	}
 
 	Floating();
 
-	//object->SetPosition(pos + floatingOffsetPos);
-	//pos = pos+floatingOffsetPos;
-	//object->SetRotation(rotation);
 	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
 	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
 
 	object->SetCamera(pCamera);
 	object->Update();
 
-
+	offsetPosObj->SetCamera(pCamera);
+	offsetPosObj->Update();
 }			  
 
 void JimaXengine::Boss::Draw()
 {
 	object->Draw();
+	offsetPosObj->Draw();
 
 	hpBarLength = hpBarMaxLength * hp / Maxhp;
 	hpSprite->DrawOriginal("white1x1.png", Vector2(WinApp::WINDOW_WIDTH / 2 - 250, 20), 0.0f, Vector2(hpBarLength, 50.0f), "ALPHA", Vector2(), Vector4(0, 1, 0, 1));
@@ -298,9 +299,12 @@ void JimaXengine::Boss::SingleShot()
 	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
 	targetPos.y += random;
 
-	Vector3 bollVel = targetPos - pos;
+	Vector3 bollVel = targetPos - (p);
 
-	pOManager->Insert(new Target(pCamera, pos, bollVel));
+	pOManager->Insert(new Target(pCamera, p, bollVel, bollSpeed));
+
+	// 投げた数を加算
+	shotBallCount += 1;
 
 	attacked = true;
 }
@@ -320,14 +324,17 @@ void JimaXengine::Boss::RapidFire()
 		random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
 		targetPos.y += random;
 
-		Vector3 bollVel = targetPos - pos;
+		Vector3 bollVel = targetPos - (p);
 
-		pOManager->Insert(new Target(pCamera, pos, bollVel));
+		pOManager->Insert(new Target(pCamera, p, bollVel, bollSpeed));
 
 		// 発射回数の加算
 		shotCounter++;
 		// 発射間隔のリセット
 		shotIntervalTimer = shotInterval;
+
+		// 投げた数を加算
+		shotBallCount += 1;
 	}
 
 	// 攻撃回数が目標になったら
@@ -342,9 +349,13 @@ void JimaXengine::Boss::EachShot()
 {
 	// プレイヤーの位置を参考に球の発射方向を決定
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
-	Vector3 bollVel = targetPos - pos;
+	Vector3 bollVel = targetPos - (p);
 
-	pOManager->Insert(new Target(pCamera, pos, bollVel));
+	pOManager->Insert(new Target(pCamera, p, bollVel, bollSpeed));
+
+	// 投げた数を加算
+	shotBallCount += 1;
+
 	attacked = true;
 }
 
@@ -358,8 +369,34 @@ void JimaXengine::Boss::SuitableForPlayer()
 	angle.x = atan2f(dir.y, dir.z);
 	angle.y = atan2f(dir.x, dir.z);
 
+	//float a = 0.05f;
+	//if (Input::KeyPress(DIK_UP)) angle.x-=a;
+	//if (Input::KeyPress(DIK_DOWN)) angle.x+=a;
+	//if (Input::KeyPress(DIK_LEFT)) angle.y+=a;
+	//if (Input::KeyPress(DIK_RIGHT)) angle.y-=a;
+
 	rotation.x = angle.x * 20;
-	rotation.y = 180 + angle.y * 50;
+	rotation.y = 180 + (angle.y * 50);
+
+	{
+		//// 回転に合わせてオフセットの座標も変更
+		//XMMATRIX matRot;
+		//matRot = XMMatrixIdentity();
+		//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+		//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+		//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+		//XMVECTOR v = shotPosOffset.ConvertXMVECTOR();
+		//shotPosOffset.x = (matRot.r[0].m128_f32[0] * v.m128_f32[0]) + (matRot.r[1].m128_f32[0] * v.m128_f32[1]) + (matRot.r[2].m128_f32[0] * v.m128_f32[2]);
+		//shotPosOffset.y = (matRot.r[0].m128_f32[1] * v.m128_f32[0]) + (matRot.r[1].m128_f32[1] * v.m128_f32[1]) + (matRot.r[2].m128_f32[1] * v.m128_f32[2]);
+		//shotPosOffset.z = (matRot.r[0].m128_f32[2] * v.m128_f32[0]) + (matRot.r[1].m128_f32[2] * v.m128_f32[1]) + (matRot.r[2].m128_f32[2] * v.m128_f32[2]);
+
+		p = pos + shotPosOffset;
+
+		//if (Input::KeyTrigger(DIK_SPACE))
+		//{
+		//	SingleShot();
+		//}
+	}
 }
 
 void JimaXengine::Boss::Floating()

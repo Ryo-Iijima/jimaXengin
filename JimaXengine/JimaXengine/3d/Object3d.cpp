@@ -216,7 +216,6 @@ void JimaXengine::Object3d::Update()
 	const auto matProje = camera->GetMatProjection();
 
 	const XMMATRIX matViewProjection = matView * matProje;
-	const XMMATRIX modelTransform = model->GetModelTransform();
 	const XMFLOAT3 cameraPos = camera->GetEye();
 
 	HRESULT result;
@@ -227,7 +226,6 @@ void JimaXengine::Object3d::Update()
 	{
 		constMap->color = color;
 		constMap->viewproj = matViewProjection;
-		//constMap->world = matWorld * modelTransform;
 		constMap->world = matWorld;
 		constMap->cameraPos = cameraPos;
 		constBufferTransform->Unmap(0, nullptr);

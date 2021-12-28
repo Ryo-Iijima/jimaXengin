@@ -8,7 +8,7 @@ void JimaXengine::Target::Move()
 {
 	vel.Normalize();
 
-	pos += vel / 10;
+	pos += vel * speed;
 	rotation += {1, 1, 0};
 }
 
@@ -21,7 +21,7 @@ void JimaXengine::Target::HitCheck()
 		Delete();
 	}
 
-	// プレイヤーが跳ね返した後
+	// プレイヤーが跳ね返す前で
 	if (reflection == false)
 	{
 		Player* player = oManager->GetPlayer();
@@ -30,7 +30,6 @@ void JimaXengine::Target::HitCheck()
 		if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
 			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
 		{
-			//object->SetColor(Vector4(0, 1, 1, 1));
 			color = Vector4(0, 1, 1, 1);
 			reflection = true;
 
@@ -83,10 +82,12 @@ void JimaXengine::Target::HitCheck()
 		}
 
 		// プレイヤーより後ろに行ったら
-		if (pos.z <= -20)
+		if (pos.z <= player->GetPos().z)
 		{
+			player->Damage();
 			Dead();
 			Delete();
+
 		}
 		
 	}
@@ -104,6 +105,8 @@ void JimaXengine::Target::HitCheck()
 			boss->Damage();
 			Dead();
 			Delete();
+
+			oManager->GetPlayer()->AddHitBollCount();
 		}
 	}
 }
@@ -145,8 +148,6 @@ void JimaXengine::Target::Update()
 	HitCheck();
 	Move();
 	
-	pEmitter->RandomCube(pos);
-
 	object->SetCamera(pCamera);
 	object->Update();
 

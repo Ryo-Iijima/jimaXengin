@@ -2,14 +2,15 @@
 #include "../3d/FbxLoader.h"
 #include "../general/Input.h"
 #include <typeinfo>
-
+#include "Boss.h"
 #include "../general/_StringFormat.h"
-
+#include "../GameObject/GameObjectManager.h"
+#include "../general/General.h"
 
 void JimaXengine::Player::Move()
 {
 #pragma region Stick
-    float defaultvel = 0.005f;
+    float defaultvel = 0.05f;
     float maxacc = 0.05f;    // 最大加速度
     float xLimit = 100.0f;    // 画面内に制限する用
     float yLimit = 100.0f;
@@ -252,11 +253,8 @@ void JimaXengine::Player::Initialize()
     pos = Vector3(0, 1, -15);
     scale = Vector3(1, 1, 0.01f);
     color = Vector4(1, 1, 1, 0.3f);
- //   object->SetScale(Vector3(1, 1, 0.01f));
- //   object->SetColor(Vector4(1, 1, 1, 0.3f));
 
     renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
-    //JoyConInitialize();
 
 #pragma region ラケット初期化
     racketScale = Vector3(0.5f, 0.5f, 0.01f);
@@ -302,7 +300,23 @@ void JimaXengine::Player::Initialize()
     hpUi_3 = std::make_unique<Object2d>();
     hpUi_3->CreateSprite();
 
+    for (int i = 0; i < digit; i++)
+    {
+        // 桁数分初期化
+        shotBollCountTex[i] = std::make_unique<Object2d>();
+        shotBollCountTex[i]->CreateSprite();
+        // 全桁0で埋めておく
+        shotBollCountEachNum[i] = 0;
+
+        // 桁数分初期化
+        hitBollCountTex[i] = std::make_unique<Object2d>();
+        hitBollCountTex[i]->CreateSprite();
+        // 全桁0で埋めておく
+        hitBollCountEachNum[i] = 0;
+    }
+
     hp = Maxhp;
+    hitBollCount = 0;
 }
 
 enum class DebugType
@@ -322,10 +336,46 @@ void DebugPrint(std::string s, DebugType d)
 
 void JimaXengine::Player::Update()
 {    
-    if (Input::KeyTrigger(DIK_V))
+#pragma region 数字・桁保存
+    if (Input::KeyTrigger(DIK_Z))
     {
-        Damage();
+        hitBollCount++;
     }
+
+    // 表示する数字のデータを取得して整列する
+    // 表示したい数値の桁数を取得
+    int digitNum = General::GetDigit(hitBollCount);
+    // 桁ごとに数値を記録
+    int result = 0;
+    int numStock = hitBollCount;
+
+    for (int i = 0; i < digitNum; i++)
+    {
+        // 商のあまりから数字を読み取る
+        result = numStock % 10;
+        //次は10で割ったものを使う
+        numStock /= 10;
+
+        hitBollCountEachNum[i] = result;
+    }
+
+    digitNum = General::GetDigit(oManager->GetBoss()->GetShotBallCount());
+    result = 0;
+    // 敵から投げた数を受けとる
+    numStock = oManager->GetBoss()->GetShotBallCount();
+
+    for (int i = 0; i < digitNum; i++)
+    {
+        // 商のあまりから数字を読み取る
+        result = numStock % 10;
+        //次は10で割ったものを使う
+        numStock /= 10;
+
+        shotBollCountEachNum[i] = result;
+    }
+
+#pragma endregion 数字・桁保存
+
 
     Move();
 
@@ -358,12 +408,42 @@ void JimaXengine::Player::Draw()
 #pragma endregion
     //object->Draw();
 
+#pragma region 数字・UI
     Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
     hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
     hpUi_1->DrawOriginal("playerUI_1.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
     hpUi_2->DrawOriginal("playerUI_2.png", uiPos+Vector2(85,114.5f), 0.0f, Vector2(1.0f / 6.0f * ((float)hp / (float)Maxhp), 1.0f / 6.0f), "ALPHA");
     hpUi_3->DrawOriginal("playerUI_3.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
 
+    // テクスチャの大きさを取得
+    Vector2 texScale = Vector2((float)(Texture::GetMetadata("number.png").width) / 10, (float)(Texture::GetMetadata("number.png").height));
+    Object2d::DrawTextureData d;
+    d.name = "number.png";
+    d.length = Vector2(1920 / 10, 270);
+    d.size = texScale * 0.15f;
+
+    for (int i = 0; i < digit; i++)
+    {
+                                                                                                             // 桁数分ずらす
+        d.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(3.5f / 20.0f, 8.0f / 10.0f) - Vector2(d.size.x * i, 0);
+        // 保存した桁毎のデータから切り取り範囲を決定
+        d.uvPos = Vector2((1920 / 10) * shotBollCountEachNum[i], 0);
+
+        shotBollCountTex[i]->DrawRect(d);
+    }
+
+    for (int i = 0; i < digit; i++)
+    {
+                                                                                                             // 桁数分ずらす
+        d.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(1.0f / 20.0f, 8.0f / 10.0f) - Vector2(d.size.x * i, 0);
+        // 保存した桁毎のデータから切り取り範囲を決定
+        d.uvPos = Vector2((1920 / 10) * hitBollCountEachNum[i], 0);
+
+        hitBollCountTex[i]->DrawRect(d);
+    }
+#pragma endregion
+
+#pragma region ダメージエフェクト
     if (damaged)
     {
         if (!half && damageCount > damageTime)
@@ -384,6 +464,7 @@ void JimaXengine::Player::Draw()
 
         damageSprite->DrawOriginal("damagefilter.png", Vector2(0, 0), 0.0f, Vector2(1.0f / 1.5f, 1.0f / 1.5f), "ALPHA", Vector2(), Vector4(1, 0, 0, 1.0f * (float)damageCount / (float)damageTime));
     }
+#pragma endregion
 }
 
 JimaXengine::GameObject::TYPE JimaXengine::Player::GetType()
