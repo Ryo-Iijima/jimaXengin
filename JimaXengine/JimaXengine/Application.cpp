@@ -128,7 +128,7 @@ void JimaXengine::Application::Initialize()
 	sceneManager->Add("Play", new Play());
 	sceneManager->Add("End", new End(winApp));
 
-	sceneManager->Change("End");
+	sceneManager->Change("Play");
 
 	// imgui
 	imguiDev.Initialize(winApp, dxCommon);	

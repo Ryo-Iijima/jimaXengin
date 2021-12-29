@@ -18,6 +18,7 @@ namespace JimaXengine
 		Vector2 referrencePos;		// 基準位置
 
 	public:
+		// 表示したい数値、桁数、パラメーター
 		NumberDrawer(int& number, int digit, Object2d::DrawTextureData data);
 
 		void Initialize();

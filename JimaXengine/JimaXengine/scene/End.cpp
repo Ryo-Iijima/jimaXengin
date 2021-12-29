@@ -22,16 +22,35 @@ void JimaXengine::End::Initialize()
 	bordTexData.size = scale;
 	bordTexData.type = "ALPHA";
 
-	scale = Vector2(2.0f / (3.0f * 2.5f), 2.0f / (3.0f * 2.5f));
-	timeTex = std::make_unique<Object2d>();
-	timeTex->CreateSprite();
+	scale = Vector2(2.0f / (3.0f * 3.0f), 2.0f / (3.0f * 3.0f));
 	timeTexData.name = "number.png";
-	timeTexData.pos = Vector2(600, 155);
-	timeTexData.uvPos = Vector2((float)(Texture::GetMetadata(timeTexData.name).width) * 0.0f, 0);
+	timeTexData.pos = Vector2(WinApp::WINDOW_WIDTH * 0.75f, WinApp::WINDOW_HEIGHT * 0.23f);
+	timeTexData.uvPos = Vector2((float)(Texture::GetMetadata(timeTexData.name).width) , 0);
 	timeTexData.length = Vector2((float)(Texture::GetMetadata(timeTexData.name).width) * 0.1f, (float)(Texture::GetMetadata(timeTexData.name).height));
 	timeTexData.size = timeTexData.length * scale;
 	timeTexData.angle = 0;
 	timeTexData.type = "ALPHA";
+	time = 12345;
+	timeTex = std::make_unique<NumberDrawer>(time, 8, timeTexData);
+	timeTex->Initialize();
+
+	damageTexData = timeTexData;
+	damageTexData.pos = Vector2(WinApp::WINDOW_WIDTH * 0.75f, WinApp::WINDOW_HEIGHT * 0.34f);
+	damage = 0;
+	damageTex = std::make_unique<NumberDrawer>(damage, 8, damageTexData);
+	damageTex->Initialize();
+
+	battingAverageTexData = timeTexData;
+	battingAverageTexData.pos = Vector2(WinApp::WINDOW_WIDTH * 0.75f, WinApp::WINDOW_HEIGHT * 0.45f);
+	battingAverage = 0;
+	battingAverageTex = std::make_unique<NumberDrawer>(battingAverage, 8, battingAverageTexData);
+	battingAverageTex->Initialize();
+
+	overallScoreTexData = timeTexData;
+	overallScoreTexData.pos = Vector2(WinApp::WINDOW_WIDTH * 0.75f, WinApp::WINDOW_HEIGHT * 0.56f);
+	overallScore = 0;
+	overallScoreTex = std::make_unique<NumberDrawer>(overallScore, 8, overallScoreTexData);
+	overallScoreTex->Initialize();
 
 	scale = Vector2(2.0f / 3.0f, 2.0f / 3.0f);
 	stampTex = std::make_unique<Object2d>();
@@ -69,7 +88,13 @@ void JimaXengine::End::Draw()
 {
 	bordTex->DrawOriginal(bordTexData);
 
-	timeTex->DrawRect(timeTexData);
+	timeTex->Draw();
+
+	damageTex->Draw();
+
+	battingAverageTex->Draw();
+
+	overallScoreTex->Draw();
 
 	stampTex->DrawOriginal(stampTexData);
 
