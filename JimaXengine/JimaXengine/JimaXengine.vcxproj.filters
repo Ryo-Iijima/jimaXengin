@@ -278,6 +278,9 @@
     <ClCompile Include="TestScene.cpp">
       <Filter>ソース ファイル\app\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="NumberDrawer.cpp">
+      <Filter>ソース ファイル\app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -462,6 +465,9 @@
     </ClInclude>
     <ClInclude Include="TestScene.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="NumberDrawer.h">
+      <Filter>ヘッダー ファイル\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -95,6 +95,16 @@ JimaXengine::Vector3 JimaXengine::Vector3::operator/(const float scalar) const
 	return Vector3(x / scalar, y / scalar, z / scalar);
 }
 
+JimaXengine::Vector3 JimaXengine::Vector3::operator*(const DirectX::XMMATRIX& v) const
+{
+	Vector3 ans;
+	ans.x = { x * v.r[0].m128_f32[0] + y * v.r[1].m128_f32[0] + z * v.r[2].m128_f32[0] };
+	ans.y = { x * v.r[0].m128_f32[1] + y * v.r[1].m128_f32[1] + z * v.r[2].m128_f32[1] };
+	ans.z = { x * v.r[0].m128_f32[2] + y * v.r[1].m128_f32[2] + z * v.r[2].m128_f32[2] };
+
+	return ans;
+}
+
 JimaXengine::Vector3 JimaXengine::Vector3::operator+=(const Vector3 & v)
 {
 	x += v.x;
@@ -124,6 +134,19 @@ JimaXengine::Vector3 JimaXengine::Vector3::operator/=(float s)
 	x /= s;
 	y /= s;
 	z /= s;
+	return *this;
+}
+
+JimaXengine::Vector3 JimaXengine::Vector3::operator*=(const DirectX::XMMATRIX& v)
+{
+	Vector3 a = *this;
+
+	a.x = x * v.r[0].m128_f32[0] + y * v.r[1].m128_f32[0] + z * v.r[2].m128_f32[0];
+	a.y = x * v.r[0].m128_f32[1] + y * v.r[1].m128_f32[1] + z * v.r[2].m128_f32[1];
+	a.z = x * v.r[0].m128_f32[2] + y * v.r[1].m128_f32[2] + z * v.r[2].m128_f32[2];
+
+	*this = a;
+
 	return *this;
 }
 

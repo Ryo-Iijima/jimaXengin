@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include "../3d/FbxLoader.h"
 #include "../general/Random.h"
+#include "../general/General.h"
 #include "../GameObject/GameObjectManager.h"
 
 JimaXengine::Boss::Boss(Camera* camera, GameObjectManager* oManager)
@@ -56,9 +57,10 @@ void JimaXengine::Boss::Initialize()
 	offsetPosObj->Initialize();
 	offsetPosObj->SetModelforBuff("smooth_sphere");
 
-	shotPosOffset = { 0, 0, -5 };
-	p = pos + shotPosOffset;
-	s = Vector3(1, 1, 1);
+	shotPosOffset = { 0, 0, -1 };
+	offsetRad = -3.5f;
+	p = pos + shotPosOffset * offsetRad;
+	s = Vector3(0.3f, 0.3f, 0.3f);
 	c = Vector4(1, 0, 0, 1);
 
 	bollSpeed = 0.3f;
@@ -378,24 +380,29 @@ void JimaXengine::Boss::SuitableForPlayer()
 	rotation.x = angle.x * 20;
 	rotation.y = 180 + (angle.y * 50);
 
+	// 度→ラジアン
+	Vector3 rotRad = Vector3::Zero;
+	rotRad.x = General::ConvertToRadians(rotation.x);
+	rotRad.y = General::ConvertToRadians(rotation.y);
+	rotRad.z = General::ConvertToRadians(rotation.z);
+
 	{
-		//// 回転に合わせてオフセットの座標も変更
-		//XMMATRIX matRot;
-		//matRot = XMMatrixIdentity();
-		//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-		//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-		//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-		//XMVECTOR v = shotPosOffset.ConvertXMVECTOR();
-		//shotPosOffset.x = (matRot.r[0].m128_f32[0] * v.m128_f32[0]) + (matRot.r[1].m128_f32[0] * v.m128_f32[1]) + (matRot.r[2].m128_f32[0] * v.m128_f32[2]);
-		//shotPosOffset.y = (matRot.r[0].m128_f32[1] * v.m128_f32[0]) + (matRot.r[1].m128_f32[1] * v.m128_f32[1]) + (matRot.r[2].m128_f32[1] * v.m128_f32[2]);
-		//shotPosOffset.z = (matRot.r[0].m128_f32[2] * v.m128_f32[0]) + (matRot.r[1].m128_f32[2] * v.m128_f32[1]) + (matRot.r[2].m128_f32[2] * v.m128_f32[2]);
+		// 無回転ベクトル
+		shotPosOffset = Vector3(0, 0, -1);
+		
+		// 回転行列を作る
+		XMMATRIX mRot = XMMatrixRotationX(rotRad.x) * XMMatrixRotationY(rotRad.y);
+
+		shotPosOffset = shotPosOffset * mRot;
+		
+		shotPosOffset *= offsetRad;
 
 		p = pos + shotPosOffset;
 
-		//if (Input::KeyTrigger(DIK_SPACE))
-		//{
-		//	SingleShot();
-		//}
+		if (Input::KeyTrigger(DIK_SPACE))
+		{
+			SingleShot();
+		}
 	}
 }
 

@@ -27,10 +27,14 @@ namespace JimaXengine
 		Vector3 operator*(const float scalar) const;
 		Vector3 operator/(const float scalar) const;
 
+		Vector3 operator*(const DirectX::XMMATRIX& v) const;
+
 		Vector3 operator+=(const Vector3& v);
 		Vector3 operator-=(const Vector3& v);
 		Vector3 operator*=(float s);
 		Vector3 operator/=(float s);
+
+		Vector3 operator*=(const DirectX::XMMATRIX& v);
 
 		bool operator==(const Vector3& v);
 		bool operator!=(const Vector3& v);

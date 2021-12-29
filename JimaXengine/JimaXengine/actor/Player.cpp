@@ -240,6 +240,8 @@ JimaXengine::Player::Player(Camera* camera)
 
 JimaXengine::Player::~Player()
 {
+    delete hitBollCountTex;
+    delete shotBollCountTex;
 	delete object;
 	delete model;
 }
@@ -300,23 +302,26 @@ void JimaXengine::Player::Initialize()
     hpUi_3 = std::make_unique<Object2d>();
     hpUi_3->CreateSprite();
 
-    for (int i = 0; i < digit; i++)
-    {
-        // 桁数分初期化
-        shotBollCountTex[i] = std::make_unique<Object2d>();
-        shotBollCountTex[i]->CreateSprite();
-        // 全桁0で埋めておく
-        shotBollCountEachNum[i] = 0;
+    Object2d::DrawTextureData data;
+    data.name = "number.png";
+    // テクスチャの大きさを取得
+    Vector2 texScale = Vector2((float)(Texture::GetMetadata(data.name).width), (float)(Texture::GetMetadata(data.name).height));
+    data.length = Vector2(texScale.x / 10, texScale.y);
+    data.size = data.length * 0.15f;
+    data.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(1.0f / 20.0f, 8.0f / 10.0f);
+    data.uvPos = Vector2(data.length.x, 0);
 
-        // 桁数分初期化
-        hitBollCountTex[i] = std::make_unique<Object2d>();
-        hitBollCountTex[i]->CreateSprite();
-        // 全桁0で埋めておく
-        hitBollCountEachNum[i] = 0;
-    }
+    hitBollCountTex = new NumberDrawer(hitBollCount, 2, data);
+    hitBollCountTex->Initialize();
+
+    data.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(3.5f / 20.0f, 8.0f / 10.0f);
+
+    shotBollCountTex = new NumberDrawer(shotBollCount, 2, data);
+    shotBollCountTex->Initialize();
 
     hp = Maxhp;
     hitBollCount = 0;
+    shotBollCount = 0;
 }
 
 enum class DebugType
@@ -342,37 +347,7 @@ void JimaXengine::Player::Update()
         hitBollCount++;
     }
 
-    // 表示する数字のデータを取得して整列する
-    // 表示したい数値の桁数を取得
-    int digitNum = General::GetDigit(hitBollCount);
-    // 桁ごとに数値を記録
-    int result = 0;
-    int numStock = hitBollCount;
-
-    for (int i = 0; i < digitNum; i++)
-    {
-        // 商のあまりから数字を読み取る
-        result = numStock % 10;
-        //次は10で割ったものを使う
-        numStock /= 10;
-
-        hitBollCountEachNum[i] = result;
-    }
-
-    digitNum = General::GetDigit(oManager->GetBoss()->GetShotBallCount());
-    result = 0;
-    // 敵から投げた数を受けとる
-    numStock = oManager->GetBoss()->GetShotBallCount();
-
-    for (int i = 0; i < digitNum; i++)
-    {
-        // 商のあまりから数字を読み取る
-        result = numStock % 10;
-        //次は10で割ったものを使う
-        numStock /= 10;
-
-        shotBollCountEachNum[i] = result;
-    }
+    shotBollCount = oManager->GetBoss()->GetShotBallCount();
 
 #pragma endregion 数字・桁保存
 
@@ -415,32 +390,10 @@ void JimaXengine::Player::Draw()
     hpUi_2->DrawOriginal("playerUI_2.png", uiPos+Vector2(85,114.5f), 0.0f, Vector2(1.0f / 6.0f * ((float)hp / (float)Maxhp), 1.0f / 6.0f), "ALPHA");
     hpUi_3->DrawOriginal("playerUI_3.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
 
-    // テクスチャの大きさを取得
-    Vector2 texScale = Vector2((float)(Texture::GetMetadata("number.png").width) / 10, (float)(Texture::GetMetadata("number.png").height));
-    Object2d::DrawTextureData d;
-    d.name = "number.png";
-    d.length = Vector2(1920 / 10, 270);
-    d.size = texScale * 0.15f;
+    hitBollCountTex->Draw();
 
-    for (int i = 0; i < digit; i++)
-    {
-                                                                                                             // 桁数分ずらす
-        d.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(3.5f / 20.0f, 8.0f / 10.0f) - Vector2(d.size.x * i, 0);
-        // 保存した桁毎のデータから切り取り範囲を決定
-        d.uvPos = Vector2((1920 / 10) * shotBollCountEachNum[i], 0);
+    shotBollCountTex->Draw();
 
-        shotBollCountTex[i]->DrawRect(d);
-    }
-
-    for (int i = 0; i < digit; i++)
-    {
-                                                                                                             // 桁数分ずらす
-        d.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(1.0f / 20.0f, 8.0f / 10.0f) - Vector2(d.size.x * i, 0);
-        // 保存した桁毎のデータから切り取り範囲を決定
-        d.uvPos = Vector2((1920 / 10) * hitBollCountEachNum[i], 0);
-
-        hitBollCountTex[i]->DrawRect(d);
-    }
 #pragma endregion
 
 #pragma region ダメージエフェクト

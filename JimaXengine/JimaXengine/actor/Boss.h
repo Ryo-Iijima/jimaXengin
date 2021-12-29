@@ -84,6 +84,7 @@ namespace JimaXengine
 		// ボールの発射地点へのオフセット
 		Vector3 shotPosOffset;
 		std::unique_ptr<Object3d> offsetPosObj;
+		float offsetRad;
 		Vector3 p, s, r;
 		Vector4 c;
 

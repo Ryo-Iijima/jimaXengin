@@ -92,8 +92,6 @@ void JimaXengine::DebugCamera::Move()
 
 	if (dirty) 
 	{
-		General:: ConvertToRadians(0);
-
 		eye.x = cosf(General::ConvertToRadians(angle.x)) * cosf(General::ConvertToRadians(angle.y));
 		eye.z = sinf(General::ConvertToRadians(angle.x)) * cosf(General::ConvertToRadians(angle.y));
 		eye.y = sinf(General::ConvertToRadians(angle.y));

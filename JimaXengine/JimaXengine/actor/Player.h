@@ -1,6 +1,7 @@
 #pragma once
 #include "../hidapi/hidapi.h"
 #include "../GameObject/GameObject.h"
+#include "../NumberDrawer.h"
 
 namespace JimaXengine
 {
@@ -35,23 +36,10 @@ namespace JimaXengine
 		std::unique_ptr<Object2d> hpUi_2;
 		std::unique_ptr<Object2d> hpUi_3;
 
-		///////////////////////////
-		//// 数字表示関連　↓
-		///////////////////////////
 		int hitBollCount;									// ボスに球を当てた数
-
-		static const int digit = 2;							// 桁
-		// ボスが打った数
-		std::unique_ptr<Object2d> shotBollCountTex[digit];	// 桁数分のスプライト管理
-		int shotBollCountEachNum[digit];					// 各桁の数値
-		// ボスに当てた数
-		std::unique_ptr<Object2d> hitBollCountTex[digit];	// 桁数分のスプライト管理
-		int hitBollCountEachNum[digit];						// 各桁の数値
-
-		///////////////////////////
-		//// 数字表示関連　↑
-		///////////////////////////
-
+		int shotBollCount;									// ボスが打った数
+		NumberDrawer* hitBollCountTex;
+		NumberDrawer* shotBollCountTex;
 
 	public:
 		struct Racket
