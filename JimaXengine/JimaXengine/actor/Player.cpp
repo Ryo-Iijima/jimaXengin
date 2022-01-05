@@ -252,8 +252,8 @@ void JimaXengine::Player::Initialize()
 	object->Initialize();
     object->SetModelforBuff("DefaultBox");
     
-    pos = Vector3(0, 1, -15);
-    scale = Vector3(1, 1, 0.01f);
+    pos = Vector3(0, 3, -15);
+    scale = Vector3(2, 2, 0.01f);
     color = Vector4(1, 1, 1, 0.3f);
 
     renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
@@ -381,7 +381,7 @@ void JimaXengine::Player::Draw()
     leftRacket->object->Draw();
     rightRacket->object->Draw();
 #pragma endregion
-    //object->Draw();
+    object->Draw();
 
 #pragma region ”ŽšEUI
     Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
@@ -433,6 +433,7 @@ void JimaXengine::Player::DrawImGui()
     ImGui::Begin("PlayerInformation");
     ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
     ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
+    ImGui::Text("objePos : %f,%f,%f", pos.x, pos.y, pos.z);
 
     ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
 

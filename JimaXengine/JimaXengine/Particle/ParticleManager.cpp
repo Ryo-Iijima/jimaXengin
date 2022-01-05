@@ -13,6 +13,7 @@ std::vector<JimaXengine::ParticleObj*> JimaXengine::ParticleManager::particleObj
 
 void JimaXengine::ParticleManager::StaticInitialize()
 {
+	// ジオメトリオブジェクトの初期化
 	q_alp_geo = new GeometoryObject3D();
 	q_add_geo = new GeometoryObject3D();
 	c_alp_geo = new GeometoryObject3D();

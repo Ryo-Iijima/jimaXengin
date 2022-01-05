@@ -64,6 +64,8 @@ void JimaXengine::Boss::Initialize()
 	c = Vector4(1, 0, 0, 1);
 
 	bollSpeed = 0.3f;
+
+	center = Vector3(0, 3, -15);
 }
 
 void JimaXengine::Boss::Update()
@@ -296,14 +298,14 @@ void JimaXengine::Boss::SingleShot()
 	// プレイヤーの位置を参考に球の発射方向を決定
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
 	// 目標地点をランダムにずらす
-	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+	random = (int)Random::GetRandom(-rad, rad);
 	targetPos.x += random;
-	random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+	random = (int)Random::GetRandom(-rad, rad);
 	targetPos.y += random;
 
 	Vector3 bollVel = targetPos - (p);
 
-	pOManager->Insert(new Target(pCamera, p, bollVel, bollSpeed));
+	pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed));
 
 	// 投げた数を加算
 	shotBallCount += 1;
@@ -321,14 +323,14 @@ void JimaXengine::Boss::RapidFire()
 	if (shotIntervalTimer <= 0)
 	{
 		// 目標地点をランダムにずらす
-		random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+		random = (int)Random::GetRandom(-rad, rad);
 		targetPos.x += random;
-		random = (int)Random::GetRandom(-blurredWidth, blurredWidth);
+		random = (int)Random::GetRandom(-rad, rad);
 		targetPos.y += random;
 
 		Vector3 bollVel = targetPos - (p);
 
-		pOManager->Insert(new Target(pCamera, p, bollVel, bollSpeed));
+		pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed));
 
 		// 発射回数の加算
 		shotCounter++;
@@ -353,7 +355,7 @@ void JimaXengine::Boss::EachShot()
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
 	Vector3 bollVel = targetPos - (p);
 
-	pOManager->Insert(new Target(pCamera, p, bollVel, bollSpeed));
+	pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed));
 
 	// 投げた数を加算
 	shotBallCount += 1;
@@ -370,12 +372,6 @@ void JimaXengine::Boss::SuitableForPlayer()
 
 	angle.x = atan2f(dir.y, dir.z);
 	angle.y = atan2f(dir.x, dir.z);
-
-	//float a = 0.05f;
-	//if (Input::KeyPress(DIK_UP)) angle.x-=a;
-	//if (Input::KeyPress(DIK_DOWN)) angle.x+=a;
-	//if (Input::KeyPress(DIK_LEFT)) angle.y+=a;
-	//if (Input::KeyPress(DIK_RIGHT)) angle.y-=a;
 
 	rotation.x = angle.x * 20;
 	rotation.y = 180 + (angle.y * 50);

@@ -52,6 +52,10 @@ namespace JimaXengine
 			Vector3 vel;						// 移動量
 			Vector3 acc;						// 加速度
 			AABB3D col;							// 当たり判定用
+
+			bool isHold;						// 構えているか
+			bool preIsHold;						// 前のフレーム構えていたか
+			float holdCount;					// 構えてからの引付時間
 		};
 
 		std::unique_ptr<Racket> leftRacket;

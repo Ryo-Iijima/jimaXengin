@@ -82,7 +82,7 @@ void JimaXengine::Target::HitCheck()
 		}
 
 		// プレイヤーより後ろに行ったら
-		if (pos.z <= player->GetPos().z)
+		if (pos.z <= player->GetPos().z - 1)
 		{
 			player->Damage();
 			Dead();
@@ -111,11 +111,12 @@ void JimaXengine::Target::HitCheck()
 	}
 }
 
-JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, float speed)
+JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, Vector3 gool, float speed)
 {
 	pCamera = camera;
 	this->pos = pos;
 	this->vel = vel;
+	this->gool = gool;
 	this->speed = speed;
 }
 
@@ -147,6 +148,8 @@ void JimaXengine::Target::Update()
 
 	HitCheck();
 	Move();
+
+	//pEmitter->RandomEffect(pos);
 	
 	object->SetCamera(pCamera);
 	object->Update();

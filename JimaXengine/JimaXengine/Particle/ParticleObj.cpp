@@ -2,7 +2,6 @@
 
 JimaXengine::ParticleObj::ParticleObj()
 {
-	//obj3d.CreateMesh();
 }
 
 JimaXengine::ParticleObj::~ParticleObj()
@@ -34,6 +33,7 @@ void JimaXengine::ParticleObj::Update()
 	param.color;
 	param.alpha += param.add_alpha;
 	param.life--;
+
 	if (param.life <= 0)
 	{
 		isDead = true;
@@ -41,10 +41,6 @@ void JimaXengine::ParticleObj::Update()
 
 	if (!isDead)
 	{
-		//obj3d.Update(param.pos, param.rot, param.scl);
-		//obj3d.SetPosition(param.pos);
-		//obj3d.SetRotation(param.rot);
-		//obj3d.SetScale(param.scl);
 		obj3d->Update();
 	}
 }

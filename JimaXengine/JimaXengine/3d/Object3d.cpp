@@ -212,7 +212,12 @@ void JimaXengine::Object3d::Update()
 	matWorld *= matRot;
 	matWorld *= matTrans;
 
-	const auto matView = camera->GetMatView();
+	// ビルボードかどうか
+	XMMATRIX matView = camera->GetMatView();
+	if (isBillboard)
+	{
+		matView *= camera->GetMatBillboard();
+	}
 	const auto matProje = camera->GetMatProjection();
 
 	const XMMATRIX matViewProjection = matView * matProje;

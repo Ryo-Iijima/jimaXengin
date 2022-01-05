@@ -88,6 +88,9 @@ namespace JimaXengine
 		//ライト
 		static Light* light;
 
+		// ビルボードかどうか
+		bool isBillboard = false;
+
 	public:		// static関数
 		static void StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp);
 
@@ -133,12 +136,7 @@ namespace JimaXengine
 
 		// setter
 		void SetModelforBuff(const std::string& modelName);
-
-		//void SetColor(const Vector4& color) { this->color = color; }
-		//void SetScale(const Vector3& scale) { this->scale = scale; }
-		//void SetRotation(const Vector3& rotation) { this->rotation = rotation; }
-		//void SetPosition(const Vector3& position) { this->position = position; }
-
 		void SetCamera(Camera* camera) { this->camera = camera; }
+		void SetIsBillboard(bool isbillbord) { isBillboard = isbillbord; }
 	};
 }
