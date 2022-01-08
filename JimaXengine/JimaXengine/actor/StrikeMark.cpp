@@ -26,7 +26,7 @@ void JimaXengine::StrikeMark::TraceBall()
 
 void JimaXengine::StrikeMark::PassCheck()
 {
-	float limit = -13.0f;	// ‘Å‚Ä‚éƒ‰ƒCƒ“
+	float limit = -12.0f;	// ‘Å‚Ä‚éƒ‰ƒCƒ“
 	if (pTarget->GetPos().z < limit)
 	{
 		isPassed = true;
@@ -71,13 +71,15 @@ JimaXengine::StrikeMark::~StrikeMark()
 
 void JimaXengine::StrikeMark::Initialize()
 {
+	renderType = RENDER_TYPE::RENDER_TYPE_ALPHA_TEST;
+
 	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("ball");
-	object->SetIsBillboard(true);
+	//object->SetIsBillboard(true);
 
 	scale = Vector3(0.3f, 0.3f, 0.01f);
-	color = Vector4(1, 0.5f, 0.5f, 1.0f);
+	color = Vector4(1, 0.5f, 0.5f, 0.4f);
 
 	pos = oManager->GetPlayer()->GetPos();
 	center = oManager->GetPlayer()->GetPos();
@@ -116,12 +118,7 @@ void JimaXengine::StrikeMark::Draw()
 
 JimaXengine::GameObject::TYPE JimaXengine::StrikeMark::GetType()
 {
-	return TYPE();
-}
-
-JimaXengine::GameObject::RENDER_TYPE JimaXengine::StrikeMark::GetRenderType()
-{
-	return RENDER_TYPE();
+	return GameObject::TYPE::TARGET;
 }
 
 void JimaXengine::StrikeMark::DrawImGui()

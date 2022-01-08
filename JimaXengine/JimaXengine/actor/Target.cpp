@@ -8,7 +8,7 @@ void JimaXengine::Target::Move()
 {
 	vel.Normalize();
 
-	pos += vel * speed;
+	pos += vel * speed / 2.0f;
 	rotation += {1, 1, 0};
 }
 
@@ -82,14 +82,17 @@ void JimaXengine::Target::HitCheck()
 		}
 
 		// プレイヤーより後ろに行ったら
-		if (pos.z <= player->GetPos().z - 1)
+		if (pos.z <= player->GetPos().z -1)
 		{
 			player->Damage();
-			Dead();
-			Delete();
 
+			// カメラより手前に来たら
+			if (pos.z <= pCamera->GetEye().z)
+			{
+				Dead();
+				Delete();
+			}
 		}
-		
 	}
 
 	// プレイヤーが跳ね返した後

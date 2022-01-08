@@ -15,6 +15,9 @@ JimaXengine::BackGround::~BackGround()
 
 void JimaXengine::BackGround::Initialize()
 {
+	// レンダータイプ設定
+	renderType = RENDER_TYPE::RENDER_TYPE_BACKGROUND;
+
 	// モデルのセット
 	wall = std::make_unique<Object3d>(wallPos, wallScale, wallRot, wallColor);
 	wall->Initialize();
@@ -80,15 +83,11 @@ void JimaXengine::BackGround::Update()
 
 
 #pragma region 壁
-	//wall->SetPosition(wallPos);
-	//wall->SetRotation(wallRot);
 	wall->SetCamera(pCamera);
 	wall->Update();
 #pragma endregion
 
 #pragma region 地面
-	//ground->SetPosition(groundPos);
-	//ground->SetRotation(groundRot);
 	ground->SetCamera(pCamera);
 	ground->Update();
 
@@ -113,7 +112,7 @@ void JimaXengine::BackGround::Draw()
 
 JimaXengine::GameObject::TYPE JimaXengine::BackGround::GetType()
 {
-	return GameObject::TYPE::NONE;
+	return GameObject::TYPE::BACKGROUND;
 }
 
 void JimaXengine::BackGround::DrawImGui()

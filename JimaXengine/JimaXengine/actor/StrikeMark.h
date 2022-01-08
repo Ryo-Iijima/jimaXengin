@@ -50,7 +50,6 @@ namespace JimaXengine
 		void Draw() override;
 
 		TYPE GetType() override;
-		RENDER_TYPE GetRenderType() override;
 		void DrawImGui() override;
 	};
 }

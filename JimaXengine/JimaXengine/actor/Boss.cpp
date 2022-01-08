@@ -19,6 +19,7 @@ void JimaXengine::Boss::Initialize()
 	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("boss");
+	//object->SetModelforBuff("octotorso");
 
 	pos = Vector3(0, 6, 0);
 	scale = Vector3(1.5f, 1.5f, 1.5f);
@@ -30,6 +31,7 @@ void JimaXengine::Boss::Initialize()
 
 	state = State::WAIT;
 	hp = Maxhp;
+	isAnger = false;
 	random = 1;
 	nextPos = { 0,0,50 };
 	toDestinationVelocity = { 0,0,0 };
@@ -70,37 +72,17 @@ void JimaXengine::Boss::Initialize()
 
 void JimaXengine::Boss::Update()
 {
+	CheckIsAnger();
+
 	Move();
+
+	DamageEffect();
 
 	SuitableForPlayer();
 
-	// ダメージ受けてたら点滅する
-	if (damaged)
-	{
-		i++;
-		if (i > count)
-		{
-			i = 0;
-			damaged = false;
-		}
-		if (i % 2 == 0)
-		{
-			color = Vector4(1, 0.5f, 0.5f, 1);
-		}
-		else
-		{
-			color = Vector4(1, 1, 1, 1);
-		}
-	}
-	else
-	{
-		color = Vector4(1, 1, 1, 1);
-	}
-
 	Floating();
 
-	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
-	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
+	ColPosSet();
 
 	object->SetCamera(pCamera);
 	object->Update();
@@ -131,28 +113,23 @@ JimaXengine::GameObject::TYPE JimaXengine::Boss::GetType()
 	return GameObject::TYPE::BOSS;
 }
 
-JimaXengine::GameObject::RENDER_TYPE JimaXengine::Boss::GetRenderType()
-{
-	return RENDER_TYPE();
-}
-
 void JimaXengine::Boss::DrawImGui()
 {
-	ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
-	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+	//ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
+	//ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-	ImGui::Begin("BossInformation");
-	ImGui::Text("hp : %d", hp);
-	ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
-	ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
-	ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
-	ImGui::Text("state : %d", state);
+	//ImGui::Begin("BossInformation");
+	//ImGui::Text("hp : %d", hp);
+	//ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
+	//ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
+	//ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
+	//ImGui::Text("state : %d", state);
 
-	ImGui::Text("playerPos : %f,%f,%f", playerPos.x, playerPos.y, playerPos.z);
-	ImGui::Text("dir : %f,%f,%f", dir.x, dir.y, dir.z);
-	ImGui::Text("angle : %f", angle);
+	//ImGui::Text("playerPos : %f,%f,%f", playerPos.x, playerPos.y, playerPos.z);
+	//ImGui::Text("dir : %f,%f,%f", dir.x, dir.y, dir.z);
+	//ImGui::Text("angle : %f", angle);
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void JimaXengine::Boss::Damage()
@@ -163,6 +140,47 @@ void JimaXengine::Boss::Damage()
 	{
 		hp = 0;
 	}
+}
+
+void JimaXengine::Boss::CheckIsAnger()
+{
+	// のこりHPが半分以下になったら
+	if (hp < (Maxhp / 2))
+	{
+		isAnger = true;
+	}
+}
+
+void JimaXengine::Boss::DamageEffect()
+{
+	// ダメージ受けてたら点滅する
+	if (damaged)
+	{
+		i++;
+		if (i > count)
+		{
+			i = 0;
+			damaged = false;
+		}
+		if (i % 2 == 0)
+		{
+			color = Vector4(1, 0.5f, 0.5f, 1);
+		}
+		else
+		{
+			color = Vector4(1, 1, 1, 1);
+		}
+	}
+	else
+	{
+		color = Vector4(1, 1, 1, 1);
+	}
+}
+
+void JimaXengine::Boss::ColPosSet()
+{
+	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
+	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
 }
 
 void JimaXengine::Boss::Move()

@@ -381,18 +381,18 @@ void JimaXengine::Player::Draw()
     leftRacket->object->Draw();
     rightRacket->object->Draw();
 #pragma endregion
-    object->Draw();
+    //object->Draw();
 
 #pragma region ”ŽšEUI
-    Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
-    hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
-    hpUi_1->DrawOriginal("playerUI_1.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
-    hpUi_2->DrawOriginal("playerUI_2.png", uiPos+Vector2(85,114.5f), 0.0f, Vector2(1.0f / 6.0f * ((float)hp / (float)Maxhp), 1.0f / 6.0f), "ALPHA");
-    hpUi_3->DrawOriginal("playerUI_3.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
+    //Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
+    //hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
+    //hpUi_1->DrawOriginal("playerUI_1.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
+    //hpUi_2->DrawOriginal("playerUI_2.png", uiPos+Vector2(85,114.5f), 0.0f, Vector2(1.0f / 6.0f * ((float)hp / (float)Maxhp), 1.0f / 6.0f), "ALPHA");
+    //hpUi_3->DrawOriginal("playerUI_3.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");
 
-    hitBollCountTex->Draw();
+    //hitBollCountTex->Draw();
 
-    shotBollCountTex->Draw();
+    //shotBollCountTex->Draw();
 
 #pragma endregion
 
@@ -427,17 +427,17 @@ JimaXengine::GameObject::TYPE JimaXengine::Player::GetType()
 
 void JimaXengine::Player::DrawImGui()
 {
-    ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
-    ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+    //ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
+    //ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-    ImGui::Begin("PlayerInformation");
-    ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
-    ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
-    ImGui::Text("objePos : %f,%f,%f", pos.x, pos.y, pos.z);
+    //ImGui::Begin("PlayerInformation");
+    //ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
+    //ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
+    //ImGui::Text("objePos : %f,%f,%f", pos.x, pos.y, pos.z);
 
-    ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
+    //ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
 
-    ImGui::End();
+    //ImGui::End();
 }
 
 JimaXengine::Camera* JimaXengine::Player::GetCamera()

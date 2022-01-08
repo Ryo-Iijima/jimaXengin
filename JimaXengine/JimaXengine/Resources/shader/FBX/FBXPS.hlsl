@@ -33,7 +33,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	float3 ambient = m_ambient;
 	// ŠgŽU”½ŽËŒõ
 	float3 diffuse = dotlightnormal * m_diffuse;
-	//// ‹¾–Ê”½ŽËŒõ
+	// ‹¾–Ê”½ŽËŒõ
 	float3 specular = pow(saturate(dot(reflect, eyedir)), shinines) * m_specular;
 
 	shadecolor.rgb = (ambient + diffuse + specular) * lightcolor;

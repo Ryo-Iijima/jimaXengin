@@ -11,6 +11,7 @@ namespace JimaXengine
 	class BackGround : public GameObject
 	{
 	private:
+
 		Model* model = nullptr;
 
 		// •Ç

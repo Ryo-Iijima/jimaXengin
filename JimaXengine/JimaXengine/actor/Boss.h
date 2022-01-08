@@ -20,6 +20,7 @@ namespace JimaXengine
 		bool damaged = false;	// ダメージ点滅用
 		int count = 20;			// 点滅時間
 		int i = 0;				// 点滅カウント用
+		bool isAnger = false;	// 怒り状態
 		
 		std::unique_ptr<Object2d> hpSprite;		// HP表示用
 		const float hpBarMaxLength = 500;		// HPバーの最大長
@@ -104,6 +105,12 @@ namespace JimaXengine
 		void SuitableForPlayer();
 		// 上下にふわふわ
 		void Floating();
+		// 怒り条件チェック
+		void CheckIsAnger();
+		// ダメージ演出
+		void DamageEffect();
+		// 判定の位置合わせ
+		void ColPosSet()override;
 
 	public:
 		Boss(Camera* camera, GameObjectManager* oManager);
@@ -115,7 +122,6 @@ namespace JimaXengine
 		void Dead()override;
 		void Delete()override;
 		GameObject::TYPE GetType()override;
-		GameObject::RENDER_TYPE GetRenderType()override;
 		void DrawImGui()override;
 
 		void Damage();	// ダメージを食らう

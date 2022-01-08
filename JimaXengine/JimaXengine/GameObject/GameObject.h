@@ -32,9 +32,10 @@ namespace JimaXengine
 		enum class TYPE
 		{
 			NONE,
+			BACKGROUND,
+			BOSS,
 			PLAYER,
 			TARGET,
-			BOSS,
 		};
 
 		// ƒˆ‰¼‘zŠÖ”
@@ -69,6 +70,9 @@ namespace JimaXengine
 		void InitializeParticleEmitter(ParticleManager* pManager);
 
 	protected:
+		// ”»’è‚ÌˆÊ’u‡‚í‚¹
+		virtual void ColPosSet();
+
 		Camera* pCamera;
 		GameObjectManager* oManager;
 		ParticleEmitter* pEmitter;

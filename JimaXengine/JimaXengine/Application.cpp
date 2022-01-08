@@ -120,6 +120,8 @@ void JimaXengine::Application::Initialize()
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("seat");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("ball");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("cube");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octoleg");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octotorso");
 
 	// ÉVÅ[ÉìÇÃê›íË
 	sceneManager = new SceneManager;

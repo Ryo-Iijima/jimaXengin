@@ -9,7 +9,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 texcolor0 = tex0.Sample(smp,input.uv);
 	float4 texcolor1 = tex1.Sample(smp,input.uv);
 
-	//float4 color = texcolor0;
+	float4 color = texcolor0;
 	//if (fmod(input.uv.y, 0.1) < 0.05)
 	//{
 	//	color = texcolor1;

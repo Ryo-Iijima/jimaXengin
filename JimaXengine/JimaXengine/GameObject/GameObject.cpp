@@ -34,6 +34,10 @@ void JimaXengine::GameObject::DrawImGui()
 {
 }
 
+void JimaXengine::GameObject::ColPosSet()
+{
+}
+
 void JimaXengine::GameObject::InitializeParticleEmitter(ParticleManager* pManager)
 {
 	pEmitter->Initialize(pManager);
