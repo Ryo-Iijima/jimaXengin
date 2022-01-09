@@ -186,27 +186,27 @@ void JimaXengine::ParticleEmitter::RandomEffect(const Vector3& pos)
 		param.vel.y = Random::GetRandom(-1.0f, 1.0f);
 		param.vel.z = Random::GetRandom(-1.0f, 1.0f);
 		param.vel.Normalize();
-		param.acc.x = Random::GetRandom(-1.0f, 1.0f);
-		param.acc.y = Random::GetRandom(-1.0f, 1.0f);
-		param.acc.z = Random::GetRandom(-1.0f, 1.0f);
-		param.acc *= 0.035f;
-		param.speed = 0.1f;
+		//param.acc.x = Random::GetRandom(-1.0f, 1.0f);
+		//param.acc.y = Random::GetRandom(-1.0f, 1.0f);
+		//param.acc.z = Random::GetRandom(-1.0f, 1.0f);
+		//param.acc *= 0.0001f;
+		param.speed = 0.001f;
 		//サイズ
 		float size = 1.0f;
 		param.scl = { size,size,size };
-		param.add_scl = Vector3::Zero;
+		param.add_scl = { -0.05f,-0.05f, -0.05f };
 		//回転
 		param.rot = Vector3::Zero;
 		param.add_rot = Vector3::Zero;
 		//寿命
 		param.life = 60;
 		//色
-		param.color.x = (255.0f / 255.0f);
-		param.color.y = (255.0f / 255.0f);
-		param.color.z = (255.0f / 255.0f);
+		param.color.x = 1.0f;
+		param.color.y = 0.0f;
+		param.color.z = 0.0f;
 		//透明度
-		param.alpha = 1.0f;
-		param.add_alpha = -0.01f;
+		param.alpha = 0.05f;
+		param.add_alpha = 0.01f;
 		//パーティクルを増やす
 		manager->AddQuadAdd(new DefaultGeometryParticle(param));
 	}
