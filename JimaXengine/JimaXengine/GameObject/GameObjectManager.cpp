@@ -69,7 +69,9 @@ void JimaXengine::GameObjectManager::Draw()
 			{
 				continue;
 			}
+
 			(*it)->Draw();
+
 #ifdef _DEBUG
 			(*it)->DrawImGui();
 #endif // _DEBUG
@@ -82,7 +84,7 @@ void JimaXengine::GameObjectManager::Draw()
 		pManager->DrawDepthAlpha(GetPlayer()->GetCamera());
 		GetPlayer()->DrawAlphaObj();
 		//深度テストなしパーティクル
-		pManager->DrawDepthNone(GetPlayer()->GetCamera());
+		//pManager->DrawDepthNoneBack(GetPlayer()->GetCamera());
 	}
 }
 

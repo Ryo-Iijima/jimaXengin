@@ -192,7 +192,7 @@ void JimaXengine::ParticleEmitter::RandomEffect(const Vector3& pos)
 		param.acc *= 0.035f;
 		param.speed = 0.1f;
 		//ÉTÉCÉY
-		float size = 10.0f;
+		float size = 1.0f;
 		param.scl = { size,size,size };
 		param.add_scl = Vector3::Zero;
 		//âÒì]

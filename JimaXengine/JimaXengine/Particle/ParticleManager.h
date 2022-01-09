@@ -31,7 +31,8 @@ namespace JimaXengine
 		// 各設定ごとの描画
 		void DrawDepth(Camera* camera);
 		void DrawDepthAlpha(Camera* camera);
-		void DrawDepthNone(Camera* camera);
+		void DrawDepthNoneFront(Camera* camera);
+		void DrawDepthNoneBack(Camera* camera);
 		// 各種類ごとの追加（Emitterから好きなのを選んで呼ぶ）
 		void AddParticleObj(ParticleObj* particle);
 		void AddQuadAlpha(ParticleBase* parameter);

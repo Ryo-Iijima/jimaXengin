@@ -16,3 +16,5 @@
 // float JimaXengine::General::ConvertToDegrees(float& radians)参照渡しにするとx64環境だと64bitになって逆に容量食う
 
 // Todo デッドゾーン、上限、下限、の設定
+
+// Joycon.cpp 545行ローカル配列をリターンしているのを直す

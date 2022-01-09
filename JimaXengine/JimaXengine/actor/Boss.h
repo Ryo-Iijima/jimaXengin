@@ -1,5 +1,6 @@
 #pragma once
 #include "../GameObject/GameObject.h"
+#include "../OctLeg.h"
 
 namespace JimaXengine
 {	
@@ -12,12 +13,16 @@ namespace JimaXengine
 	{
 	private:
 		std::unique_ptr<Object3d> object;
+		const int legNum = 8;		// 足の数
+		std::vector< std::unique_ptr<OctLeg>> legs;	// タコの足
 
 		GameObjectManager* pOManager = nullptr;
 
 		int hp;					// ヒットポイント
 		const int Maxhp = 3;	// 最大ヒットポイント
 		bool damaged = false;	// ダメージ点滅用
+		const Vector4 normalColor = Vector4(1, 1, 1, 1);		// 通常時の色
+		const Vector4 damageColor = Vector4(1, 0.5f, 0.5f, 1);	// ダメージ受けた時の色
 		int count = 20;			// 点滅時間
 		int i = 0;				// 点滅カウント用
 		bool isAnger = false;	// 怒り状態
@@ -111,6 +116,8 @@ namespace JimaXengine
 		void DamageEffect();
 		// 判定の位置合わせ
 		void ColPosSet()override;
+		// 足の初期位置合わせ
+		void LegPosInitialize();
 
 	public:
 		Boss(Camera* camera, GameObjectManager* oManager);

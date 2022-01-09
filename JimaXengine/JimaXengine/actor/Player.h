@@ -41,6 +41,16 @@ namespace JimaXengine
 		NumberDrawer* hitBollCountTex;
 		NumberDrawer* shotBollCountTex;
 
+
+		// カメラアクション関連
+		// 開始位置
+		Vector3 cameraStartPos;
+		// 終了位置
+		Vector3 cameraEndPos;
+		// 移動完了フラグ
+		bool moveEnd;
+		// 移動ルートとかはそれぞれ作る？時間経過で方向とか変えてやる
+
 	public:
 		struct Racket
 		{

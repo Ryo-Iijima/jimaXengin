@@ -1,5 +1,4 @@
 #include "Boss.h"
-#include "../3d/FbxLoader.h"
 #include "../general/Random.h"
 #include "../general/General.h"
 #include "../GameObject/GameObjectManager.h"
@@ -18,16 +17,25 @@ void JimaXengine::Boss::Initialize()
 {
 	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
-	object->SetModelforBuff("boss");
-	//object->SetModelforBuff("octotorso");
+	object->SetModelforBuff("octotorso");
 
 	pos = Vector3(0, 6, 0);
-	scale = Vector3(1.5f, 1.5f, 1.5f);
-	rotation = Vector3(0, 180, 0);
+	scale = Vector3(1.0f, 1.0f, 1.0f);
+	rotation = Vector3(0, 0, 0);
 
 	Vector3 colscale = { 5,5,5 };
 	aabb3dCol.maxPos = pos + colscale;
 	aabb3dCol.minPos = pos - colscale;
+
+	legs.resize(legNum);
+	for (int i = 0; i < legNum; i++)
+	{
+		legs[i] = std::make_unique <OctLeg>(pCamera);
+		legs[i]->Initialize();
+	}
+
+	// ë´Ç≤Ç∆Ç…à íuÇ∆å¸Ç´Çê›íË
+	LegPosInitialize();
 
 	state = State::WAIT;
 	hp = Maxhp;
@@ -84,17 +92,29 @@ void JimaXengine::Boss::Update()
 
 	ColPosSet();
 
+
 	object->SetCamera(pCamera);
 	object->Update();
 
 	offsetPosObj->SetCamera(pCamera);
 	offsetPosObj->Update();
+
+	for (int i = 0; i < legNum; i++)
+	{
+		legs[i]->SetRootPos(pos);
+		legs[i]->Update();
+	}
 }			  
 
 void JimaXengine::Boss::Draw()
 {
 	object->Draw();
 	offsetPosObj->Draw();
+
+	for (int i = 0; i < legNum; i++)
+	{
+		legs[i]->Draw();
+	}
 
 	hpBarLength = hpBarMaxLength * hp / Maxhp;
 	hpSprite->DrawOriginal("white1x1.png", Vector2(WinApp::WINDOW_WIDTH / 2 - 250, 20), 0.0f, Vector2(hpBarLength, 50.0f), "ALPHA", Vector2(), Vector4(0, 1, 0, 1));
@@ -164,16 +184,16 @@ void JimaXengine::Boss::DamageEffect()
 		}
 		if (i % 2 == 0)
 		{
-			color = Vector4(1, 0.5f, 0.5f, 1);
+			color = damageColor;
 		}
 		else
 		{
-			color = Vector4(1, 1, 1, 1);
+			color = normalColor;
 		}
 	}
 	else
 	{
-		color = Vector4(1, 1, 1, 1);
+		color = normalColor;
 	}
 }
 
@@ -181,6 +201,33 @@ void JimaXengine::Boss::ColPosSet()
 {
 	aabb3dCol.maxPos = Vector3(pos.x + 5, pos.y + 5, pos.z + 5);
 	aabb3dCol.minPos = Vector3(pos.x - 5, pos.y - 5, pos.z - 5);
+}
+
+void JimaXengine::Boss::LegPosInitialize()
+{
+	legs[0]->SetDiffPos(Vector3(0.917f, 0, -0.87f));
+	legs[0]->SetRotation(Vector3(0, -45, 0));
+
+	legs[1]->SetDiffPos(Vector3(1.07f, 0, 0));
+	legs[1]->SetRotation(Vector3(0, 270, 0));
+
+	legs[2]->SetDiffPos(Vector3(1.045f, 0, 0.819f));
+	legs[2]->SetRotation(Vector3(0, 230, 0));
+
+	legs[3]->SetDiffPos(Vector3(0.358f, 0, 1.054f));
+	legs[3]->SetRotation(Vector3(0, 190, 0));
+
+	legs[4]->SetDiffPos(Vector3(-0.917f, 0, -0.87f));
+	legs[4]->SetRotation(Vector3(0, 45, 0));
+
+	legs[5]->SetDiffPos(Vector3(-1.07f, 0, 0));
+	legs[5]->SetRotation(Vector3(0, -270, 0));
+
+	legs[6]->SetDiffPos(Vector3(-1.045f, 0, 0.819f));
+	legs[6]->SetRotation(Vector3(0, -230, 0));
+
+	legs[7]->SetDiffPos(Vector3(-0.358f, 0, 1.054f));
+	legs[7]->SetRotation(Vector3(0, -190, 0));
 }
 
 void JimaXengine::Boss::Move()
@@ -392,7 +439,7 @@ void JimaXengine::Boss::SuitableForPlayer()
 	angle.y = atan2f(dir.x, dir.z);
 
 	rotation.x = angle.x * 20;
-	rotation.y = 180 + (angle.y * 50);
+	rotation.y = (angle.y * 50);
 
 	// ìxÅ®ÉâÉWÉAÉì
 	Vector3 rotRad = Vector3::Zero;
@@ -406,16 +453,19 @@ void JimaXengine::Boss::SuitableForPlayer()
 		
 		// âÒì]çsóÒÇçÏÇÈ
 		XMMATRIX mRot = XMMatrixRotationX(rotRad.x) * XMMatrixRotationY(rotRad.y);
-
+		// âÒì]çsóÒÇîΩâf
 		shotPosOffset = shotPosOffset * mRot;
-		
+		// îºåaÇä|ÇØÇÈ
 		shotPosOffset *= offsetRad;
-
+		// î≠éÀà íuÇ…îΩâf
 		p = pos + shotPosOffset;
 
-		if (Input::KeyTrigger(DIK_SPACE))
+		// äeë´Ç‡ëÃÇ…çáÇÇπÇƒâÒì]Ç≥ÇπÇÈ
+		LegPosInitialize();
+		for (int i = 0; i < legNum; i++)
 		{
-			SingleShot();
+			legs[i]->SetDiffPos(legs[i]->GetDiffPos() * mRot);
+			legs[i]->SetRotation(legs[i]->GetRotation() + rotation);
 		}
 	}
 }

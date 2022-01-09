@@ -222,6 +222,7 @@
     <ClCompile Include="math\Vector3.cpp" />
     <ClCompile Include="math\Vector4.cpp" />
     <ClCompile Include="NumberDrawer.cpp" />
+    <ClCompile Include="OctLeg.cpp" />
     <ClCompile Include="Particle\DefaultGeometryParticle.cpp" />
     <ClCompile Include="Particle\GeometoryObject3D.cpp" />
     <ClCompile Include="Particle\HomingGeometryParticle.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="NumberDrawer.h" />
+    <ClInclude Include="OctLeg.h" />
     <ClInclude Include="Particle\DefaultGeometryParticle.h" />
     <ClInclude Include="Particle\GeometoryObject3D.h" />
     <ClInclude Include="Particle\HomingGeometryParticle.h" />

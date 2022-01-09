@@ -9,7 +9,6 @@
 #include "../3d/Object3d.h"
 #include "../camera/Camera.h"
 #include "../Particle/ParticleEmitter.h"
-//#include "FbxObj.h"
 
 
 namespace JimaXengine
@@ -66,7 +65,6 @@ namespace JimaXengine
 		AABB3D GetAABB3DCol() { return aabb3dCol; }
 		// Setter
 		void SetGameObjectManager(GameObjectManager* oManager) { this->oManager = oManager; }
-
 		void InitializeParticleEmitter(ParticleManager* pManager);
 
 	protected:

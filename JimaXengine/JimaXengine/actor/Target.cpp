@@ -152,7 +152,7 @@ void JimaXengine::Target::Update()
 	HitCheck();
 	Move();
 
-	//pEmitter->RandomEffect(pos);
+	pEmitter->RandomEffect(pos);
 	
 	object->SetCamera(pCamera);
 	object->Update();

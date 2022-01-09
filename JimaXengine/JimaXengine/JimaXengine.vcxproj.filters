@@ -281,6 +281,9 @@
     <ClCompile Include="NumberDrawer.cpp">
       <Filter>ソース ファイル\app</Filter>
     </ClCompile>
+    <ClCompile Include="OctLeg.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -468,6 +471,9 @@
     </ClInclude>
     <ClInclude Include="NumberDrawer.h">
       <Filter>ヘッダー ファイル\app</Filter>
+    </ClInclude>
+    <ClInclude Include="OctLeg.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
