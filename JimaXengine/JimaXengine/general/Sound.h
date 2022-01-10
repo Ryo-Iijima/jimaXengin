@@ -58,7 +58,7 @@ namespace JimaXengine
 		static void LoadWav(const std::string& filename);
 
 		// çƒê∂
-		void PlayforBuff(const std::string& filename);
+		static void PlayforBuff(const std::string& filename, const float& volume = 1.0f);
 
 	};
 }

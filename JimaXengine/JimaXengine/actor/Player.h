@@ -2,6 +2,7 @@
 #include "../hidapi/hidapi.h"
 #include "../GameObject/GameObject.h"
 #include "../NumberDrawer.h"
+#include "../general/Sound.h"
 
 namespace JimaXengine
 {
@@ -9,12 +10,13 @@ namespace JimaXengine
 	class Model;
 	class Object3d;
 	class Object2d;
+	class Sound;
 
 	class Player : public GameObject
 	{
 	private:
-		Model* model = nullptr;
-		Object3d* object = nullptr;
+		std::unique_ptr <Object3d> object;
+
 
 		Vector3 eye, target;
 
@@ -42,7 +44,7 @@ namespace JimaXengine
 		NumberDrawer* shotBollCountTex;
 
 
-		// カメラアクション関連
+		/// カメラアクション関連 ///
 		// 開始位置
 		Vector3 cameraStartPos;
 		// 終了位置

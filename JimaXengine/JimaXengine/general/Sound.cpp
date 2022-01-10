@@ -81,7 +81,7 @@ void JimaXengine::Sound::LoadWav(const std::string& filename)
 	soundDataBuffer.emplace(filename, registData);
 }
 
-void JimaXengine::Sound::PlayforBuff(const std::string& filename)
+void JimaXengine::Sound::PlayforBuff(const std::string& filename, const float& volume)
 {
 	FormatChunc tFormat = GetSoundDataBuffer(filename).format;
 	Chunk tData = GetSoundDataBuffer(filename).data;
@@ -106,7 +106,13 @@ void JimaXengine::Sound::PlayforBuff(const std::string& filename)
 	buff.Flags = XAUDIO2_END_OF_STREAM;
 	buff.AudioBytes = tData.size;
 
-	// 再生
+	// ボリューム設定
+	result = pSourceVoice->SetVolume(volume);
+	if (FAILED(result)) assert(0);
+	// バッファの送信
 	result = pSourceVoice->SubmitSourceBuffer(&buff);
+	if (FAILED(result)) assert(0);
+	// 再生
 	result = pSourceVoice->Start();
+	if (FAILED(result)) assert(0);
 }

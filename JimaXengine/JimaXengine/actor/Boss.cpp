@@ -154,6 +154,7 @@ void JimaXengine::Boss::DrawImGui()
 
 void JimaXengine::Boss::Damage()
 {
+	Sound::PlayforBuff("_Boss_damage.wav", 0.5f);
 	damaged = true;
 	hp--;
 	if (hp <= 0)
@@ -375,6 +376,7 @@ void JimaXengine::Boss::SingleShot()
 	// “Š‚°‚½”‚ð‰ÁŽZ
 	shotBallCount += 1;
 
+	Sound::PlayforBuff("_Boss_attack.wav", 0.5f);
 	attacked = true;
 }
 
@@ -404,6 +406,8 @@ void JimaXengine::Boss::RapidFire()
 
 		// “Š‚°‚½”‚ð‰ÁŽZ
 		shotBallCount += 1;
+
+		Sound::PlayforBuff("_Boss_attack.wav", 0.5f);
 	}
 
 	// UŒ‚‰ñ”‚ª–Ú•W‚É‚È‚Á‚½‚ç
@@ -424,6 +428,8 @@ void JimaXengine::Boss::EachShot()
 
 	// “Š‚°‚½”‚ð‰ÁŽZ
 	shotBallCount += 1;
+
+	Sound::PlayforBuff("_Boss_attack.wav", 0.5f);
 
 	attacked = true;
 }

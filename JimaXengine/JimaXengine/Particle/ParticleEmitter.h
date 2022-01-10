@@ -26,6 +26,8 @@ namespace JimaXengine
 		void Drift(const Vector3& pos, const Vector3& vec);
 		// ビルボードのよくわからんもや
 		void RandomEffect(const Vector3& pos);
+		// 球の周りに出す軌跡
+		void Locus(const Vector3& pos, const Vector3& color = Vector3::One);
 		// アイテムの周りに出すエフェクト
 		void Moya(const Vector3& pos, const Vector3& color = Vector3::One);
 		// 球状に出るエフェクト

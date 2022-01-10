@@ -40,8 +40,6 @@ namespace JimaXengine
 		Bg bg;
 		Bg band;
 
-		Sound* sound = nullptr;
-
 		Vector2 texPos = { 0,0 };
 
 	private:

@@ -212,6 +212,37 @@ void JimaXengine::ParticleEmitter::RandomEffect(const Vector3& pos)
 	}
 }
 
+void JimaXengine::ParticleEmitter::Locus(const Vector3& pos, const Vector3& color)
+{
+	ParticleParam param = {};
+	for (int i = 0; i < 5; i++)
+	{
+		//位置
+		param.pos = pos;
+		param.vel.x = Random::GetRandom(-1.0f, 1.0f);
+		param.vel.y = Random::GetRandom(-1.0f, 1.0f);
+		param.vel.z = Random::GetRandom(-1.0f, 1.0f);
+		param.vel.Normalize();
+		param.speed = 0.001f;
+		//サイズ
+		float size = 1.0f;
+		param.scl = { size,size,size };
+		param.add_scl = { -0.05f,-0.05f, -0.05f };
+		//回転
+		param.rot = Vector3::Zero;
+		param.add_rot = Vector3::Zero;
+		//寿命
+		param.life = 60;
+		//色
+		param.color = color;
+		//透明度
+		param.alpha = 0.05f;
+		param.add_alpha = 0.01f;
+		//パーティクルを増やす
+		manager->AddQuadAdd(new DefaultGeometryParticle(param));
+	}
+}
+
 void JimaXengine::ParticleEmitter::Moya(const Vector3& pos, const Vector3& color)
 {
 	ParticleParam param = {};

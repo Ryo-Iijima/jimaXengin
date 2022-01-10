@@ -19,9 +19,19 @@ namespace JimaXengine
 		// 当たった後の方向調整用
 		Player::Racket* hitRacket = nullptr;
 
+		// コース予測表示を出したか
 		bool markInserted = false;
 
 		Vector3 gool;
+
+		// 軌跡の色
+		const Vector3 normalLocusColor = { 1, 0, 0 };
+		const Vector3 reflectLocusColor = { 0, 0, 1 };
+		Vector3 locusColor;	
+
+		bool isHitPlayer;	// プレイヤーに当たった
+		bool isHitEnemy;	// 敵に当たった
+
 
 	private:
 		void Move();

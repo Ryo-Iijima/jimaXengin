@@ -13,6 +13,7 @@ namespace JimaXengine
 	{
 	private:
 		std::unique_ptr<Object3d> object;
+
 		const int legNum = 8;		// ‘«‚Ì”
 		std::vector< std::unique_ptr<OctLeg>> legs;	// ƒ^ƒR‚Ì‘«
 

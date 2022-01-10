@@ -6,14 +6,14 @@
 
 void JimaXengine::Title::BgScroll()
 {
-	//// Žè‘O‚Ì‘Ñ
+	// Žè‘O‚Ì‘Ñ
 	bg.uvPos += bg.vel;
 	if (bg.uvPos.x >= Texture::GetMetadata("title_bg.png").width)
 	{
 		bg.uvPos = Vector2(0, 0);
 	}
 
-	//// Œã‚ë‚ÌŽs¼–Í—l
+	// Œã‚ë‚ÌŽs¼–Í—l
 	band.uvPos += band.vel;
 	if (band.uvPos.x >= Texture::GetMetadata("title_bg2.png").width)
 	{
@@ -75,8 +75,7 @@ void JimaXengine::Title::Initialize()
 	
 	selected = false;
 
-	sound = new Sound;
-	sound->PlayforBuff("_UI_select.wav");
+	Sound::PlayforBuff("_UI_select.wav", 1.0f);
 
 	fadeTex = std::make_unique<Object2d>();
 	fadeTex->CreateSprite();
@@ -94,7 +93,7 @@ void JimaXengine::Title::Update()
 	if (Input::KeyTrigger(DIK_1)||Input::KeyTrigger(DIK_SPACE))
 	{
 		selected = true;
-		sound->PlayforBuff("_UI_decision.wav");
+		Sound::PlayforBuff("_UI_decision.wav", 1.0f);
 	}
 
 	if (selected)

@@ -21,7 +21,7 @@ void JimaXengine::Target::HitCheck()
 		Delete();
 	}
 
-	// プレイヤーが跳ね返す前で
+	// プレイヤーが跳ね返す前
 	if (reflection == false)
 	{
 		Player* player = oManager->GetPlayer();
@@ -30,7 +30,8 @@ void JimaXengine::Target::HitCheck()
 		if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
 			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
 		{
-			color = Vector4(0, 1, 1, 1);
+			Sound::PlayforBuff("_Player_hit.wav", 1.0f);
+			locusColor = reflectLocusColor;
 			reflection = true;
 
 			// どっちのラケットに当たったか判定
@@ -84,7 +85,12 @@ void JimaXengine::Target::HitCheck()
 		// プレイヤーより後ろに行ったら
 		if (pos.z <= player->GetPos().z -1)
 		{
-			player->Damage();
+			if (isHitPlayer == false)
+			{
+				player->Damage();
+			}
+
+			isHitPlayer = true;
 
 			// カメラより手前に来たら
 			if (pos.z <= pCamera->GetEye().z)
@@ -139,6 +145,10 @@ void JimaXengine::Target::Initialize()
 	reflection = false;
 
 	markInserted = false;
+
+	locusColor = normalLocusColor;
+
+	isHitPlayer = false;
 }
 
 void JimaXengine::Target::Update()
@@ -152,7 +162,7 @@ void JimaXengine::Target::Update()
 	HitCheck();
 	Move();
 
-	pEmitter->RandomEffect(pos);
+	pEmitter->Locus(pos, locusColor);
 	
 	object->SetCamera(pCamera);
 	object->Update();

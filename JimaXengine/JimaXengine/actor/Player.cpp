@@ -225,6 +225,7 @@ void JimaXengine::Player::Move()
 
 void JimaXengine::Player::Damage()
 {
+    Sound::PlayforBuff("_Player_damage.wav", 0.5f);
     damaged = true;
     hp--;
     if (hp <= 0)
@@ -242,13 +243,11 @@ JimaXengine::Player::~Player()
 {
     delete hitBollCountTex;
     delete shotBollCountTex;
-	delete object;
-	delete model;
 }
 
 void JimaXengine::Player::Initialize()
 {
-    object = new Object3d(pos, scale, rotation, color);
+    object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
     object->SetModelforBuff("DefaultBox");
     
