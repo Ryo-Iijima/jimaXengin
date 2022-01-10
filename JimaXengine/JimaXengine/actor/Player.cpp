@@ -234,6 +234,53 @@ void JimaXengine::Player::Damage()
     }
 }
 
+void JimaXengine::Player::Swing()
+{
+
+    if (Input::KeyTrigger(DIK_SPACE) && isSwing == false)
+    {
+        Sound::PlayforBuff("_Player_swing.wav");
+        isSwing = true;
+    }
+
+    // 振り始めたら
+    if (isSwing == true)
+    {
+        // カウントスタート
+        swingCounter++;
+
+        // 当たる範囲内だったら（todo:時間をx~yの間ならみたいな指定にする）
+        if (swingCounter >= justHitTime &&
+            swingCounter < (justHitTime + justHitinterval))
+        {
+            // 当たる位置にある
+            isHitZone = true;
+        }
+        else
+        {
+            // 当たる位置にない
+            isHitZone = false;
+        }
+
+        // 振り切るまでの時間が経過したら
+        if (swingCounter > swingTime)
+        {
+            // 振り切った
+        }
+
+        // 振り切ってから構えるまでの時間が経過したら
+        if (swingCounter > holdTime + swingTime)
+        {
+            // 構えた
+
+            // 振っている最中ではない
+            isSwing = false;
+            // カウンターリセット
+            swingCounter = 0;
+        }
+    }
+}
+
 JimaXengine::Player::Player(Camera* camera)
 {
     pCamera = camera;
@@ -321,6 +368,15 @@ void JimaXengine::Player::Initialize()
     hp = Maxhp;
     hitBollCount = 0;
     shotBollCount = 0;
+
+    // 打つタイミング関連
+    isSwing = false;
+    isHitZone = false;
+    swingCounter = 0;
+    justHitTime = 5;
+    justHitinterval = 5;
+    swingTime = 15;
+    holdTime = 5;
 }
 
 enum class DebugType
@@ -341,17 +397,14 @@ void DebugPrint(std::string s, DebugType d)
 void JimaXengine::Player::Update()
 {    
 #pragma region 数字・桁保存
-    if (Input::KeyTrigger(DIK_Z))
-    {
-        hitBollCount++;
-    }
 
     shotBollCount = oManager->GetBoss()->GetShotBallCount();
 
 #pragma endregion 数字・桁保存
 
-
     Move();
+
+    Swing();
 
     object->SetCamera(pCamera);
     object->Update();
@@ -433,6 +486,11 @@ void JimaXengine::Player::DrawImGui()
     //ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
     //ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
     //ImGui::Text("objePos : %f,%f,%f", pos.x, pos.y, pos.z);
+
+    ImGui::Checkbox("isSwing", &isSwing);
+    ImGui::Checkbox("isHitZone", &isHitZone);
+    ImGui::Text("swingCounter : %d", swingCounter);
+
 
     ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
 

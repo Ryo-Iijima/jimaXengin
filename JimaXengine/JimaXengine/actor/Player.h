@@ -14,9 +14,28 @@ namespace JimaXengine
 
 	class Player : public GameObject
 	{
+	public:
+		struct Racket
+		{
+			std::unique_ptr<Object3d> object;	// モデル
+			Vector3 pos;						// 位置
+			Vector3 scale;						// スケール
+			Vector3 rot;						// 回転
+			Vector4 color;						// 色
+			Vector3 vel;						// 移動量
+			Vector3 acc;						// 加速度
+			AABB3D col;							// 当たり判定用
+
+			bool isHold;						// 構えているか
+			bool preIsHold;						// 前のフレーム構えていたか
+			float holdCount;					// 構えてからの引付時間
+		};
+
+		std::unique_ptr<Racket> leftRacket;
+		std::unique_ptr<Racket> rightRacket;
+
 	private:
 		std::unique_ptr <Object3d> object;
-
 
 		Vector3 eye, target;
 
@@ -38,11 +57,10 @@ namespace JimaXengine
 		std::unique_ptr<Object2d> hpUi_2;
 		std::unique_ptr<Object2d> hpUi_3;
 
-		int hitBollCount;									// ボスに球を当てた数
-		int shotBollCount;									// ボスが打った数
+		int hitBollCount;					// ボスに球を当てた数
+		int shotBollCount;					// ボスが打った数
 		NumberDrawer* hitBollCountTex;
 		NumberDrawer* shotBollCountTex;
-
 
 		/// カメラアクション関連 ///
 		// 開始位置
@@ -53,25 +71,14 @@ namespace JimaXengine
 		bool moveEnd;
 		// 移動ルートとかはそれぞれ作る？時間経過で方向とか変えてやる
 
-	public:
-		struct Racket
-		{
-			std::unique_ptr<Object3d> object;	// モデル
-			Vector3 pos;						// 位置
-			Vector3 scale;						// スケール
-			Vector3 rot;						// 回転
-			Vector4 color;						// 色
-			Vector3 vel;						// 移動量
-			Vector3 acc;						// 加速度
-			AABB3D col;							// 当たり判定用
-
-			bool isHold;						// 構えているか
-			bool preIsHold;						// 前のフレーム構えていたか
-			float holdCount;					// 構えてからの引付時間
-		};
-
-		std::unique_ptr<Racket> leftRacket;
-		std::unique_ptr<Racket> rightRacket;
+		/// 打つタイミング関連 ///
+		bool isSwing;			// 振っている最中
+		bool isHitZone;			// 当たる位置にあるか
+		int swingCounter;		// 振ってる間の計測タイマー
+		int justHitTime;		// 当たる位置にある時間
+		int justHitinterval;	// （上の時間からどれだけ続くか）
+		int swingTime;			// 振り始めてから振り切るまでの時間
+		int holdTime;			// 振り切ってから再び構えるまでの時間
 
 	public:
 		Player(Camera* camera);
@@ -83,14 +90,23 @@ namespace JimaXengine
 		GameObject::TYPE GetType()override;
 		void DrawImGui()override;
 
-		void SetCamera(Camera* camera) { pCamera = camera; }
-		Camera* GetCamera();
 		void DrawAlphaObj();
-		void Move();
 		void Damage();	// ダメージを食らう
 
 		// 敵に球を当てた回数を加算
 		void AddHitBollCount() { hitBollCount++; }
 
+		// setter
+		void SetCamera(Camera* camera) { pCamera = camera; }
+
+		// getter
+		Camera* GetCamera();
+		bool GetIsHitZone() { return isHitZone; }
+
+	private:
+		// 移動他
+		void Move();
+		// バットを振る
+		void Swing();
 	};
 }

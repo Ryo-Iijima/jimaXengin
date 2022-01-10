@@ -27,8 +27,9 @@ void JimaXengine::Target::HitCheck()
 		Player* player = oManager->GetPlayer();
 
 		// ƒ‰ƒPƒbƒg‚É“–‚½‚Á‚½‚ç
-		if (Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
-			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol))
+		if (player->GetIsHitZone()&&
+			(Collision::CheckAABB3DToSphere(player->leftRacket->col, sphereCol)
+			|| Collision::CheckAABB3DToSphere(player->rightRacket->col, sphereCol)))
 		{
 			Sound::PlayforBuff("_Player_hit.wav", 1.0f);
 			locusColor = reflectLocusColor;
