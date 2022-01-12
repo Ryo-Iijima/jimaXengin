@@ -10,6 +10,8 @@
 
 namespace JimaXengine
 {
+	class Vector2;
+
 	class FbxLoader
 	{
 	private:	// エイリアス
@@ -36,6 +38,11 @@ namespace JimaXengine
 		void operator=(const FbxLoader& obj) = delete;
 
 		static FbxLoader* instance;
+
+		int controlPointCount = 0;
+		// ポリゴン番号、頂点番号保存用
+		std::vector<Vector2> data;
+
 
 	private:	// 関数
 
