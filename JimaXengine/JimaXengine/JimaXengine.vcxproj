@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -187,6 +187,7 @@
     <ClCompile Include="actor\StrikeMark.cpp" />
     <ClCompile Include="actor\Target.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BatterCharacter.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="collision\Collision.cpp" />
     <ClCompile Include="collision\CollisionPrimitive.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="actor\StrikeMark.h" />
     <ClInclude Include="actor\Target.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BatterCharacter.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="collision\Collision.h" />
     <ClInclude Include="collision\CollisionPrimitive.h" />

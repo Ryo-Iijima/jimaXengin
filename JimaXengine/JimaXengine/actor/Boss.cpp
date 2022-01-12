@@ -82,7 +82,7 @@ void JimaXengine::Boss::Update()
 {
 	CheckIsAnger();
 
-	Move();
+	//Move();
 
 	DamageEffect();
 

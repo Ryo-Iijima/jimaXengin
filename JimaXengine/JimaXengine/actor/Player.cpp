@@ -377,6 +377,12 @@ void JimaXengine::Player::Initialize()
     justHitinterval = 5;
     swingTime = 15;
     holdTime = 5;
+
+    character = std::make_unique<BatterCharacter>(pCamera);
+    character->Initialize();
+
+    Vector3 charaPos = pos + Vector3();
+    character->SetPosition(charaPos);
 }
 
 enum class DebugType
@@ -402,9 +408,14 @@ void JimaXengine::Player::Update()
 
 #pragma endregion 数字・桁保存
 
+    // 移動他
     Move();
 
+    // バットを振る
     Swing();
+
+    // 表示キャラクター
+    character->Update();
 
     object->SetCamera(pCamera);
     object->Update();
@@ -434,7 +445,7 @@ void JimaXengine::Player::Draw()
     rightRacket->object->Draw();
 #pragma endregion
     //object->Draw();
-
+    character->Draw();
 #pragma region 数字・UI
     //Vector2 uiPos = Vector2(0, WinApp::WINDOW_HEIGHT / 4 * 3);
     //hpUi_0->DrawOriginal("playerUI_0.png", uiPos, 0.0f, Vector2(1.0f / 6.0f, 1.0f / 6.0f), "ALPHA");

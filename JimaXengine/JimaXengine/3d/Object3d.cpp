@@ -119,7 +119,9 @@ void  JimaXengine::Object3d::CreateGraphicsPipeline()
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
-
+	//samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	//samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	
 	// ルートシグネチャの設定
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);

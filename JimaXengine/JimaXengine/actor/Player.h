@@ -3,11 +3,11 @@
 #include "../GameObject/GameObject.h"
 #include "../NumberDrawer.h"
 #include "../general/Sound.h"
+#include "../BatterCharacter.h"
 
 namespace JimaXengine
 {
 	class Camera;
-	class Model;
 	class Object3d;
 	class Object2d;
 	class Sound;
@@ -36,6 +36,8 @@ namespace JimaXengine
 
 	private:
 		std::unique_ptr <Object3d> object;
+
+		std::unique_ptr <BatterCharacter> character;
 
 		Vector3 eye, target;
 

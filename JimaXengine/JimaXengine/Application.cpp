@@ -109,6 +109,9 @@ void JimaXengine::Application::Initialize()
 	Sound::LoadWav("_Player_swing.wav");
 
 	// ÉÇÉfÉãÇÃì«Ç›çûÇ›
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("tex_test_20x1");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("tex_test_cut");
+
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultBox");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("smooth_sphere");
@@ -122,6 +125,10 @@ void JimaXengine::Application::Initialize()
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("cube");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octoleg");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octotorso");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("test_robo");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("bat");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("tex_test");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("tex_test_6x6");
 
 	// ÉVÅ[ÉìÇÃê›íË
 	sceneManager = new SceneManager;

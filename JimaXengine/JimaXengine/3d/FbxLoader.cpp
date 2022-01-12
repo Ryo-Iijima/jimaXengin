@@ -121,13 +121,6 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     FbxStringList uvNames;
     fbxMesh->GetUVSetNames(uvNames);
 
-    //int cnt = uvNames.GetCount();
-    //std::vector<std::string> unNames2;
-
-    //for (int i = 0; i < cnt; i++) {
-    //    unNames2.emplace_back(uvNames[i].Buffer());
-    //}
-
     // 面ごとの情報読み取り
     for (int i = 0; i < polygonCount; i++)
     {
@@ -161,8 +154,19 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
                 if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, pUnmappedUV))
                 {
                     vertex.uv.x = (float)uvs[0];
-                    //vertex.uv.y = 1 - (float)uvs[1];    // Mayaの出力に合わせて反転してます
-                    vertex.uv.y = -1 * (float)uvs[1];    // Mayaの出力に合わせて反転してます
+                    vertex.uv.y = (float)uvs[1];
+
+                    if (pUnmappedUV == true) {
+                        static int a = 0;
+                        a++;
+                    }
+
+                    if (uvs[0] > 1.0) {
+                        //vertex.uv.x = (float)uvs[0] - 1.0f;
+                    }
+
+                    //vertex.uv.x = -1.0f * (float)uvs[0];
+                    //vertex.uv.y = -1.0f * (float)uvs[1];    // Mayaの出力に合わせて反転してます
                 }
             }
             // 頂点インデックス追加
