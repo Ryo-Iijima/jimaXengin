@@ -381,7 +381,7 @@ void JimaXengine::Player::Initialize()
     character = std::make_unique<BatterCharacter>(pCamera);
     character->Initialize();
 
-    Vector3 charaPos = pos + Vector3();
+    Vector3 charaPos = pos + Vector3(5, -3, 0);
     character->SetPosition(charaPos);
 }
 

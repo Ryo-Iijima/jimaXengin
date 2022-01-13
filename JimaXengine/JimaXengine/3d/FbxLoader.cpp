@@ -12,7 +12,7 @@ JimaXengine::FbxLoader* JimaXengine::FbxLoader::instance = nullptr;
 
 void JimaXengine::FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
 {
-    //// ノード名を取得
+    // ノード名を取得
     //string neme = fbxNode->GetName();
     // モデルにノードを追加
     model->nodes.emplace_back();
@@ -138,7 +138,7 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     auto& vertices = model->vertices;
     auto& indices = model->indices;
 
-    //// 複数メッシュ非対応
+    // 複数メッシュ非対応
     //assert(indices.size() == 0);
     // 面の数
     const int polygonCount = fbxMesh->GetPolygonCount();
@@ -174,8 +174,6 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
         verticesControlPointNum.push_back(controlPointIndex);
 
         // 頂点法線読み込み
-        //Model::FBXVertexData& vertex = vertices[index];
-        //Model::FBXVertexData& vertex = vertices[n];
         FbxVector4 normal;
         if (fbxMesh->GetPolygonVertexNormal(polygonNum, polygonIndexNum, normal))
         {

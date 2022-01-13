@@ -15,6 +15,8 @@ void JimaXengine::BatterCharacter::Initialize()
 	characterObject = std::make_unique<Object3d>(pos, scale, rotation, color);
 	characterObject->Initialize();;
 	characterObject->SetModelforBuff("test_robo");
+	scale = Vector3(1.0f, 1.0f, 1.0f);
+	rotation = Vector3(0, 180, 0);
 
 	// ƒoƒbƒg
 	batObject = std::make_unique<Object3d>(pos, batScale, rotation, color);
