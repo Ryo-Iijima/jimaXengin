@@ -114,9 +114,6 @@ void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
         indices.push_back(0 + vertexCount);
         indices.push_back(1 + vertexCount);
         indices.push_back(2 + vertexCount);
-        //indices.push_back(0 + vertexCount);
-        //indices.push_back(2 + vertexCount);
-        //indices.push_back(3 + vertexCount);
 
         // 1頂点ずつ
         for (int j = 0; j < polygonSize; j++)
@@ -128,51 +125,12 @@ void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
             data.push_back(Vector2(i, j));
         }
 
-        //// 頂点インデックス追加
-        //// 3頂点目より前なら
-        //if (polygonSize < 3)
-        //{
-        //    // 頂点を追加して三角形を作る
-        //    indices.push_back(index);
-        //}
-        //// 4頂点目なら
-        //else
-        //{
-        //    // 3頂点追加して三角形を作る
-        //    int index2 = indices[indices.size() - 1];
-        //    int index3 = index;
-        //    int index0 = indices[indices.size() - 3];
-        //    indices.push_back(index2);
-        //    indices.push_back(index3);
-        //    indices.push_back(index0);
-        //}
-
     }
-
-    //// 頂点データの数
-    //const int controlPointCount = fbxMesh->GetControlPointsCount();
 
     // 頂点データ配列を確保
     Model::FBXVertexData vert{};
     model->vertices.resize(vertexCount, vert);
 
-
-    //// FBXメッシュの頂点座標配列を取得
-    //FbxVector4* pCoord = fbxMesh->GetControlPoints();
-    //// FBXメッシュの全頂点をモデル内の配列にコピーする
-    //for (int i = 0; i < vertexCount; i++)
-    //{
-    //    Model::FBXVertexData& vertex = vertices[i];
-    //    vertex.pos.x = (float)pCoord[i][0];
-    //    vertex.pos.y = (float)pCoord[i][1];
-    //    vertex.pos.z = (float)pCoord[i][2];
-
-    //    //if (i >= controlPointCount - 1)
-    //    //{
-    //    //    static int a = 0;
-    //    //    a++;
-    //    //}
-    //}
 }
 
 void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
@@ -191,72 +149,7 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     FbxStringList uvNames;
     fbxMesh->GetUVSetNames(uvNames);
 
-    //// 面ごとの情報読み取り
-    //for (int i = 0; i < polygonCount; i++)
-    //{
-    //    // 面を構成する頂点の数を取得
-    //    const int polygonSize = fbxMesh->GetPolygonSize(i);
-    //    // 三角形じゃなかったら非対応
-    //    assert(polygonSize <= 4);
-
-    //    // 1頂点ずつ
-    //    for (int j = 0; j < polygonSize; j++)
-    //    {
-    //        // FBX頂点配列のインデックス(ポリゴンiを構成するj番目の頂点のインデックス番号)
-    //        int index = fbxMesh->GetPolygonVertex(i, j);
-    //        // 0以下だったらストップ
-    //        assert(index >= 0);
-
-    //        // 頂点法線読み込み
-    //        Model::FBXVertexData& vertex = vertices[index];
-    //        FbxVector4 normal;
-    //        if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
-    //        {
-    //            vertex.normal.x = (float)normal[0];
-    //            vertex.normal.y = (float)normal[1];
-    //            vertex.normal.z = (float)normal[2];
-    //        }
-
-    //        // テクスチャUV読み込み
-    //        if (textureUVCount > 0)
-    //        {
-    //            FbxVector2 uvs;
-    //            bool pUnmappedUV;
-    //            // 0番決め打ち
-    //            if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, pUnmappedUV))
-    //            {
-    //                vertex.uv.x = (float)uvs[0];
-    //                vertex.uv.y = (float)uvs[1];
-
-    //                if (uvs[0] > 1.0) {
-    //                    //vertex.uv.x = (float)uvs[0] - 1.0f;
-    //                }
-
-    //                //vertex.uv.x = -1.0f * (float)uvs[0];
-    //                //vertex.uv.y = -1.0f * (float)uvs[1];    // Mayaの出力に合わせて反転してます
-    //            }
-    //        }
-
-    //        // 頂点インデックス追加
-    //        // 3頂点目より前なら
-    //        if (j < 3)
-    //        {
-    //            // 頂点を追加して三角形を作る
-    //            indices.push_back(index);
-    //        }
-    //        // 4頂点目なら
-    //        else
-    //        {
-    //            // 3頂点追加して三角形を作る
-    //            int index2 = indices[indices.size() - 1];
-    //            int index3 = index;
-    //            int index0 = indices[indices.size() - 3];
-    //            indices.push_back(index2);
-    //            indices.push_back(index3);
-    //            indices.push_back(index0);
-    //        }
-    //    }
-    //}
+    verticesControlPointNum.clear();
 
     // 全頂点分
     for (int n = 0; n < vertexCount; n++)
@@ -300,38 +193,10 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
             if (fbxMesh->GetPolygonVertexUV(polygonNum, polygonIndexNum, uvNames[0], uvs, pUnmappedUV))
             {
                 vertex.uv.x = (float)uvs[0];
-                vertex.uv.y = (float)uvs[1];
-
-                if (uvs[0] > 1.0) {
-                    //vertex.uv.x = (float)uvs[0] - 1.0f;
-                }
-
-                //vertex.uv.x = -1.0f * (float)uvs[0];
-                //vertex.uv.y = -1.0f * (float)uvs[1];    // Mayaの出力に合わせて反転してます
+                vertex.uv.y = 1.0f - (float)uvs[1];     // Mayaの出力に合わせて反転してます
             }
         }
 
-        //// 頂点インデックス追加
-        //indices.push_back(n);
-
-        
-        //// 3頂点目より前なら
-        //if (polygonIndexNum < 3)
-        //{
-        //    // 頂点を追加して三角形を作る
-        //    indices.push_back(polygonVertexIndex);
-        //}
-        //// 4頂点目なら
-        //else
-        //{
-        //    // 3頂点追加して三角形を作る
-        //    int index2 = indices[indices.size() - 1];
-        //    int index3 = polygonVertexIndex;
-        //    int index0 = indices[indices.size() - 3];
-        //    indices.push_back(index2);
-        //    indices.push_back(index3);
-        //    indices.push_back(index0);
-        //}
     }
 
 }
@@ -526,25 +391,6 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
     // 全ボーンで
     for (int i = 0; i < clusterCount; i++)
     {
-        //// FBXボーン情報
-        //FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
-        //// このボーンに影響を受ける頂点の数
-        //int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
-        //// このボーンに影響を受ける頂点配列
-        //int* controlPointIndices = fbxCluster->GetControlPointIndices();
-        //double* controlPointWeights = fbxCluster->GetControlPointWeights();
-
-        //// 影響を受ける頂点で
-        //for (int j = 0; j < controlPointIndicesCount; j++)
-        //{
-        //    // 頂点番号
-        //    int vertIndex = controlPointIndices[j];
-        //    // スキンウェイト
-        //    float weight = (float)controlPointWeights[j];
-        //    // その頂点に影響を与えるボーンリストに、ボーンとウェイトのペアを追加
-        //    weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i, weight });
-        //}
-
         // FBXボーン情報
         FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
         // このボーンに影響を受ける頂点の数
@@ -576,7 +422,6 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
     for (int i = 0; i < vertices.size(); i++)
     {
         // 頂点のウェイトから最も大きい4つを選択
-        //auto& weightList = weightLists[i];
         auto& weightList = weightLists[verticesControlPointNum[i]];
         // 大小比較用のラムダ式を指定して降順にソート
         weightList.sort([](auto const& lhs, auto const& rhs)

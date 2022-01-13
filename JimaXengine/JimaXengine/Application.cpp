@@ -109,6 +109,8 @@ void JimaXengine::Application::Initialize()
 	Sound::LoadWav("_Player_swing.wav");
 
 	// ÉÇÉfÉãÇÃì«Ç›çûÇ›
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("test_robo");
+
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octoLeg");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octotorso");
 
@@ -127,8 +129,7 @@ void JimaXengine::Application::Initialize()
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("cube");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octoleg");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octotorso");
-	//FbxLoader::GetInstance().LoadModelFromFiletoBuff("test_robo");
-	//FbxLoader::GetInstance().LoadModelFromFiletoBuff("bat");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("bat");
 
 	// ÉVÅ[ÉìÇÃê›íË
 	sceneManager = new SceneManager;

@@ -14,13 +14,12 @@ void JimaXengine::BatterCharacter::Initialize()
 	// キャラクター
 	characterObject = std::make_unique<Object3d>(pos, scale, rotation, color);
 	characterObject->Initialize();;
-	//characterObject->SetModelforBuff("test_robo");
-	characterObject->SetModelforBuff("tex_test_20x1");
+	characterObject->SetModelforBuff("test_robo");
 
 	// バット
 	batObject = std::make_unique<Object3d>(pos, batScale, rotation, color);
 	batObject->Initialize();;
-	batObject->SetModelforBuff("tex_test_20x1");
+	batObject->SetModelforBuff("bat");
 	batScale = Vector3(1.0f, 1.0f, 1.0f);
 }
 
@@ -41,7 +40,7 @@ void JimaXengine::BatterCharacter::Draw()
 	characterObject->Draw();
 
 	// バット
-	//batObject->Draw();
+	batObject->Draw();
 }
 
 JimaXengine::GameObject::TYPE JimaXengine::BatterCharacter::GetType()
