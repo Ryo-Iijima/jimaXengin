@@ -39,10 +39,11 @@ namespace JimaXengine
 
 		static FbxLoader* instance;
 
-		int controlPointCount = 0;
+		int vertexCount = 0;
 		// ポリゴン番号、頂点番号保存用
 		std::vector<Vector2> data;
-
+		// コントロールポイントの番号
+		std::vector<int> verticesControlPointNum;
 
 	private:	// 関数
 

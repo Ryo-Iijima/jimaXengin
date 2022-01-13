@@ -20,7 +20,7 @@ void JimaXengine::BatterCharacter::Initialize()
 	// ƒoƒbƒg
 	batObject = std::make_unique<Object3d>(pos, batScale, rotation, color);
 	batObject->Initialize();;
-	batObject->SetModelforBuff("bat");
+	batObject->SetModelforBuff("tex_test_20x1");
 	batScale = Vector3(1.0f, 1.0f, 1.0f);
 }
 

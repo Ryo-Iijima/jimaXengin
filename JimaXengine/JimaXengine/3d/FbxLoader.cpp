@@ -89,9 +89,13 @@ void JimaXengine::FbxLoader::ParseMesh(Model* model, FbxNode* fbxNode)
 void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
 {
     auto& vertices = model->vertices;
+    auto& indices = model->indices;
+
+    // 複数メッシュ非対応
+    assert(indices.size() == 0);
 
     // 頂点データの数
-    controlPointCount = 0;
+    vertexCount = 0;
     // 全要素削除
     data.clear();
 
@@ -103,18 +107,46 @@ void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
     {
         // 面を構成する頂点の数を取得
         const int polygonSize = fbxMesh->GetPolygonSize(i);
-        // 三角形じゃなかったら非対応
-        assert(polygonSize <= 4);
+        // じゃなかったら非対応
+        assert(polygonSize <= 3);
+
+        // 3頂点追加して三角形を作る
+        indices.push_back(0 + vertexCount);
+        indices.push_back(1 + vertexCount);
+        indices.push_back(2 + vertexCount);
+        //indices.push_back(0 + vertexCount);
+        //indices.push_back(2 + vertexCount);
+        //indices.push_back(3 + vertexCount);
 
         // 1頂点ずつ
         for (int j = 0; j < polygonSize; j++)
         {
             // カウント
-            controlPointCount++;
+            vertexCount++;
 
             // ここで何番目のポリゴンの何番目の頂点化記録する必要あり？
             data.push_back(Vector2(i, j));
         }
+
+        //// 頂点インデックス追加
+        //// 3頂点目より前なら
+        //if (polygonSize < 3)
+        //{
+        //    // 頂点を追加して三角形を作る
+        //    indices.push_back(index);
+        //}
+        //// 4頂点目なら
+        //else
+        //{
+        //    // 3頂点追加して三角形を作る
+        //    int index2 = indices[indices.size() - 1];
+        //    int index3 = index;
+        //    int index0 = indices[indices.size() - 3];
+        //    indices.push_back(index2);
+        //    indices.push_back(index3);
+        //    indices.push_back(index0);
+        //}
+
     }
 
     //// 頂点データの数
@@ -122,23 +154,25 @@ void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
 
     // 頂点データ配列を確保
     Model::FBXVertexData vert{};
-    model->vertices.resize(controlPointCount, vert);
-    // FBXメッシュの頂点座標配列を取得
-    FbxVector4* pCoord = fbxMesh->GetControlPoints();
-    // FBXメッシュの全頂点をモデル内の配列にコピーする
-    for (int i = 0; i < controlPointCount; i++)
-    {
-        Model::FBXVertexData& vertex = vertices[i];
-        vertex.pos.x = (float)pCoord[i][0];
-        vertex.pos.y = (float)pCoord[i][1];
-        vertex.pos.z = (float)pCoord[i][2];
+    model->vertices.resize(vertexCount, vert);
 
-        //if (i >= controlPointCount - 1)
-        //{
-        //    static int a = 0;
-        //    a++;
-        //}
-    }
+
+    //// FBXメッシュの頂点座標配列を取得
+    //FbxVector4* pCoord = fbxMesh->GetControlPoints();
+    //// FBXメッシュの全頂点をモデル内の配列にコピーする
+    //for (int i = 0; i < vertexCount; i++)
+    //{
+    //    Model::FBXVertexData& vertex = vertices[i];
+    //    vertex.pos.x = (float)pCoord[i][0];
+    //    vertex.pos.y = (float)pCoord[i][1];
+    //    vertex.pos.z = (float)pCoord[i][2];
+
+    //    //if (i >= controlPointCount - 1)
+    //    //{
+    //    //    static int a = 0;
+    //    //    a++;
+    //    //}
+    //}
 }
 
 void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
@@ -146,8 +180,8 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     auto& vertices = model->vertices;
     auto& indices = model->indices;
 
-    // 複数メッシュ非対応
-    assert(indices.size() == 0);
+    //// 複数メッシュ非対応
+    //assert(indices.size() == 0);
     // 面の数
     const int polygonCount = fbxMesh->GetPolygonCount();
  
@@ -225,22 +259,32 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
     //}
 
     // 全頂点分
-    for (int n = 0; n < controlPointCount; n++)
+    for (int n = 0; n < vertexCount; n++)
     {
         // これだと結局同じここと
-        int i = data[n].x;
-        int j = data[n].y;
+        int polygonNum = data[n].x;
+        int polygonIndexNum = data[n].y;
 
         // FBX頂点配列のインデックス(ポリゴンiを構成するj番目の頂点のインデックス番号)
-        int index = fbxMesh->GetPolygonVertex(i, j);
+        int controlPointIndex = fbxMesh->GetPolygonVertex(polygonNum, polygonIndexNum);
         // 0以下だったらストップ
-        assert(index >= 0);
+        assert(controlPointIndex >= 0);
+
+        // FBXメッシュの頂点座標配列を取得
+        FbxVector4* pCoord = fbxMesh->GetControlPoints();
+        // FBXメッシュの全頂点をモデル内の配列にコピーする
+        Model::FBXVertexData& vertex = vertices[n];
+        vertex.pos.x = (float)pCoord[controlPointIndex][0];
+        vertex.pos.y = (float)pCoord[controlPointIndex][1];
+        vertex.pos.z = (float)pCoord[controlPointIndex][2];
+
+        verticesControlPointNum.push_back(controlPointIndex);
 
         // 頂点法線読み込み
         //Model::FBXVertexData& vertex = vertices[index];
-        Model::FBXVertexData& vertex = vertices[n];
+        //Model::FBXVertexData& vertex = vertices[n];
         FbxVector4 normal;
-        if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
+        if (fbxMesh->GetPolygonVertexNormal(polygonNum, polygonIndexNum, normal))
         {
             vertex.normal.x = (float)normal[0];
             vertex.normal.y = (float)normal[1];
@@ -253,7 +297,7 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
             FbxVector2 uvs;
             bool pUnmappedUV;
             // 0番決め打ち
-            if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, pUnmappedUV))
+            if (fbxMesh->GetPolygonVertexUV(polygonNum, polygonIndexNum, uvNames[0], uvs, pUnmappedUV))
             {
                 vertex.uv.x = (float)uvs[0];
                 vertex.uv.y = (float)uvs[1];
@@ -267,24 +311,27 @@ void JimaXengine::FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
             }
         }
 
-        // 頂点インデックス追加
-        // 3頂点目より前なら
-        if (j < 3)
-        {
-            // 頂点を追加して三角形を作る
-            indices.push_back(index);
-        }
-        // 4頂点目なら
-        else
-        {
-            // 3頂点追加して三角形を作る
-            int index2 = indices[indices.size() - 1];
-            int index3 = index;
-            int index0 = indices[indices.size() - 3];
-            indices.push_back(index2);
-            indices.push_back(index3);
-            indices.push_back(index0);
-        }
+        //// 頂点インデックス追加
+        //indices.push_back(n);
+
+        
+        //// 3頂点目より前なら
+        //if (polygonIndexNum < 3)
+        //{
+        //    // 頂点を追加して三角形を作る
+        //    indices.push_back(polygonVertexIndex);
+        //}
+        //// 4頂点目なら
+        //else
+        //{
+        //    // 3頂点追加して三角形を作る
+        //    int index2 = indices[indices.size() - 1];
+        //    int index3 = polygonVertexIndex;
+        //    int index0 = indices[indices.size() - 3];
+        //    indices.push_back(index2);
+        //    indices.push_back(index3);
+        //    indices.push_back(index0);
+        //}
     }
 
 }
@@ -479,11 +526,30 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
     // 全ボーンで
     for (int i = 0; i < clusterCount; i++)
     {
+        //// FBXボーン情報
+        //FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
+        //// このボーンに影響を受ける頂点の数
+        //int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
+        //// このボーンに影響を受ける頂点配列
+        //int* controlPointIndices = fbxCluster->GetControlPointIndices();
+        //double* controlPointWeights = fbxCluster->GetControlPointWeights();
+
+        //// 影響を受ける頂点で
+        //for (int j = 0; j < controlPointIndicesCount; j++)
+        //{
+        //    // 頂点番号
+        //    int vertIndex = controlPointIndices[j];
+        //    // スキンウェイト
+        //    float weight = (float)controlPointWeights[j];
+        //    // その頂点に影響を与えるボーンリストに、ボーンとウェイトのペアを追加
+        //    weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i, weight });
+        //}
+
         // FBXボーン情報
         FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
         // このボーンに影響を受ける頂点の数
         int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
-        // このボーンに影響を受ける頂点配列
+        // このボーンに影響を受ける座標配列
         int* controlPointIndices = fbxCluster->GetControlPointIndices();
         double* controlPointWeights = fbxCluster->GetControlPointWeights();
 
@@ -491,11 +557,11 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
         for (int j = 0; j < controlPointIndicesCount; j++)
         {
             // 頂点番号
-            int vertIndex = controlPointIndices[j];
+            int controlPointIndex = controlPointIndices[j];
             // スキンウェイト
             float weight = (float)controlPointWeights[j];
             // その頂点に影響を与えるボーンリストに、ボーンとウェイトのペアを追加
-            weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i, weight });
+            weightLists[controlPointIndex].emplace_back(WeightSet{ (UINT)i, weight });
         }
     }
     
@@ -503,13 +569,15 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
     // スキンウェイトの整理
     ////////////////////////////// 
 
+
     // 頂点配列書き換え用の参照
     auto& vertices = model->vertices;
     // 各頂点について
     for (int i = 0; i < vertices.size(); i++)
     {
         // 頂点のウェイトから最も大きい4つを選択
-        auto& weightList = weightLists[i];
+        //auto& weightList = weightLists[i];
+        auto& weightList = weightLists[verticesControlPointNum[i]];
         // 大小比較用のラムダ式を指定して降順にソート
         weightList.sort([](auto const& lhs, auto const& rhs)
         {
@@ -522,6 +590,7 @@ void JimaXengine::FbxLoader::ParseSkin(Model* model, FbxMesh* fbxMesh)
             // 頂点データ書き込み
             vertices[i].boneIndex[ewightArrayIndex] = weightSet.index;
             vertices[i].boneWeight[ewightArrayIndex] = weightSet.weight;
+
             // 4つになったら終了
             if (++ewightArrayIndex >= Model::MAX_BONE_INDOCES)
             {

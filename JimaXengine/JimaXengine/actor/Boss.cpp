@@ -108,7 +108,7 @@ void JimaXengine::Boss::Update()
 
 void JimaXengine::Boss::Draw()
 {
-	object->Draw();
+	//object->Draw();
 	offsetPosObj->Draw();
 
 	for (int i = 0; i < legNum; i++)
