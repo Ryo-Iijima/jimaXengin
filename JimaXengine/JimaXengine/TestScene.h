@@ -58,6 +58,9 @@ namespace JimaXengine
 		Model* model = nullptr;
 		Object3d* object = nullptr;
 
+		// Ši”[‚·‚é‚½‚ß‚Ì”z—ñ
+		std::vector<std::string> sensorData;
+
 	public:
 		TestScene();
 		~TestScene();

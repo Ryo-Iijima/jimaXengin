@@ -1,2 +1,4 @@
-﻿  BatterCharacter.cpp
+﻿  Player.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\FbxLoader.h(13,15): warning C4099: 'JimaXengine::Vector2': タイプ名は最初 'struct' として使われていましたが 'class' として使われています。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\math\Vector2.h(6): message : 'JimaXengine::Vector2' の宣言を確認してください
   JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

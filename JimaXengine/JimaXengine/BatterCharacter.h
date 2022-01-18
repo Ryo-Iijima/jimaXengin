@@ -24,6 +24,18 @@ namespace JimaXengine
 		GameObject::TYPE GetType()override;
 		void DrawImGui()override;
 
+		// setter
 		void SetPosition(Vector3 position) { pos = position; }
+		/// <summary>
+		/// キャラクターのアニメーションフレーム設定
+		/// </summary>
+		/// <param name="start">開始フレーム</param>
+		/// <param name="end">終了フレーム</param>
+		/// <param name="loop">ループするか</param>
+		void SetAnimationFrame(const int start, const int end, bool loop = true);
+
+		// getter
+		Object3d* GetCharacterObject() { return characterObject.get(); }
+		Object3d* GetBatObject() { return batObject.get(); }
 	};
 }

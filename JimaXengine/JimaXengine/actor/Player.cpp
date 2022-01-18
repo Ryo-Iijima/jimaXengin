@@ -237,10 +237,12 @@ void JimaXengine::Player::Damage()
 void JimaXengine::Player::Swing()
 {
 
-    if (Input::KeyTrigger(DIK_SPACE) && isSwing == false)
+    if ((Input::KeyTrigger(DIK_SPACE)||Input::PadButtonTrigger(XINPUT_GAMEPAD_A)) && isSwing == false)
     {
         Sound::PlayforBuff("_Player_swing.wav");
         isSwing = true;
+
+        character->SetAnimationFrame(150, 250, false);
     }
 
     // 振り始めたら
@@ -277,6 +279,8 @@ void JimaXengine::Player::Swing()
             isSwing = false;
             // カウンターリセット
             swingCounter = 0;
+            //// アニメーション戻す
+            //character->SetAnimationFrame(130, 149);
         }
     }
 }
@@ -383,6 +387,7 @@ void JimaXengine::Player::Initialize()
 
     Vector3 charaPos = pos + Vector3(5, -3, 0);
     character->SetPosition(charaPos);
+    character->SetAnimationFrame(130, 149, false);
 }
 
 enum class DebugType

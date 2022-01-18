@@ -116,12 +116,17 @@ namespace JimaXengine
 		FbxTime currentTime;
 		// アニメーション再生中
 		bool isPlay = false;
+		// 指定した終了時間まで再生した
+		bool isEndAnimation = false;
+		// アニメーションをループする
+		bool isAnimationLoop = true;
+		
 
 	private:	// 関数
-		/// <summary>
-		/// アニメーション再生
-		/// </summary>
-		void PlayAnimation();
+		// アニメーション関連初期化
+		void AnimationInit();
+		// アニメーション再生
+		bool PlayAnimation(bool loop);
 
 	public:		// 関数
 
@@ -138,5 +143,12 @@ namespace JimaXengine
 		void SetModelforBuff(const std::string& modelName);
 		void SetCamera(Camera* camera) { this->camera = camera; }
 		void SetIsBillboard(bool isbillbord) { isBillboard = isbillbord; }
+
+		void SetAnimationLoop(bool loop) { isAnimationLoop = loop; }
+		void SetAnimationFrame(const int start, const int end, const int frametime = 1);
+
+		// getter
+		bool GetIsEndAnimation() { return isEndAnimation; }
+
 	};
 }

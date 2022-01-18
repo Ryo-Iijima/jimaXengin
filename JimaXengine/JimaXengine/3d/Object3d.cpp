@@ -188,8 +188,10 @@ void JimaXengine::Object3d::Initialize()
 	constBufferSkin->Unmap(0, nullptr);
 	assert(SUCCEEDED(result));
 
-	// 1フレーム分の時間を60FPSに設定
+	// アニメーション関連の初期化
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+	//AnimationInit();
+	isAnimationLoop = true;
 }
 
 void JimaXengine::Object3d::Update()
@@ -243,20 +245,21 @@ void JimaXengine::Object3d::Update()
 	////////////////////////////
 
 	// アニメーション
-	if (isPlay)
-	{
-		// 1フレーム進める
-		currentTime += frameTime;
-		// 最後まで再生したら先頭に戻す
-		if (currentTime > endTime)
-		{
-			currentTime = startTime;
-		}
-	}
-	else
-	{
-		PlayAnimation();
-	}
+	PlayAnimation(isAnimationLoop);
+	//if (isPlay)
+	//{
+	//	// 1フレーム進める
+	//	currentTime += frameTime;
+	//	// 最後まで再生したら先頭に戻す
+	//	if (currentTime > endTime)
+	//	{
+	//		currentTime = startTime;
+	//	}
+	//}
+	//else
+	//{
+	//	PlayAnimation();
+	//}
 
 	// ボーン配列
 	std::vector<JimaXengine::Model::Bone>& bones = model->GetBonse();
@@ -300,9 +303,10 @@ void JimaXengine::Object3d::Draw()
 void JimaXengine::Object3d::SetModelforBuff(const std::string& modelName)
 {
 	model = FbxLoader::GetInstance().GetFbxModel(modelName);
+	AnimationInit();
 }
 
-void JimaXengine::Object3d::PlayAnimation()
+void JimaXengine::Object3d::AnimationInit()
 {
 	FbxScene* fbxScene = model->GetFbxScene();
 	// 0番のアニメーション取得
@@ -325,4 +329,46 @@ void JimaXengine::Object3d::PlayAnimation()
 	currentTime = startTime;
 	// 再生中状態にする
 	isPlay = true;
+}
+
+void JimaXengine::Object3d::SetAnimationFrame(const int start, const int end, const int frametime)
+{
+	// 開始フレーム、現在フレーム、終了フレームを設定
+	startTime.SetTime(0, 0, 0, start, 0, FbxTime::EMode::eFrames60);
+	currentTime = startTime;
+	endTime.SetTime(0, 0, 0, end, 0, FbxTime::EMode::eFrames60);
+
+	// 数字の大きさを見てカウントの向きを決める
+	if (start > end)
+	{
+		frameTime.SetTime(0, 0, 0, -frametime, 0, FbxTime::EMode::eFrames60);
+	}
+	else
+	{
+		frameTime.SetTime(0, 0, 0, frametime, 0, FbxTime::EMode::eFrames60);
+	}
+	isPlay = true;
+}
+
+bool JimaXengine::Object3d::PlayAnimation(bool loop)
+{
+	// 再生中でなかったら返す
+	if (!isPlay)
+	{
+		return false;
+	}
+
+	// カウントを進める
+	currentTime += frameTime;
+	// 
+	if ((currentTime > endTime && frameTime > 0) || (currentTime < endTime && frameTime < 0))
+	{
+		currentTime = startTime;
+		if (!loop)
+		{
+			isPlay = false;
+			return false;
+		}
+	}
+	return true;
 }
