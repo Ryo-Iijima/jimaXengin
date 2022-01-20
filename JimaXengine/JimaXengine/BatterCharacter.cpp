@@ -54,10 +54,10 @@ void JimaXengine::BatterCharacter::DrawImGui()
 {
 }
 
-void JimaXengine::BatterCharacter::SetAnimationFrame(const int start, const int end, bool loop)
+void JimaXengine::BatterCharacter::SetAnimationFrame(const int start, const int end, bool loop, const int frametime)
 {
-	characterObject->SetAnimationFrame(start, end);
+	characterObject->SetAnimationFrame(start, end, frametime);
 	characterObject->SetAnimationLoop(loop);
-	batObject->SetAnimationFrame(start, end);
+	batObject->SetAnimationFrame(start, end, frametime);
 	batObject->SetAnimationLoop(loop);
 }

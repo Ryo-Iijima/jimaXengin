@@ -239,10 +239,10 @@ void JimaXengine::Player::Swing()
 
     if ((Input::KeyTrigger(DIK_SPACE)||Input::PadButtonTrigger(XINPUT_GAMEPAD_A)) && isSwing == false)
     {
-        Sound::PlayforBuff("_Player_swing.wav");
+        //Sound::PlayforBuff("_Player_swing.wav");
         isSwing = true;
 
-        character->SetAnimationFrame(150, 250, false);
+        character->SetAnimationFrame(150, 250, false, 2);
     }
 
     // 振り始めたら
@@ -252,8 +252,8 @@ void JimaXengine::Player::Swing()
         swingCounter++;
 
         // 当たる範囲内だったら（todo:時間をx~yの間ならみたいな指定にする）
-        if (swingCounter >= justHitTime &&
-            swingCounter < (justHitTime + justHitinterval))
+        if (swingCounter >= justHitTime &&                      // 当たり始める時間より大きく
+            swingCounter < (justHitTime + justHitinterval))     // 当たり始める時間と持続時間の合計より小さい
         {
             // 当たる位置にある
             isHitZone = true;
@@ -264,10 +264,16 @@ void JimaXengine::Player::Swing()
             isHitZone = false;
         }
 
+        bool prevIsSwung = isSwung;
         // 振り切るまでの時間が経過したら
         if (swingCounter > swingTime)
         {
             // 振り切った
+            isSwung = true;
+        }
+        if (prevIsSwung == false && isSwung == true)
+        {
+            Sound::PlayforBuff("_Player_swing.wav");
         }
 
         // 振り切ってから構えるまでの時間が経過したら
@@ -277,6 +283,7 @@ void JimaXengine::Player::Swing()
 
             // 振っている最中ではない
             isSwing = false;
+            isSwung = false;
             // カウンターリセット
             swingCounter = 0;
             //// アニメーション戻す
@@ -376,11 +383,12 @@ void JimaXengine::Player::Initialize()
     // 打つタイミング関連
     isSwing = false;
     isHitZone = false;
+    isSwung = false;
     swingCounter = 0;
-    justHitTime = 5;
-    justHitinterval = 5;
-    swingTime = 15;
-    holdTime = 5;
+    justHitTime = 15;
+    justHitinterval = 10;
+    swingTime = 25;
+    holdTime = 20;
 
     character = std::make_unique<BatterCharacter>(pCamera);
     character->Initialize();

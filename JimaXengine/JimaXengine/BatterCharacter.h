@@ -32,7 +32,7 @@ namespace JimaXengine
 		/// <param name="start">開始フレーム</param>
 		/// <param name="end">終了フレーム</param>
 		/// <param name="loop">ループするか</param>
-		void SetAnimationFrame(const int start, const int end, bool loop = true);
+		void SetAnimationFrame(const int start, const int end, bool loop = true, const int frametime = 1);
 
 		// getter
 		Object3d* GetCharacterObject() { return characterObject.get(); }
