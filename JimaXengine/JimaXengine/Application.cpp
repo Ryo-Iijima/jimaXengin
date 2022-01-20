@@ -146,6 +146,8 @@ void JimaXengine::Application::Initialize()
 
 void JimaXengine::Application::Finalize()
 {
+	sceneManager->~SceneManager();
+
 	delete postEffect;
 	// ŠeŽí‰ð•úˆ—
 	input->Finalize();

@@ -53,3 +53,11 @@ JimaXengine::GameObject::TYPE JimaXengine::BatterCharacter::GetType()
 void JimaXengine::BatterCharacter::DrawImGui()
 {
 }
+
+void JimaXengine::BatterCharacter::SetAnimationFrame(const int start, const int end, bool loop, const int frametime)
+{
+	characterObject->SetAnimationFrame(start, end, frametime);
+	characterObject->SetAnimationLoop(loop);
+	batObject->SetAnimationFrame(start, end, frametime);
+	batObject->SetAnimationLoop(loop);
+}

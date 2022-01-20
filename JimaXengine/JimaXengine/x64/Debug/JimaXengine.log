@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\Resources\shader\FBX\FBXPS.hlsl(12,13-41): warning X3576: semantics in type overridden by variable/function or enclosing type
   
   compilation object save succeeded; see C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\FBXPS.cso
@@ -630,3 +631,9 @@ zlib-md.lib(inffast.obj) : warning LNK4099: PDB 'zlib-md.pdb' が 'zlib-md.lib(i
 zlib-md.lib(trees.obj) : warning LNK4099: PDB 'zlib-md.pdb' が 'zlib-md.lib(trees.obj)' で、または 'C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\zlib-md.pdb' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
 zlib-md.lib(zutil.obj) : warning LNK4099: PDB 'zlib-md.pdb' が 'zlib-md.lib(zutil.obj)' で、または 'C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\zlib-md.pdb' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
   JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+=======
+﻿  Player.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\3d\FbxLoader.h(13,15): warning C4099: 'JimaXengine::Vector2': タイプ名は最初 'struct' として使われていましたが 'class' として使われています。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\math\Vector2.h(6): message : 'JimaXengine::Vector2' の宣言を確認してください
+  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+>>>>>>> main

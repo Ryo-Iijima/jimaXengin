@@ -75,6 +75,7 @@ namespace JimaXengine
 
 		/// 打つタイミング関連 ///
 		bool isSwing;			// 振っている最中
+		bool isSwung;			// 振り切った
 		bool isHitZone;			// 当たる位置にあるか
 		int swingCounter;		// 振ってる間の計測タイマー
 		int justHitTime;		// 当たる位置にある時間

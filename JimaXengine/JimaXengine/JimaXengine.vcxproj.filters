@@ -284,6 +284,9 @@
     <ClCompile Include="OctLeg.cpp">
       <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
+    <ClCompile Include="BatterCharacter.cpp">
+      <Filter>ソース ファイル\app\actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -473,6 +476,9 @@
       <Filter>ヘッダー ファイル\app</Filter>
     </ClInclude>
     <ClInclude Include="OctLeg.h">
+      <Filter>ヘッダー ファイル\app\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="BatterCharacter.h">
       <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
   </ItemGroup>

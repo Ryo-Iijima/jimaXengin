@@ -1,5 +1,6 @@
 #include "TestScene.h"
 #include "DebugCamera.h"
+#include <fstream>
 
 #define JOYCON_L_PRODUCT_ID 8198
 #define JOYCON_R_PRODUCT_ID 8199
@@ -119,6 +120,9 @@ void JimaXengine::TestScene::JoyConUpdate()
         // 前フレームの状態を保持
         prev_accel = accel;
         prev_gyro = gyro;
+
+        // 出力用配列にも記録
+        sensorData.push_back(std::to_string(accel.x));
 
         // input report を受けとる。
         int ret = hid_read(dev, buff, size);
@@ -302,6 +306,18 @@ JimaXengine::TestScene::TestScene()
 
 JimaXengine::TestScene::~TestScene()
 {
+    // ファイル出力テスト
+    std::ofstream outfile("test.txt");
+
+    for (auto itr = sensorData.begin(); itr != sensorData.end(); itr++)
+    {
+        // 配列の内容をファイルに出力
+        outfile << (*itr);
+        outfile << "\n";
+    }
+    outfile << "出力終了";
+    outfile.close();
+
 	delete light;
 	delete oManager;
     delete object;
