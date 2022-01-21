@@ -14,7 +14,7 @@ namespace JimaXengine
 		Object3d* object = nullptr;
 
 		// d—Í‚à‚Ç‚«
-		Vector3 gravity = { 0, -0.001f, 0 };
+		Vector3 gravity = { 0, -0.005f, 0 };
 
 		// 
 
