@@ -78,10 +78,11 @@ void JimaXengine::GameObjectManager::Draw()
 		}
 	}
 
-	// 深度テストありアルファパーティクル
 	if (GetPlayer())
 	{
+		// 深度テストありアルファパーティクル
 		pManager->DrawDepthAlpha(GetPlayer()->GetCamera());
+
 		GetPlayer()->DrawAlphaObj();
 		// 深度テストなしパーティクル
 		pManager->DrawDepthNoneBack(GetPlayer()->GetCamera());

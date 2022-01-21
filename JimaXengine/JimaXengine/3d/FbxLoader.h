@@ -10,12 +10,26 @@
 
 namespace JimaXengine
 {
-	class Vector2;
-
 	class FbxLoader
 	{
 	private:	// エイリアス
 		using string = std::string;
+
+	private:
+
+		// 頂点数数える用
+		struct Int2
+		{
+			Int2() {};
+			Int2(int x, int y)
+			{
+				this->x = x;
+				this->y = y;
+			};
+
+			int x;
+			int y;
+		};
 
 	public:		// 定数
 		// ファイルパスの前半の共通部分
@@ -41,7 +55,7 @@ namespace JimaXengine
 
 		int vertexCount = 0;
 		// ポリゴン番号、頂点番号保存用
-		std::vector<Vector2> data;
+		std::vector<Int2> data;
 		// コントロールポイントの番号
 		std::vector<int> verticesControlPointNum;
 

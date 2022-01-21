@@ -16,8 +16,6 @@ namespace JimaXengine
 		// d—Í‚à‚Ç‚«
 		Vector3 gravity = { 0, -0.005f, 0 };
 
-		// 
-
 		// ’µ‚Ë•Ô‚µ‚½Œã‚©
 		bool reflection = false;
 

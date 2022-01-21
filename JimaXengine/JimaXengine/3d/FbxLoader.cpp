@@ -1,6 +1,5 @@
 ﻿#include "FbxLoader.h"
 #include <cassert>
-#include "../math/Vector2.h"
 
 using namespace DirectX;
 
@@ -122,7 +121,7 @@ void JimaXengine::FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
             vertexCount++;
 
             // ここで何番目のポリゴンの何番目の頂点化記録する必要あり？
-            data.push_back(Vector2(i, j));
+            data.push_back(Int2(i, j));
         }
 
     }
