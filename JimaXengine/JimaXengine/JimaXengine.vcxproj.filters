@@ -108,6 +108,24 @@
     <Filter Include="シェーダーファイル\PostEffectTest">
       <UniqueIdentifier>{9509f567-26b9-47e5-b425-0a64d96d3025}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\app\actor\Player">
+      <UniqueIdentifier>{56ab7bf8-4579-4273-9197-7f77d72c6e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\app\actor\Boss">
+      <UniqueIdentifier>{4dcbd205-6c8e-457c-ac6b-baf73701230c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\app\actor\Target">
+      <UniqueIdentifier>{cda7b01b-18e9-42a4-94ec-4905d61a7227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\app\actor\Player">
+      <UniqueIdentifier>{e86fc58c-5c41-426f-9733-76791a6dfc6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\app\actor\Boss">
+      <UniqueIdentifier>{1e236800-aac9-46e4-9f12-c0878231f772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\app\actor\Target">
+      <UniqueIdentifier>{94d83215-2f5d-44f0-bb14-71f4bb8ffcd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -209,12 +227,6 @@
     <ClCompile Include="ResourceShader.cpp">
       <Filter>ソース ファイル\engin\general</Filter>
     </ClCompile>
-    <ClCompile Include="actor\Player.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="actor\Target.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
-    </ClCompile>
     <ClCompile Include="scene\Title.cpp">
       <Filter>ソース ファイル\app\Scene</Filter>
     </ClCompile>
@@ -248,9 +260,6 @@
     <ClCompile Include="Particle\HomingGeometryParticle.cpp">
       <Filter>ソース ファイル\app\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="actor\Boss.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
-    </ClCompile>
     <ClCompile Include="DebugCamera.cpp">
       <Filter>ソース ファイル\engin\3DObject</Filter>
     </ClCompile>
@@ -259,9 +268,6 @@
     </ClCompile>
     <ClCompile Include="actor\Seat.cpp">
       <Filter>ソース ファイル\app\actor\backGround</Filter>
-    </ClCompile>
-    <ClCompile Include="actor\StrikeMark.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
     </ClCompile>
     <ClCompile Include="scene\End.cpp">
       <Filter>ソース ファイル\app\Scene</Filter>
@@ -281,11 +287,23 @@
     <ClCompile Include="NumberDrawer.cpp">
       <Filter>ソース ファイル\app</Filter>
     </ClCompile>
-    <ClCompile Include="OctLeg.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
+    <ClCompile Include="actor\Player.cpp">
+      <Filter>ソース ファイル\app\actor\Player</Filter>
     </ClCompile>
     <ClCompile Include="BatterCharacter.cpp">
-      <Filter>ソース ファイル\app\actor</Filter>
+      <Filter>ソース ファイル\app\actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\Boss.cpp">
+      <Filter>ソース ファイル\app\actor\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="OctLeg.cpp">
+      <Filter>ソース ファイル\app\actor\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\Target.cpp">
+      <Filter>ソース ファイル\app\actor\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="actor\StrikeMark.cpp">
+      <Filter>ソース ファイル\app\actor\Target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,12 +418,6 @@
     <ClInclude Include="Particle\ParticleParam.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="actor\Player.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
-    </ClInclude>
-    <ClInclude Include="actor\Target.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
-    </ClInclude>
     <ClInclude Include="scene\Play.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
@@ -445,9 +457,6 @@
     <ClInclude Include="Particle\HomingGeometryParticle.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="actor\Boss.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
-    </ClInclude>
     <ClInclude Include="DebugCamera.h">
       <Filter>ヘッダー ファイル\engin\3DObject</Filter>
     </ClInclude>
@@ -456,9 +465,6 @@
     </ClInclude>
     <ClInclude Include="actor\Seat.h">
       <Filter>ヘッダー ファイル\app\actor\backGround</Filter>
-    </ClInclude>
-    <ClInclude Include="actor\StrikeMark.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
     </ClInclude>
     <ClInclude Include="scene\End.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
@@ -475,11 +481,23 @@
     <ClInclude Include="NumberDrawer.h">
       <Filter>ヘッダー ファイル\app</Filter>
     </ClInclude>
-    <ClInclude Include="OctLeg.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
-    </ClInclude>
     <ClInclude Include="BatterCharacter.h">
-      <Filter>ヘッダー ファイル\app\actor</Filter>
+      <Filter>ヘッダー ファイル\app\actor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\Player.h">
+      <Filter>ヘッダー ファイル\app\actor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\Boss.h">
+      <Filter>ヘッダー ファイル\app\actor\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="OctLeg.h">
+      <Filter>ヘッダー ファイル\app\actor\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\Target.h">
+      <Filter>ヘッダー ファイル\app\actor\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="actor\StrikeMark.h">
+      <Filter>ヘッダー ファイル\app\actor\Target</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

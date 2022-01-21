@@ -13,6 +13,11 @@ namespace JimaXengine
 	private:
 		Object3d* object = nullptr;
 
+		// 重力もどき
+		Vector3 gravity = { 0, -0.001f, 0 };
+
+		// 
+
 		// 跳ね返した後か
 		bool reflection = false;
 
@@ -31,7 +36,6 @@ namespace JimaXengine
 
 		bool isHitPlayer;	// プレイヤーに当たった
 		bool isHitEnemy;	// 敵に当たった
-
 
 	private:
 		void Move();

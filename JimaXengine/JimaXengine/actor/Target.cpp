@@ -8,7 +8,7 @@ void JimaXengine::Target::Move()
 {
 	vel.Normalize();
 
-	pos += vel * speed / 2.0f;
+	pos += (vel * speed / 2.0f) + gravity;
 	rotation += {1, 1, 0};
 }
 

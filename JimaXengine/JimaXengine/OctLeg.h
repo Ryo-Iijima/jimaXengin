@@ -31,6 +31,7 @@ namespace JimaXengine
 		void SetDiffPos(Vector3 pos) { diffPos = pos; }
 		void SetRootPos(Vector3 pos) { rootPos = pos; }
 		void SetRotation(Vector3 rot) { rotation = rot; }
+		void SetScale(Vector3 scale) { this->scale = scale; }
 	};
 }
 

@@ -20,7 +20,7 @@ void JimaXengine::Boss::Initialize()
 	object->SetModelforBuff("octotorso");
 
 	pos = Vector3(0, 6, 0);
-	scale = Vector3(1.0f, 1.0f, 1.0f);
+	scale *= 1.5f;
 	rotation = Vector3(0, 0, 0);
 
 	Vector3 colscale = { 5,5,5 };
@@ -32,6 +32,7 @@ void JimaXengine::Boss::Initialize()
 	{
 		legs[i] = std::make_unique <OctLeg>(pCamera);
 		legs[i]->Initialize();
+		legs[i]->SetScale(scale);
 	}
 
 	// ‘«‚²‚Æ‚ÉˆÊ’u‚ÆŒü‚«‚ðÝ’è
@@ -92,7 +93,6 @@ void JimaXengine::Boss::Update()
 
 	ColPosSet();
 
-
 	object->SetCamera(pCamera);
 	object->Update();
 
@@ -135,21 +135,21 @@ JimaXengine::GameObject::TYPE JimaXengine::Boss::GetType()
 
 void JimaXengine::Boss::DrawImGui()
 {
-	//ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
-	//ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+	ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
+	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-	//ImGui::Begin("BossInformation");
-	//ImGui::Text("hp : %d", hp);
-	//ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
-	//ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
-	//ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
-	//ImGui::Text("state : %d", state);
+	ImGui::Begin("BossInformation");
+	ImGui::Text("hp : %d", hp);
+	ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
+	ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
+	ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
+	ImGui::Text("state : %d", state);
 
 	//ImGui::Text("playerPos : %f,%f,%f", playerPos.x, playerPos.y, playerPos.z);
 	//ImGui::Text("dir : %f,%f,%f", dir.x, dir.y, dir.z);
 	//ImGui::Text("angle : %f", angle);
 
-	//ImGui::End();
+	ImGui::End();
 }
 
 void JimaXengine::Boss::Damage()
@@ -206,33 +206,40 @@ void JimaXengine::Boss::ColPosSet()
 
 void JimaXengine::Boss::LegPosInitialize()
 {
-	legs[0]->SetDiffPos(Vector3(0.917f, 0, -0.87f));
+	float scl = scale.x;
+	legs[0]->SetDiffPos(Vector3(0.917f, 0, -0.87f) * scl);
 	legs[0]->SetRotation(Vector3(0, -45, 0));
 
-	legs[1]->SetDiffPos(Vector3(1.07f, 0, 0));
+	legs[1]->SetDiffPos(Vector3(1.07f, 0, 0) * scl);
 	legs[1]->SetRotation(Vector3(0, 270, 0));
 
-	legs[2]->SetDiffPos(Vector3(1.045f, 0, 0.819f));
+	legs[2]->SetDiffPos(Vector3(1.045f, 0, 0.819f) * scl);
 	legs[2]->SetRotation(Vector3(0, 230, 0));
 
-	legs[3]->SetDiffPos(Vector3(0.358f, 0, 1.054f));
+	legs[3]->SetDiffPos(Vector3(0.358f, 0, 1.054f) * scl);
 	legs[3]->SetRotation(Vector3(0, 190, 0));
 
-	legs[4]->SetDiffPos(Vector3(-0.917f, 0, -0.87f));
+	legs[4]->SetDiffPos(Vector3(-0.917f, 0, -0.87f) * scl);
 	legs[4]->SetRotation(Vector3(0, 45, 0));
 
-	legs[5]->SetDiffPos(Vector3(-1.07f, 0, 0));
+	legs[5]->SetDiffPos(Vector3(-1.07f, 0, 0) * scl);
 	legs[5]->SetRotation(Vector3(0, -270, 0));
 
-	legs[6]->SetDiffPos(Vector3(-1.045f, 0, 0.819f));
+	legs[6]->SetDiffPos(Vector3(-1.045f, 0, 0.819f) * scl);
 	legs[6]->SetRotation(Vector3(0, -230, 0));
 
-	legs[7]->SetDiffPos(Vector3(-0.358f, 0, 1.054f));
+	legs[7]->SetDiffPos(Vector3(-0.358f, 0, 1.054f) * scl);
 	legs[7]->SetRotation(Vector3(0, -190, 0));
 }
 
 void JimaXengine::Boss::Move()
 {
+	//float defaultvel = 0.2f;
+	//if (Input::KeyPress(DIK_W)) pos.y += defaultvel;
+	//if (Input::KeyPress(DIK_S)) pos.y += -defaultvel;
+	//if (Input::KeyPress(DIK_A)) pos.x += -defaultvel;
+	//if (Input::KeyPress(DIK_D)) pos.x += defaultvel;
+
 	switch (state)
 	{
 	case JimaXengine::Boss::State::WAIT:
