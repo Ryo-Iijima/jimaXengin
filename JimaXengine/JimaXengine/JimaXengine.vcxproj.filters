@@ -126,6 +126,12 @@
     <Filter Include="ヘッダー ファイル\app\actor\Target">
       <UniqueIdentifier>{94d83215-2f5d-44f0-bb14-71f4bb8ffcd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\engin\3DObject\Light">
+      <UniqueIdentifier>{69288ae7-bf3a-490e-a844-b71613f3cf24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\engin\3DObject\Light">
+      <UniqueIdentifier>{b11ee3e0-22f8-41db-9ac5-521ce3e3df0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -272,9 +278,6 @@
     <ClCompile Include="scene\End.cpp">
       <Filter>ソース ファイル\app\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>ソース ファイル\engin\3DObject</Filter>
-    </ClCompile>
     <ClCompile Include="2d\PostEffect.cpp">
       <Filter>ソース ファイル\engin\2DObject</Filter>
     </ClCompile>
@@ -304,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="actor\StrikeMark.cpp">
       <Filter>ソース ファイル\app\actor\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="LightGroup.cpp">
+      <Filter>ソース ファイル\engin\3DObject\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -469,9 +475,6 @@
     <ClInclude Include="scene\End.h">
       <Filter>ヘッダー ファイル\app\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>ヘッダー ファイル\engin\3DObject</Filter>
-    </ClInclude>
     <ClInclude Include="2d\PostEffect.h">
       <Filter>ヘッダー ファイル\engin\2DObject</Filter>
     </ClInclude>
@@ -498,6 +501,15 @@
     </ClInclude>
     <ClInclude Include="actor\StrikeMark.h">
       <Filter>ヘッダー ファイル\app\actor\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>ヘッダー ファイル\engin\3DObject\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>ヘッダー ファイル\engin\3DObject\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightGroup.h">
+      <Filter>ヘッダー ファイル\engin\3DObject\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

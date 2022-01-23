@@ -12,7 +12,7 @@ JimaXengine::Play::~Play()
 {
 	delete object2d;
 	delete oManager;
-	delete light;
+	delete lightGroup;
 }
 
 void JimaXengine::Play::Initialize()
@@ -54,9 +54,19 @@ void JimaXengine::Play::Initialize()
 	object2d = new Object2d();
 	object2d->CreateSprite();
 
-	light = Light::Create();
-	light->SetColor({ 1,1,1 });
-	Object3d::SetLight(light);
+	lightGroup = LightGroup::Create();
+
+	lightGroup->SetDirLightActive(0, false);
+	lightGroup->SetDirLightActive(1, false);
+	lightGroup->SetDirLightActive(2, false);
+
+	lightGroup->SetPointLightActive(0, true);
+
+	pointLightPos[0] =  0.5f;
+	pointLightPos[1] =  1.0f;
+	pointLightPos[2] =  0.0f;
+
+	Object3d::SetLightGroup(lightGroup);
 }
 
 void JimaXengine::Play::Update()
@@ -64,15 +74,19 @@ void JimaXengine::Play::Update()
 	camera->Move();
 
 	{
-		static XMVECTOR lightDir = { 0,-5,5,0 };
-		if (Input::KeyPress(DIK_UP)) { lightDir.m128_f32[1] += 1.0f; }
-		if (Input::KeyPress(DIK_DOWN)) { lightDir.m128_f32[1] -= 1.0f; }
-		if (Input::KeyPress(DIK_RIGHT)) { lightDir.m128_f32[0] += 1.0f; }
-		if (Input::KeyPress(DIK_LEFT)) { lightDir.m128_f32[0] -= 1.0f; }
-
-		light->SetDir(lightDir);
+		//	lightGroup->SetAmbientColor(XMFLOAT3(ambientColor0));
+		//	lightGroup->SetDirLightDir(0, XMVECTOR({ lightDir0[0], lightDir0[1], lightDir0[2], 0 }));
+		//	lightGroup->SetDirLightColor(0, XMFLOAT3(lightColor0));
+		//	lightGroup->SetDirLightDir(1, XMVECTOR({ lightDir1[0], lightDir1[1], lightDir1[2], 0 }));
+		//	lightGroup->SetDirLightColor(1, XMFLOAT3(lightColor1));
+		//	lightGroup->SetDirLightDir(2, XMVECTOR({ lightDir2[0], lightDir2[1], lightDir2[2], 0 }));
+		//	lightGroup->SetDirLightColor(2, XMFLOAT3(lightColor2));
+		lightGroup->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+		lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
+		lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
 	}
-	light->Update();
+
+	lightGroup->Update();
 
 	oManager->Update();
 
@@ -87,6 +101,16 @@ void JimaXengine::Play::Draw()
 	//object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f, Vector2(1.0f, 1.0f), "ALPHA");
 
 	oManager->Draw();
+
+	ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
+	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+
+	ImGui::Begin("Light");
+
+	ImGui::ColorEdit3("pointLightColor", pointLightColor, ImGuiColorEditFlags_Float);
+	ImGui::InputFloat3("pointLightPos", pointLightPos);
+	ImGui::InputFloat3("pointLightAtten", pointLightAtten);
+	ImGui::End();
 
 }
 

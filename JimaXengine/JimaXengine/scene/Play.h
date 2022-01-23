@@ -3,7 +3,7 @@
 #include "../GameObject/GameObjectManager.h"
 #include "../actor/JoyconTest.h"
 #include "../DebugCamera.h"
-#include "../Light.h"
+#include "../DirectionalLight.h"
 
 namespace JimaXengine
 {
@@ -14,7 +14,7 @@ namespace JimaXengine
 	class Play : public Scene
 	{
 	private:
-		Light* light = nullptr;
+		LightGroup* lightGroup = nullptr;
 
 		Model* model = nullptr;
 
@@ -30,6 +30,11 @@ namespace JimaXengine
 		
 		// ŠÈˆÕ‰æ–Ê“]Š·
 		void simpleStaging();
+
+		// “_ŒõŒ¹ŠÖ˜A
+		float pointLightPos[3] = { 0,0,0 };
+		float pointLightColor[3] = { 1,1,1 };
+		float pointLightAtten[3] = { 0.3f, 0.1f, 0.1f };
 
 	public:
 		Play();

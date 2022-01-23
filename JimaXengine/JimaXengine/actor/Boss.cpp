@@ -18,6 +18,7 @@ void JimaXengine::Boss::Initialize()
 	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("octotorso");
+	//object->SetModelforBuff("smooth_sphere");
 
 	pos = Vector3(0, 6, 0);
 	scale *= 1.5f;
@@ -244,7 +245,7 @@ void JimaXengine::Boss::Move()
 	{
 	case JimaXengine::Boss::State::WAIT:
 
-		actionIntervalTimer--;
+		//actionIntervalTimer--;
 		// çsìÆä‘äuÇ™0Ç…Ç»Ç¡ÇΩÇÁ
 		if (actionIntervalTimer <= 0)
 		{

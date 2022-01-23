@@ -12,7 +12,7 @@
 #include "../math/Vector4.h"
 #include "../general/Input.h"
 #include "../DirectXCommon.h"
-#include "../Light.h"
+#include "../LightGroup.h"
 
 namespace JimaXengine
 {
@@ -86,7 +86,7 @@ namespace JimaXengine
 		static ComPtr<ID3D12PipelineState> pipelineState;
 
 		//ライト
-		static Light* light;
+		static LightGroup* lightGroup;
 
 		// ビルボードかどうか
 		bool isBillboard = false;
@@ -98,7 +98,7 @@ namespace JimaXengine
 
 		// setter
 		static void SetDevice(ID3D12Device* device) { Object3d::_dev = device; }
-		static void SetLight(Light* plight) { light = plight; }
+		static void SetLightGroup(LightGroup* plight) { lightGroup = plight; }
 
 	private:	// 変数
 

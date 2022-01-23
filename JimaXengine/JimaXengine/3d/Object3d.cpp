@@ -14,7 +14,7 @@ JimaXengine::DirectXCommon* JimaXengine::Object3d::dxCommon = nullptr;
 ID3D12Device* JimaXengine::Object3d::_dev = nullptr;
 ComPtr<ID3D12RootSignature> JimaXengine::Object3d::rootSignature;
 ComPtr<ID3D12PipelineState> JimaXengine::Object3d::pipelineState;
-JimaXengine::Light* JimaXengine::Object3d::light=nullptr;
+JimaXengine::LightGroup* JimaXengine::Object3d::lightGroup = nullptr;
 
 void  JimaXengine::Object3d::StaticInitialize(DirectXCommon* dxcommon, WinApp* winapp)
 {
@@ -294,7 +294,9 @@ void JimaXengine::Object3d::Draw()
 	dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::transform, constBufferTransform->GetGPUVirtualAddress());
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::skin, constBufferSkin->GetGPUVirtualAddress());
-	light->Draw((int)ViewName::light);
+
+	lightGroup->Draw(dxCommon->GetCommandList(), (int)ViewName::light);
+	
 	dxCommon->GetCommandList()->SetGraphicsRootConstantBufferView((UINT)ViewName::material, model->GetCBMaterial().Get()->GetGPUVirtualAddress());	// –³—‚â‚èˆø‚Á’£‚Á‚Ä—ˆ‚½Š´‚ ‚Á‚Ä‚¢‚Ñ‚Â
 
 	model->Draw(dxCommon->GetCommandList());

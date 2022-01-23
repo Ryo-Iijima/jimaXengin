@@ -53,7 +53,7 @@ namespace JimaXengine
 	private:
 		std::unique_ptr<Camera> camera;
 		GameObjectManager* oManager = nullptr;
-		Light* light = nullptr;
+		LightGroup* light = nullptr;
 
 		Model* model = nullptr;
 		Object3d* object = nullptr;

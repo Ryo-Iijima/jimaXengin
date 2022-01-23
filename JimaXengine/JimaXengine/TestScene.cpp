@@ -347,9 +347,8 @@ void JimaXengine::TestScene::Initialize()
 	//oManager->Add(new JoyconTest());
 
 	// ライト
-	light = Light::Create();
-	light->SetColor({ 1,1,1 });
-	Object3d::SetLight(light);
+	light = LightGroup::Create();
+	Object3d::SetLightGroup(light);
 
 	// シーン遷移
 	isEnd = false;
@@ -374,15 +373,6 @@ void JimaXengine::TestScene::Update()
 {
 	camera->Move();
 
-	{
-		static XMVECTOR lightDir = { 0,1,5,0 };
-		if (Input::KeyPress(DIK_UP)) { lightDir.m128_f32[1] += 1.0f; }
-		if (Input::KeyPress(DIK_DOWN)) { lightDir.m128_f32[1] -= 1.0f; }
-		if (Input::KeyPress(DIK_RIGHT)) { lightDir.m128_f32[0] += 1.0f; }
-		if (Input::KeyPress(DIK_LEFT)) { lightDir.m128_f32[0] -= 1.0f; }
-
-		light->SetDir(lightDir);
-	}
 	light->Update();
 
 	oManager->Update();

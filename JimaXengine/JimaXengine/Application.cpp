@@ -7,7 +7,7 @@
 #include "scene/Play.h"
 #include "scene/End.h"
 #include "2d/Texture.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 #include "ResourceShader.h"
 
 JimaXengine::Application& JimaXengine::Application::GetInstance()
@@ -62,7 +62,7 @@ void JimaXengine::Application::Initialize()
 	//
 	ParticleManager::StaticInitialize();
 	// 
-	Light::StaticInitialize(dxCommon);
+	LightGroup::StaticInitialize(dxCommon->GetDevice());
 
 	// “ü—Í
 	input = new Input();
