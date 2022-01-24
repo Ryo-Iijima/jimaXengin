@@ -511,6 +511,12 @@
     <ClInclude Include="LightGroup.h">
       <Filter>ヘッダー ファイル\engin\3DObject\Light</Filter>
     </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>ヘッダー ファイル\engin\3DObject\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleShadow.h">
+      <Filter>ヘッダー ファイル\engin\3DObject\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\FBX\FBXVS.hlsl">

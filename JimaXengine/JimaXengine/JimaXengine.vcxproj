@@ -255,6 +255,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="BatterCharacter.h" />
     <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="CircleShadow.h" />
     <ClInclude Include="collision\Collision.h" />
     <ClInclude Include="collision\CollisionPrimitive.h" />
     <ClInclude Include="DebugCamera.h" />
@@ -303,6 +304,7 @@
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\SceneManager.h" />
     <ClInclude Include="scene\Title.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>

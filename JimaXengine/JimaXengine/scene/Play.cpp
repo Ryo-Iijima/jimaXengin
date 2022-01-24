@@ -35,17 +35,6 @@ void JimaXengine::Play::Initialize()
 	oManager->Add(new Player(camera.get()));
 	oManager->Add(new Boss(camera.get(),oManager));
 	oManager->Add(new BackGround(camera.get()));
-	//oManager->Add(new JoyconTest());
-
-	//model = FbxLoader::GetInstance().LoadModelFromFile("ball");
-
-	//for (int i = 0; i < 10000; i++)
-	//{
-	//	object3d[i] = new Object3d();
-	//	object3d[i]->Initialize();
-	//	//object3d[i]->SetModel(model);
-	//	delete object3d[i];
-	//}
 
 	isEnd = false;
 	nowScene = "Play";
@@ -56,15 +45,21 @@ void JimaXengine::Play::Initialize()
 
 	lightGroup = LightGroup::Create();
 
-	lightGroup->SetDirLightActive(0, false);
+	lightGroup->SetDirLightActive(0, true);
 	lightGroup->SetDirLightActive(1, false);
 	lightGroup->SetDirLightActive(2, false);
 
-	lightGroup->SetPointLightActive(0, true);
+	lightGroup->SetPointLightActive(0, false);
+	lightGroup->SetPointLightActive(1, false);
+	lightGroup->SetPointLightActive(2, false);
 
-	pointLightPos[0] =  0.5f;
-	pointLightPos[1] =  1.0f;
-	pointLightPos[2] =  0.0f;
+	lightGroup->SetSpotLightActive(0, false);
+
+	lightGroup->SetCircleShadowActiv(0, true);
+
+	characterPos[0] = oManager->GetPlayer()->GetPos().x;
+	characterPos[1] = oManager->GetPlayer()->GetPos().y;
+	characterPos[2] = oManager->GetPlayer()->GetPos().z;
 
 	Object3d::SetLightGroup(lightGroup);
 }
@@ -81,9 +76,25 @@ void JimaXengine::Play::Update()
 		//	lightGroup->SetDirLightColor(1, XMFLOAT3(lightColor1));
 		//	lightGroup->SetDirLightDir(2, XMVECTOR({ lightDir2[0], lightDir2[1], lightDir2[2], 0 }));
 		//	lightGroup->SetDirLightColor(2, XMFLOAT3(lightColor2));
-		lightGroup->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
-		lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
-		lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+		//// ポイントライト
+		//lightGroup->SetPointLightPos(0, Vector3(pointLightPos[0], pointLightPos[1], pointLightPos[2]));
+		//lightGroup->SetPointLightColor(0, Vector3(pointLightColor[0], pointLightColor[1], pointLightColor[2]));
+		//lightGroup->SetPointLightAtten(0, Vector3(pointLightAtten[0], pointLightAtten[1], pointLightAtten[2]));
+		// スポットライト
+		lightGroup->SetSpotDir(0, XMVECTOR({ spotLightDir[0], spotLightDir[1], spotLightDir[2], 0}));
+		lightGroup->SetSpotLightPos(0, Vector3(spotLightPos[0], spotLightPos[1], spotLightPos[2]));
+		lightGroup->SetSpotLightColor(0, Vector3(spotLightColor[0], spotLightColor[1], spotLightColor[2]));
+		lightGroup->SetSpotLightAtten(0, Vector3(spotLightAtten[0], spotLightAtten[1], spotLightAtten[2]));
+		lightGroup->SetSpotLightFactorAngle(0, Vector2(spotLightAngle[0], spotLightAngle[1]));
+		// 丸影
+		lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0],circleShadowDir[1], circleShadowDir[2] }));
+		lightGroup->SetCircleShadowCasterPos(0, Vector3(characterPos[0], characterPos[1], characterPos[2]));
+		lightGroup->SetCircleShadowAtten(0, Vector3(circleShadowAtten[0], circleShadowAtten[1], circleShadowAtten[2]));
+		lightGroup->SetCircleShadowFactorAngle(0, Vector2(circleShadowFactorAngle[0], circleShadowFactorAngle[1]));
+
+		characterPos[0] = oManager->GetPlayer()->GetPos().x;
+		characterPos[1] = oManager->GetPlayer()->GetPos().y;
+		characterPos[2] = oManager->GetPlayer()->GetPos().z;
 	}
 
 	lightGroup->Update();
@@ -107,9 +118,21 @@ void JimaXengine::Play::Draw()
 
 	ImGui::Begin("Light");
 
-	ImGui::ColorEdit3("pointLightColor", pointLightColor, ImGuiColorEditFlags_Float);
-	ImGui::InputFloat3("pointLightPos", pointLightPos);
-	ImGui::InputFloat3("pointLightAtten", pointLightAtten);
+	//ImGui::ColorEdit3("pointLightColor", pointLightColor, ImGuiColorEditFlags_Float);
+	//ImGui::InputFloat3("pointLightPos", pointLightPos);
+	//ImGui::InputFloat3("pointLightAtten", pointLightAtten);
+	
+	//ImGui::InputFloat3("spotLightDir", spotLightDir);
+	//ImGui::ColorEdit3("spotLightColor", spotLightColor, ImGuiColorEditFlags_Float);
+	//ImGui::InputFloat3("spotLightPos", spotLightPos);
+	//ImGui::InputFloat3("spotLightAtten", spotLightAtten);
+	//ImGui::InputFloat2("spotLightFactorAngle", spotLightAngle);
+
+	ImGui::InputFloat3("circleShadowDir", circleShadowDir);
+	ImGui::InputFloat3("circleShadowAtten", circleShadowAtten);
+	ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
+	ImGui::InputFloat3("characterPos", characterPos);
+
 	ImGui::End();
 
 }

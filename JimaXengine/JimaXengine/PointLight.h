@@ -3,7 +3,9 @@
 
 namespace JimaXengine
 {
-
+	/// <summary>
+	/// ポイントライト
+	/// </summary>
 	class PointLight
 	{
 	public: // サブクラス

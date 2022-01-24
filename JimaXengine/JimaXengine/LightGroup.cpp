@@ -93,7 +93,7 @@ void LightGroup::TransferConstBuffer()
 			}
 		}
 
-		// 点光源
+		// ポイントライト
 		for (int i = 0; i < PointLightNum; i++) {
 			// ライトが有効なら設定を転送
 			if (pointLights[i].IsActive()) {
@@ -105,6 +105,40 @@ void LightGroup::TransferConstBuffer()
 			// ライトが無効なら色を0に
 			else {
 				constMap->pointLights[i].active = 0;
+			}
+		}
+
+		// スポットライト
+		for (int i = 0; i < SpotLightNum; i++) {
+			// ライトが有効なら設定を転送
+			if (spotLights[i].IsActive()) {
+				constMap->spotLights[i].active = 1;
+				constMap->spotLights[i].lightv = -spotLights[i].GetLightDir();
+				constMap->spotLights[i].lightPos = spotLights[i].GetLightPos();
+				constMap->spotLights[i].lightColor = spotLights[i].GetLightColor();
+				constMap->spotLights[i].lightAtten = spotLights[i].GetLightAtten();
+				constMap->spotLights[i].lightFactorAngleCos = spotLights[i].GetLightFactorAngleCos();
+			}
+			// ライトが無効なら色を0に
+			else {
+				constMap->spotLights[i].active = 0;
+			}
+		}
+
+		// 丸影
+		for (int i = 0; i < CircleShadowNum; i++) {
+			// 有効なら設定を転送
+			if (circleShadows[i].IsActive()) {
+				constMap->circleShadows[i].active = 1;
+				constMap->circleShadows[i].dir = -circleShadows[i].GetDir();
+				constMap->circleShadows[i].casterPos = circleShadows[i].GetCasterPos();
+				constMap->circleShadows[i].distanceCasterPos = circleShadows[i].GetDistanceCasterLight();
+				constMap->circleShadows[i].atten = circleShadows[i].GetAtten();
+				constMap->circleShadows[i].factorAngleCos = circleShadows[i].GetFactorAngleCos();
+			}
+			// 無効なら0に
+			else {
+				constMap->circleShadows[i].active = 0;
 			}
 		}
 
@@ -184,5 +218,99 @@ void JimaXengine::LightGroup::SetPointLightAtten(int index, const Vector3& light
 	assert(0 <= index && index < PointLightNum);
 
 	pointLights[index].SetLightAtten(lightAtten);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetSpotLightActive(int index, bool active)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights[index].SetActive(active);
+}
+
+void JimaXengine::LightGroup::SetSpotDir(int index, const XMVECTOR& lightdir)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights[index].SetLightDir(lightdir);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetSpotLightPos(int index, const Vector3& lightpos)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights[index].SetLightPos(lightpos);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetSpotLightColor(int index, const Vector3& lightcolor)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights[index].SetLightColor(lightcolor);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetSpotLightAtten(int index, const Vector3& lightAtten)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights[index].SetLightAtten(lightAtten);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetSpotLightFactorAngle(int index, const Vector2& lightFactorAngle)
+{
+	assert(0 <= index && index < SpotLightNum);
+
+	spotLights[index].SetLightFactorAngle(lightFactorAngle);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetCircleShadowActiv(int index, bool activ)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows[index].SetActive(activ);
+}
+
+void JimaXengine::LightGroup::SetCircleShadowCasterPos(int index, const Vector3& casterpos)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows[index].SetCasterPos(casterpos);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetCircleShadowDir(int index, const XMVECTOR& dir)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows[index].SetDir(dir);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetCircleShadowDistanceCasterLight(int index, float distancecasterlight)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows[index].SetDistanceCasterLight(distancecasterlight);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetCircleShadowAtten(int index, const Vector3& atten)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows[index].SetAtten(atten);
+	dirty = true;
+}
+
+void JimaXengine::LightGroup::SetCircleShadowFactorAngle(int index, const Vector2& factorangle)
+{
+	assert(0 <= index && index < CircleShadowNum);
+
+	circleShadows[index].SetFactorAngle(factorangle);
 	dirty = true;
 }
