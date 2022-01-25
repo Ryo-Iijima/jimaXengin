@@ -121,18 +121,28 @@ void JimaXengine::Target::HitCheck()
 	}
 }
 
-JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, Vector3 gool, float speed)
+void JimaXengine::Target::InformBoss()
+{
+	// ボスに自分の番号と消滅することを伝える
+	oManager->GetBoss()->SetBallStandBy(ballNumber, true);
+	// 影を見えない位置に避けておく
+	object->GetUsingLightGroup()->SetCircleShadowCasterPos(ballNumber, Vector3(-1, -1, -1));
+}
+
+JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, Vector3 gool, float speed, int ballnumber)
 {
 	pCamera = camera;
 	this->pos = pos;
 	this->vel = vel;
 	this->gool = gool;
 	this->speed = speed;
+	ballNumber = ballnumber;
 }
 
 JimaXengine::Target::~Target()
 {
 	delete object;
+	InformBoss();
 }
 
 void JimaXengine::Target::Initialize()
@@ -150,6 +160,8 @@ void JimaXengine::Target::Initialize()
 	locusColor = normalLocusColor;
 
 	isHitPlayer = false;
+
+	object->GetUsingLightGroup()->SetCircleShadowCasterPos(ballNumber, pos);
 }
 
 void JimaXengine::Target::Update()
@@ -167,6 +179,9 @@ void JimaXengine::Target::Update()
 	
 	object->SetCamera(pCamera);
 	object->Update();
+
+	// ライトグループにキャスターの位置を設定
+	object->GetUsingLightGroup()->SetCircleShadowCasterPos(ballNumber, pos);
 
 	sphereCol.center = pos.ConvertXMVECTOR();
 }

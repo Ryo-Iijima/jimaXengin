@@ -32,7 +32,7 @@ namespace JimaXengine
 		// スポットライトの数
 		static const int SpotLightNum = 3;
 		// 丸影の数
-		static const int CircleShadowNum = 1;
+		static const int CircleShadowNum = 3;
 
 	public: // サブクラス
 

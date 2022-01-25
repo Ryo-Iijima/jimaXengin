@@ -149,6 +149,6 @@ namespace JimaXengine
 
 		// getter
 		bool GetIsEndAnimation() { return isEndAnimation; }
-
+		LightGroup* GetUsingLightGroup() { return lightGroup; }
 	};
 }

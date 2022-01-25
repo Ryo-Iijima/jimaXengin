@@ -1,7 +1,6 @@
 #include "Play.h"
 #include "../3d/Object3d.h"
 #include "../3d/FbxLoader.h"
-#include "../2d/Object2d.h"
 #include "../DebugCamera.h"
 
 JimaXengine::Play::Play()
@@ -10,7 +9,6 @@ JimaXengine::Play::Play()
 
 JimaXengine::Play::~Play()
 {
-	delete object2d;
 	delete oManager;
 	delete lightGroup;
 }
@@ -40,9 +38,6 @@ void JimaXengine::Play::Initialize()
 	nowScene = "Play";
 	nextScene = "Title";
 
-	object2d = new Object2d();
-	object2d->CreateSprite();
-
 	lightGroup = LightGroup::Create();
 
 	lightGroup->SetDirLightActive(0, true);
@@ -56,12 +51,19 @@ void JimaXengine::Play::Initialize()
 	lightGroup->SetSpotLightActive(0, false);
 
 	lightGroup->SetCircleShadowActiv(0, true);
+	lightGroup->SetCircleShadowActiv(1, true);
+	lightGroup->SetCircleShadowActiv(2, true);
 
 	characterPos[0] = oManager->GetPlayer()->GetPos().x;
 	characterPos[1] = oManager->GetPlayer()->GetPos().y;
 	characterPos[2] = oManager->GetPlayer()->GetPos().z;
 
 	Object3d::SetLightGroup(lightGroup);
+	for (int i = 0; i < 3; i++)
+	{
+		lightGroup->SetCircleShadowCasterPos(i, Vector3(-1, -1, -1));
+	}
+
 }
 
 void JimaXengine::Play::Update()
@@ -87,14 +89,18 @@ void JimaXengine::Play::Update()
 		lightGroup->SetSpotLightAtten(0, Vector3(spotLightAtten[0], spotLightAtten[1], spotLightAtten[2]));
 		lightGroup->SetSpotLightFactorAngle(0, Vector2(spotLightAngle[0], spotLightAngle[1]));
 		// ŠÛ‰e
-		lightGroup->SetCircleShadowDir(0, XMVECTOR({ circleShadowDir[0],circleShadowDir[1], circleShadowDir[2] }));
-		lightGroup->SetCircleShadowCasterPos(0, Vector3(characterPos[0], characterPos[1], characterPos[2]));
-		lightGroup->SetCircleShadowAtten(0, Vector3(circleShadowAtten[0], circleShadowAtten[1], circleShadowAtten[2]));
-		lightGroup->SetCircleShadowFactorAngle(0, Vector2(circleShadowFactorAngle[0], circleShadowFactorAngle[1]));
+		for (int i = 0; i < 3; i++)
+		{
+			lightGroup->SetCircleShadowDir(i, XMVECTOR({ circleShadowDir[0],circleShadowDir[1], circleShadowDir[2] }));
+			//lightGroup->SetCircleShadowCasterPos(0, Vector3(characterPos[0], characterPos[1], characterPos[2]));
+			lightGroup->SetCircleShadowAtten(i, Vector3(circleShadowAtten[0], circleShadowAtten[1], circleShadowAtten[2]));
+			lightGroup->SetCircleShadowFactorAngle(i, Vector2(circleShadowFactorAngle[0], circleShadowFactorAngle[1]));
 
-		characterPos[0] = oManager->GetPlayer()->GetPos().x;
-		characterPos[1] = oManager->GetPlayer()->GetPos().y;
-		characterPos[2] = oManager->GetPlayer()->GetPos().z;
+		}
+
+		//characterPos[0] = oManager->GetPlayer()->GetPos().x;
+		//characterPos[1] = oManager->GetPlayer()->GetPos().y;
+		//characterPos[2] = oManager->GetPlayer()->GetPos().z;
 	}
 
 	lightGroup->Update();
@@ -109,8 +115,6 @@ void JimaXengine::Play::Update()
 
 void JimaXengine::Play::Draw()
 {
-	//object2d->DrawOriginal("colorGrid.png", Vector2(0.0f, 0.0f), 0.0f, Vector2(1.0f, 1.0f), "ALPHA");
-
 	oManager->Draw();
 
 	ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
@@ -134,7 +138,6 @@ void JimaXengine::Play::Draw()
 	ImGui::InputFloat3("characterPos", characterPos);
 
 	ImGui::End();
-
 }
 
 void JimaXengine::Play::simpleStaging()

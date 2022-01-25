@@ -18,10 +18,6 @@ namespace JimaXengine
 
 		Model* model = nullptr;
 
-		Object2d* object2d;
-
-		//Object3d* object3d[10000];
-
 		std::unique_ptr<Camera> camera;
 
 		GameObjectManager* oManager = nullptr;

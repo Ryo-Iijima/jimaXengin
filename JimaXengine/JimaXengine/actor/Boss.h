@@ -93,6 +93,9 @@ namespace JimaXengine
 		// 何発発射したか
 		int shotBallCount;
 
+		// 球が打てる状態か
+		bool ballStandBy[3];
+
 		// ボールの発射地点へのオフセット
 		Vector3 shotPosOffset;
 		std::unique_ptr<Object3d> offsetPosObj;
@@ -103,21 +106,55 @@ namespace JimaXengine
 		float bollSpeed;		// ボールのスピード
 
 	private:
+		
+		/// <summary>
+		/// 移動
+		/// </summary>
 		void Move();
+
+		/// <summary>
+		/// 単発ショット
+		/// </summary>
 		void SingleShot();
+
+		/// <summary>
+		/// ３連ショット
+		/// </summary>
 		void RapidFire();
+
+		/// <summary>
+		///  乱射
+		/// </summary>
 		void EachShot();
-		// プレイヤーのほうに向く
+
+		/// <summary>
+		/// プレイヤーのほうに向く
+		/// </summary>
 		void SuitableForPlayer();
-		// 上下にふわふわ
+
+		/// <summary>
+		/// 上下にふわふわ
+		/// </summary>
 		void Floating();
-		// 怒り条件チェック
+
+		/// <summary>
+		/// 怒り条件チェック
+		/// </summary>
 		void CheckIsAnger();
-		// ダメージ演出
+		
+		/// <summary>
+		/// ダメージ演出
+		/// </summary>
 		void DamageEffect();
-		// 判定の位置合わせ
+		
+		/// <summary>
+		/// 判定の位置合わせ
+		/// </summary>
 		void ColPosSet()override;
-		// 足の初期位置合わせ
+		
+		/// <summary>
+		/// 足の初期位置合わせ
+		/// </summary>
 		void LegPosInitialize();
 
 	public:
@@ -132,9 +169,26 @@ namespace JimaXengine
 		GameObject::TYPE GetType()override;
 		void DrawImGui()override;
 
-		void Damage();	// ダメージを食らう
+		/// <summary>
+		/// ダメージを食らう
+		/// </summary>
+		void Damage();
+
+		// setter
+
+		/// <summary>
+		/// ボールの待機状態のセット
+		/// </summary>
+		/// <param name="index">配列番号</param>
+		/// <param name="isstndby">投げれる状態か</param>
+		void SetBallStandBy(int index, bool isstndby) { ballStandBy[index] = isstndby; }
 
 		// Getter
+
+		/// <summary>
+		/// 打ったボールの数の取得
+		/// </summary>
+		/// <returns>打ったボールの数</returns>
 		int GetShotBallCount() { return shotBallCount; }
 
 	};

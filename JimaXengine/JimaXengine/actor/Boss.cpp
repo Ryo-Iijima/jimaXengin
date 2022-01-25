@@ -78,6 +78,12 @@ void JimaXengine::Boss::Initialize()
 	bollSpeed = 0.3f;
 
 	center = Vector3(0, 3, -15);
+
+	for (int i = 0; i < sizeof(ballStandBy); i++)
+	{
+		ballStandBy[i] = true;
+
+	}
 }
 
 void JimaXengine::Boss::Update()
@@ -245,7 +251,7 @@ void JimaXengine::Boss::Move()
 	{
 	case JimaXengine::Boss::State::WAIT:
 
-		//actionIntervalTimer--;
+		actionIntervalTimer--;
 		// s“®ŠÔŠu‚ª0‚É‚È‚Á‚½‚ç
 		if (actionIntervalTimer <= 0)
 		{
@@ -379,7 +385,22 @@ void JimaXengine::Boss::SingleShot()
 
 	Vector3 bollVel = targetPos - (p);
 
-	pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed));
+	// “Š‚°‚ê‚éó‘Ô‚Ì”Ô†‚©‚ç‘I‚ñ‚Å“Š‚°‚é
+	int ballNumber = -1;
+	for (int i = 0; i < sizeof(ballStandBy); i++)
+	{
+		if (ballStandBy[i])
+		{
+			ballNumber = i;
+		}
+	}
+	// ‰e”Ô†‚ª‚µ‚Á‚©‚è“o˜^‚³‚ê‚Ä‚¢‚½‚ç
+	if (ballNumber >= 0)
+	{
+		ballStandBy[ballNumber] = false;
+
+		pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed, ballNumber));
+	}
 
 	// “Š‚°‚½”‚ğ‰ÁZ
 	shotBallCount += 1;
@@ -404,8 +425,23 @@ void JimaXengine::Boss::RapidFire()
 		targetPos.y += random;
 
 		Vector3 bollVel = targetPos - (p);
+		
+		// “Š‚°‚ê‚éó‘Ô‚Ì”Ô†‚©‚ç‘I‚ñ‚Å“Š‚°‚é
+		int ballNumber = -1;
+		for (int i = 0; i < sizeof(ballStandBy); i++)
+		{
+			if (ballStandBy[i])
+			{
+				ballNumber = i;
+			}
+		}
+		// ‰e”Ô†‚ª‚µ‚Á‚©‚è“o˜^‚³‚ê‚Ä‚¢‚½‚ç
+		if (ballNumber >= 0)
+		{
+			ballStandBy[ballNumber] = false;
 
-		pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed));
+			pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed, ballNumber));
+		}
 
 		// ”­Ë‰ñ”‚Ì‰ÁZ
 		shotCounter++;
@@ -432,7 +468,21 @@ void JimaXengine::Boss::EachShot()
 	Vector3 targetPos = oManager->GetPlayer()->GetPos();
 	Vector3 bollVel = targetPos - (p);
 
-	pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed));
+	// “Š‚°‚ê‚éó‘Ô‚Ì”Ô†‚©‚ç‘I‚ñ‚Å“Š‚°‚é
+	int ballNumber = -1;
+	for (int i = 0; i < sizeof(ballStandBy); i++)
+	{
+		if (ballStandBy[i])
+		{
+			ballNumber = i;
+			ballStandBy[i] = false;
+		}
+	}
+	// ‰e”Ô†‚ª‚µ‚Á‚©‚è“o˜^‚³‚ê‚Ä‚¢‚½‚ç
+	if (ballNumber >= 0)
+	{
+		pOManager->Insert(new Target(pCamera, p, bollVel, targetPos, bollSpeed, ballNumber));
+	}
 
 	// “Š‚°‚½”‚ğ‰ÁZ
 	shotBallCount += 1;

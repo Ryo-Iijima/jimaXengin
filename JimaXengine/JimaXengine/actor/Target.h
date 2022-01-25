@@ -32,15 +32,30 @@ namespace JimaXengine
 		const Vector3 reflectLocusColor = { 0, 0, 1 };
 		Vector3 locusColor;	
 
+		// 自分が何発目の球か（丸影のインデックス指定用）
+		int ballNumber;
+
 		bool isHitPlayer;	// プレイヤーに当たった
 		bool isHitEnemy;	// 敵に当たった
 
 	private:
+		/// <summary>
+		/// 球の挙動
+		/// </summary>
 		void Move();
+
+		/// <summary>
+		/// 他のオブジェクトとの接触判定
+		/// </summary>
 		void HitCheck();
 
+		/// <summary>
+		/// 自分が消滅することをボスに知らせる
+		/// </summary>
+		void InformBoss();
+
 	public:
-		Target(Camera* camera, Vector3 pos = { 0,0,0 }, Vector3 vel = { 0,0,-1 }, Vector3 gool = {0, 0, -15}, float speed = 0.1f);
+		Target(Camera* camera, Vector3 pos = { 0,0,0 }, Vector3 vel = { 0,0,-1 }, Vector3 gool = { 0, 0, -15 }, float speed = 0.1f, int ballnumber = 0);
 		~Target();
 
 		void Initialize()override;
