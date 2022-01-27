@@ -320,7 +320,7 @@ void JimaXengine::Player::Initialize()
 
     leftRacket = std::make_unique<Racket>();
 
-    leftRacket->pos = Vector3(-5, 2.5f, -15);
+    leftRacket->pos = Vector3(0, 2.5f, -15);
 
     leftRacket->object = std::make_unique<Object3d>(leftRacket->pos, leftRacket->scale, leftRacket->rot, leftRacket->color);
     leftRacket->object->Initialize();
@@ -503,22 +503,22 @@ JimaXengine::GameObject::TYPE JimaXengine::Player::GetType()
 
 void JimaXengine::Player::DrawImGui()
 {
-    ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
-    ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+    //ImGui::SetNextWindowPos(ImVec2(20, 20), 1 << 1);
+    //ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-    ImGui::Begin("PlayerInformation");
-    //ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
-    //ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
-    //ImGui::Text("objePos : %f,%f,%f", pos.x, pos.y, pos.z);
+    //ImGui::Begin("PlayerInformation");
+    ////ImGui::Text("Lpos : %f,%f,%f", leftRacket->pos.x, leftRacket->pos.y, leftRacket->pos.z);
+    ////ImGui::Text("Rpos : %f,%f,%f", rightRacket->pos.x, rightRacket->pos.y, rightRacket->pos.z);
+    ////ImGui::Text("objePos : %f,%f,%f", pos.x, pos.y, pos.z);
 
-    ImGui::Checkbox("isSwing", &isSwing);
-    ImGui::Checkbox("isHitZone", &isHitZone);
-    ImGui::Text("swingCounter : %d", swingCounter);
+    //ImGui::Checkbox("isSwing", &isSwing);
+    //ImGui::Checkbox("isHitZone", &isHitZone);
+    //ImGui::Text("swingCounter : %d", swingCounter);
 
 
-    ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
+    //ImGui::Text("CameraPos : %f,%f,%f", pCamera->GetEye().x, pCamera->GetEye().y, pCamera->GetEye().z);
 
-    ImGui::End();
+    //ImGui::End();
 }
 
 JimaXengine::Camera* JimaXengine::Player::GetCamera()

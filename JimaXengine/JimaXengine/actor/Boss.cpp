@@ -142,21 +142,21 @@ JimaXengine::GameObject::TYPE JimaXengine::Boss::GetType()
 
 void JimaXengine::Boss::DrawImGui()
 {
-	ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
-	ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
+	//ImGui::SetNextWindowPos(ImVec2(920, 20), 1 << 1);
+	//ImGui::SetNextWindowSize(ImVec2(250, 300), 1 << 1);
 
-	ImGui::Begin("BossInformation");
-	ImGui::Text("hp : %d", hp);
-	ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
-	ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
-	ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
-	ImGui::Text("state : %d", state);
+	//ImGui::Begin("BossInformation");
+	//ImGui::Text("hp : %d", hp);
+	//ImGui::Text("pos : %f,%f,%f", pos.x, pos.y, pos.z);
+	//ImGui::Text("rot : %f,%f,%f", rotation.x, rotation.y, rotation.z);
+	//ImGui::Text("actionIntervalTimer : %d", actionIntervalTimer);
+	//ImGui::Text("state : %d", state);
 
-	//ImGui::Text("playerPos : %f,%f,%f", playerPos.x, playerPos.y, playerPos.z);
-	//ImGui::Text("dir : %f,%f,%f", dir.x, dir.y, dir.z);
-	//ImGui::Text("angle : %f", angle);
+	////ImGui::Text("playerPos : %f,%f,%f", playerPos.x, playerPos.y, playerPos.z);
+	////ImGui::Text("dir : %f,%f,%f", dir.x, dir.y, dir.z);
+	////ImGui::Text("angle : %f", angle);
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void JimaXengine::Boss::Damage()

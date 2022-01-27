@@ -84,9 +84,6 @@
     <Filter Include="シェーダーファイル\Geometory">
       <UniqueIdentifier>{dbc80a87-8d0f-4890-8303-b861b3a862c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Joycon">
-      <UniqueIdentifier>{7ffb388c-2d18-4bd0-b17f-4bfe2c9b8aed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\engin\collision">
       <UniqueIdentifier>{0b9f3cbf-7cf5-463b-bf21-ed8b39cc9e6f}</UniqueIdentifier>
     </Filter>
@@ -253,15 +250,6 @@
     </ClCompile>
     <ClCompile Include="2d\Object2d.cpp">
       <Filter>ソース ファイル\engin\2DObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Joycon\Joycon.cpp">
-      <Filter>ソース ファイル\Joycon</Filter>
-    </ClCompile>
-    <ClCompile Include="Joycon\JoyconManager.cpp">
-      <Filter>ソース ファイル\Joycon</Filter>
-    </ClCompile>
-    <ClCompile Include="actor\JoyconTest.cpp">
-      <Filter>ソース ファイル\Joycon</Filter>
     </ClCompile>
     <ClCompile Include="Particle\HomingGeometryParticle.cpp">
       <Filter>ソース ファイル\app\Particle</Filter>
@@ -450,15 +438,6 @@
     </ClInclude>
     <ClInclude Include="2d\Texture.h">
       <Filter>ヘッダー ファイル\engin\2DObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Joycon\Joycon.h">
-      <Filter>ソース ファイル\Joycon</Filter>
-    </ClInclude>
-    <ClInclude Include="Joycon\JoyconManager.h">
-      <Filter>ソース ファイル\Joycon</Filter>
-    </ClInclude>
-    <ClInclude Include="actor\JoyconTest.h">
-      <Filter>ソース ファイル\Joycon</Filter>
     </ClInclude>
     <ClInclude Include="Particle\HomingGeometryParticle.h">
       <Filter>ヘッダー ファイル\app\Particle</Filter>

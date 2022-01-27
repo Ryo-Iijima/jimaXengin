@@ -29,7 +29,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	float3 ambient = m_ambient;
 
 	// シェーディングによる色
-	float4 shadecolor;
+	float4 shadecolor = { 0,0,0,0 };
 
 	// 平行光源
 	for (int i = 0; i < DIRLIGHT_NUM; i++) {

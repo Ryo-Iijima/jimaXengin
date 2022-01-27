@@ -40,7 +40,7 @@ void JimaXengine::BackGround::Initialize()
 #pragma region •Ç
 	wallPos = Vector3(0, 2.5f, 40);
 	wallRot = Vector3(0, 180, 0);
-	wallScale = Vector3(2, 1, 1);
+	wallScale = Vector3(3, 1, 1);
 	wallColor = Vector4(1, 1, 1, 1);
 
 	//wall->SetPosition(wallPos);

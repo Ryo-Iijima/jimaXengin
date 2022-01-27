@@ -35,8 +35,8 @@ namespace JimaXengine
 		// 自分が何発目の球か（丸影のインデックス指定用）
 		int ballNumber;
 
-		bool isHitPlayer;	// プレイヤーに当たった
-		bool isHitEnemy;	// 敵に当たった
+		bool isHitPlayer = false;	// プレイヤーに当たった
+		bool isHitEnemy = false;	// 敵に当たった
 
 	private:
 		/// <summary>

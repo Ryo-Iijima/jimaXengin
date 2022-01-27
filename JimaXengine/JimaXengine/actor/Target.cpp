@@ -168,7 +168,7 @@ void JimaXengine::Target::Update()
 {
 	if (!markInserted)
 	{
-		oManager->Insert(new StrikeMark(pCamera, this));
+		//oManager->Insert(new StrikeMark(pCamera, this));
 		markInserted = true;
 	}
 
