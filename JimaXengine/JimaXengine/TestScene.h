@@ -61,6 +61,9 @@ namespace JimaXengine
 		// 格納するための配列
 		std::vector<std::string> sensorData;
 
+		// ジャイロの値を絞る用
+		float squeeze = 1.0f;
+
 	public:
 		TestScene();
 		~TestScene();

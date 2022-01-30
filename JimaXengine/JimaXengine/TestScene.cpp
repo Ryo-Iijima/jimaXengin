@@ -122,7 +122,9 @@ void JimaXengine::TestScene::JoyConUpdate()
         prev_gyro = gyro;
 
         // 出力用配列にも記録
-        sensorData.push_back(std::to_string(accel.x));
+        std::string acc = std::to_string(accel.x) + "," + std::to_string(accel.y) + "," + std::to_string(accel.z);
+        std::string gyr = std::to_string(gyro.x) + "," + std::to_string(gyro.y) + "," + std::to_string(gyro.z);
+        sensorData.push_back(acc + "," + gyr);
 
         // input report を受けとる。
         int ret = hid_read(dev, buff, size);
@@ -182,7 +184,7 @@ void JimaXengine::TestScene::JoyConUpdate()
             //gyro.z = (row_gyro.z - gyr_neutral.z) * 0.00122187695f;
         }
 
-        {
+        {// ジャイロスコープ-回転（回転/秒）
             gyro.x = (row_gyro.x - gyr_neutral.x) / 0xffff * 360.0f;
             gyro.y = (row_gyro.y - gyr_neutral.y) / 0xffff * 360.0f;
             gyro.z = (row_gyro.z - gyr_neutral.z) / 0xffff * 360.0f;
@@ -276,23 +278,26 @@ void JimaXengine::TestScene::JoyConUpdate()
 #pragma endregion
 
 #pragma region ジャイロ加算時
-    float a = 10.0f;
-    add_gyro.x = std::clamp(gyro.x, -a, a);
-    add_gyro.y = std::clamp(gyro.y, -a, a);
-    add_gyro.z = std::clamp(gyro.z, -a, a);
+    //float a = 10.0f;
+    //add_gyro.x = std::clamp(gyro.x, -a, a);
+    //add_gyro.y = std::clamp(gyro.y, -a, a);
+    //add_gyro.z = std::clamp(gyro.z, -a, a);
 
-    if (fabs(add_gyro.x) < deadZone)
-    {
-        add_gyro.x = 0;
-    }
-    if (fabs(add_gyro.y) < deadZone)
-    {
-        add_gyro.y = 0;
-    }
-    if (fabs(add_gyro.z) < deadZone)
-    {
-        add_gyro.z = 0;
-    }
+    //if (fabs(add_gyro.x) < deadZone)
+    //{
+    //    add_gyro.x = 0;
+    //}
+    //if (fabs(add_gyro.y) < deadZone)
+    //{
+    //    add_gyro.y = 0;
+    //}
+    //if (fabs(add_gyro.z) < deadZone)
+    //{
+    //    add_gyro.z = 0;
+    //}
+
+    //add_gyro += (prev_gyro - gyro) * squeeze;
+    add_gyro = gyro * squeeze;
 
     rotation.x += add_gyro.x;
 
@@ -406,7 +411,9 @@ void JimaXengine::TestScene::Draw()
     ImGui::Text(" minValue  : [%+010.3f], [%+010.3f], [%+010.3f]", minValue.x, minValue.y, minValue.z);
 
     //ImGui::Text(" Length  : [%+010.3f]", diff_accel.Length());
-   
+
+    ImGui::InputFloat("squeeze", &squeeze);
+
     static float slider1 = 0.0f;
     ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 20.0f);
     ImGui::SliderFloat("speed", &speed, 0.0f, 1.0f);
