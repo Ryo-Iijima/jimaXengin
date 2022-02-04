@@ -134,6 +134,8 @@ void JimaXengine::TestScene::JoyConUpdate()
         // ボタン
         //printf("button byte 1: %d\n", buff[1]);
 
+#pragma region 加速度
+
         /////////////////////////////////////////////////////
         //// accel 
         /////////////////////////////////////////////////////
@@ -143,7 +145,7 @@ void JimaXengine::TestScene::JoyConUpdate()
         row_accel.y = (float)(buff[15] | buff[16] << 8);
         row_accel.z = (float)(buff[17] | buff[18] << 8);
 
-        {
+        {// 加速度（G）
             accel.x = row_accel.x * 0.00025f;
             accel.y = row_accel.y * 0.00025f;
             accel.z = row_accel.z * 0.00025f;
@@ -170,29 +172,27 @@ void JimaXengine::TestScene::JoyConUpdate()
         //    accel.z = acc_vector_component.y / -500;
         //}
 
-#pragma region 加速度加算時
 
-// 前フレームとの差分
+        // 前フレームとの差分
         diff_accel = prev_accel - accel;
 
-        // 最大値、最小値、現在地のリセット
-        if (Input::KeyTrigger(DIK_1))
-        {
-            maxValue = Vector3().Zero;
-            minValue = Vector3().Zero;
+        //// 最大値、最小値、現在地のリセット
+        //if (Input::KeyTrigger(DIK_1))
+        //{
+        //    maxValue = Vector3().Zero;
+        //    minValue = Vector3().Zero;
+        //    position = Vector3().Zero;
+        //}
 
-            position = Vector3().Zero;
-        }
-
-        // 最大値、最小値の記録
-        if (maxValue.x < diff_accel.x)
-        {
-            maxValue.x = diff_accel.x;
-        }
-        if (minValue.x > diff_accel.x)
-        {
-            minValue.x = diff_accel.x;
-        }
+        //// 最大値、最小値の記録
+        //if (maxValue.x < diff_accel.x)
+        //{
+        //    maxValue.x = diff_accel.x;
+        //}
+        //if (minValue.x > diff_accel.x)
+        //{
+        //    minValue.x = diff_accel.x;
+        //}
 
         //// 直近10回分の値を平均して加算する
         //Vector3 average;
@@ -216,23 +216,26 @@ void JimaXengine::TestScene::JoyConUpdate()
         //{
         //    average = Vector3().Zero;
         //}
-        if (fabs(diff_accel.x) < deadZone)
-        {
-            diff_accel.x = 0;
-        }
-        if (fabs(diff_accel.y) < deadZone)
-        {
-            diff_accel.y = 0;
-        }
-        if (fabs(diff_accel.z) < deadZone)
-        {
-            diff_accel.z = 0;
-        }
+        //if (fabs(diff_accel.x) < deadZone)
+        //{
+        //    diff_accel.x = 0;
+        //}
+        //if (fabs(diff_accel.y) < deadZone)
+        //{
+        //    diff_accel.y = 0;
+        //}
+        //if (fabs(diff_accel.z) < deadZone)
+        //{
+        //    diff_accel.z = 0;
+        //}
 
         //velocity += diff_accel / 10.0f;
-        //position.x += velocity.x;
+        velocity += accel;
+        position.x += velocity.x;
 
 #pragma endregion
+
+#pragma region ジャイロ
 
         /////////////////////////////////////////////////////
         //// gyro
@@ -267,7 +270,7 @@ void JimaXengine::TestScene::JoyConUpdate()
             //gyro.z = (gyro_vector_component.z / -100);      
         }
 
-        {// ジャイロスコープ-回転（回転/秒）
+        {// ジャイロスコープ-回転（回転/秒）360である意味はあまりないかも
             gyro.x = ((row_gyro.x - gyr_neutral.x) / 0xffff * 360.0f);
             gyro.y = ((row_gyro.y - gyr_neutral.y) / 0xffff * 360.0f);
             gyro.z = ((row_gyro.z - gyr_neutral.z) / 0xffff * 360.0f);
@@ -289,11 +292,11 @@ void JimaXengine::TestScene::JoyConUpdate()
 
     }
 
-#pragma region ジャイロ加算時
+    // 結果の加算
 
     add_gyro = gyro * squeeze;
 
-    rotation.x += add_gyro.x;
+    //rotation.x += add_gyro.x;
     //rotation.y += -add_gyro.z;
     //rotation.z += add_gyro.y;
 
@@ -331,7 +334,7 @@ void JimaXengine::TestScene::Initialize()
 {
 	// カメラ
 	Vector3 eye, target, up;
-	eye = { 0, 3, -50 };
+	eye = { 0, 50, -100 };
 	target = { 0, 3, 10 };
 	up = { 0, 1, 0 };
 	camera = std::make_unique<DebugCamera>();
@@ -394,11 +397,11 @@ void JimaXengine::TestScene::Draw()
     ImGui::SetNextWindowSize(ImVec2(400, 300), 1 << 1);
 
     ImGui::Begin("joyconparam");
-    //ImGui::Text(" row_accel : [%+010.3f], [%+010.3f], [%+010.3f]", row_accel.x, row_accel.y, row_accel.z);
-    ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
+    ImGui::Text(" row_accel : [%+010.3f], [%+010.3f], [%+010.3f]", row_accel.x, row_accel.y, row_accel.z);
+    //ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
 
-    //ImGui::Text("     accel : [%+010.3f], [%+010.3f], [%+010.3f]", accel.x, accel.y, accel.z);
-    ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
+    ImGui::Text("     accel : [%+010.3f], [%+010.3f], [%+010.3f]", accel.x, accel.y, accel.z);
+    //ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
 
     //ImGui::Text("diff_accel : [%+010.3f], [%+010.3f], [%+010.3f]", diff_accel.x, diff_accel.y, diff_accel.z);
     //ImGui::Text(" add_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", add_gyro.x, add_gyro.y, add_gyro.z);

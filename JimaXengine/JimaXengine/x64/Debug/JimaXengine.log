@@ -1,4 +1,4 @@
 ﻿  TestScene.cpp
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(327,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
-C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
-  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(334,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
+C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
+  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
