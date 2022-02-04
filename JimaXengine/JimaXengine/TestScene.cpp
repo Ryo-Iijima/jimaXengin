@@ -121,10 +121,12 @@ void JimaXengine::TestScene::JoyConUpdate()
         prev_accel = accel;
         prev_gyro = gyro;
 
-        // 出力用配列にも記録
-        std::string acc = std::to_string(accel.x) + "," + std::to_string(accel.y) + "," + std::to_string(accel.z);
-        std::string gyr = std::to_string(gyro.x) + "," + std::to_string(gyro.y) + "," + std::to_string(gyro.z);
-        sensorData.push_back(acc + "," + gyr);
+        {// 出力用配列にも記録
+            std::string acc = std::to_string(accel.x) + "," + std::to_string(accel.y) + "," + std::to_string(accel.z);
+            std::string gyr = std::to_string(gyro.x) + "," + std::to_string(gyro.y) + "," + std::to_string(gyro.z);
+
+            sensorData.push_back(acc + "," + gyr);
+        }
 
         // input report を受けとる。
         int ret = hid_read(dev, buff, size);
@@ -168,6 +170,70 @@ void JimaXengine::TestScene::JoyConUpdate()
         //    accel.z = acc_vector_component.y / -500;
         //}
 
+#pragma region 加速度加算時
+
+// 前フレームとの差分
+        diff_accel = prev_accel - accel;
+
+        // 最大値、最小値、現在地のリセット
+        if (Input::KeyTrigger(DIK_1))
+        {
+            maxValue = Vector3().Zero;
+            minValue = Vector3().Zero;
+
+            position = Vector3().Zero;
+        }
+
+        // 最大値、最小値の記録
+        if (maxValue.x < diff_accel.x)
+        {
+            maxValue.x = diff_accel.x;
+        }
+        if (minValue.x > diff_accel.x)
+        {
+            minValue.x = diff_accel.x;
+        }
+
+        //// 直近10回分の値を平均して加算する
+        //Vector3 average;
+        //
+        //// 差分を記録
+        //arr.push_back(diff_accel);
+        //// 要素数が10個超えたら10個にする
+        //if (arr.size() > 10)
+        //{
+        //    arr.erase(arr.begin());
+        //}
+        //// 平均を取る
+        //for (auto itr = arr.begin(); itr != arr.end(); itr++)
+        //{
+        //    average += (*itr);
+        //}
+        //average /= arr.size();
+
+        //// 変化が小さかったら無視
+        //if (average.x < deadZone)
+        //{
+        //    average = Vector3().Zero;
+        //}
+        if (fabs(diff_accel.x) < deadZone)
+        {
+            diff_accel.x = 0;
+        }
+        if (fabs(diff_accel.y) < deadZone)
+        {
+            diff_accel.y = 0;
+        }
+        if (fabs(diff_accel.z) < deadZone)
+        {
+            diff_accel.z = 0;
+        }
+
+        //velocity += diff_accel / 10.0f;
+        //position.x += velocity.x;
+
+#pragma endregion
+
         /////////////////////////////////////////////////////
         //// gyro
         /////////////////////////////////////////////////////
@@ -177,20 +243,10 @@ void JimaXengine::TestScene::JoyConUpdate()
         row_gyro.y = (float)(buff[21] | buff[22] << 8);
         row_gyro.z = (float)(buff[23] | buff[24] << 8);
 
-        Vector3 gyr_neutral = { 330, 65495, 65520 };
-        {
-            //gyro.x = (row_gyro.x - gyr_neutral.x) * 0.00122187695f;
-            //gyro.y = (row_gyro.y - gyr_neutral.y) * 0.00122187695f;
-            //gyro.z = (row_gyro.z - gyr_neutral.z) * 0.00122187695f;
-        }
+        //Vector3 gyr_neutral = { 330, 65495, 65520 };  // 資料参考
+        Vector3 gyr_neutral = { 7, 65495, 65520 };  // 実測値
 
-        {// ジャイロスコープ-回転（回転/秒）
-            gyro.x = (row_gyro.x - gyr_neutral.x) / 0xffff * 360.0f;
-            gyro.y = (row_gyro.y - gyr_neutral.y) / 0xffff * 360.0f;
-            gyro.z = (row_gyro.z - gyr_neutral.z) / 0xffff * 360.0f;
-        }
-
-        {
+        {// ジャイロスコープ（キャリブレーション済み） - 回転（度 / 秒 - dps）
             //// 補正用の計算（上半分は毎回計算する必要はない）
             //Vector3 cal_gyro_coeff = { 350,0,4081 };      // オフセット量
             //Vector3 cal_gyro_offset = { 24,-19,-27 };     // コントローラー水平時のセンサーの値
@@ -211,95 +267,35 @@ void JimaXengine::TestScene::JoyConUpdate()
             //gyro.z = (gyro_vector_component.z / -100);      
         }
 
+        {// ジャイロスコープ-回転（回転/秒）
+            gyro.x = ((row_gyro.x - gyr_neutral.x) / 0xffff * 360.0f);
+            gyro.y = ((row_gyro.y - gyr_neutral.y) / 0xffff * 360.0f);
+            gyro.z = ((row_gyro.z - gyr_neutral.z) / 0xffff * 360.0f);
+
+            // 180超えてたら-方向にプロットしなおす
+            if (gyro.x > 180)
+            {
+                gyro.x -= 360;
+            }
+            if (gyro.y > 180)
+            {
+                gyro.y -= 360;
+            }
+            if (gyro.z > 180)
+            {
+                gyro.z -= 360;
+            }
+        }
+
     }
-
-    // 前フレームとの差分
-    diff_accel = prev_accel - accel;
-
-    // 最大値、最小値、現在地のリセット
-    if (Input::KeyTrigger(DIK_1))
-    {
-        maxValue = Vector3().Zero;
-        minValue = Vector3().Zero;
-
-        position = Vector3().Zero;     
-    }
-
-    // 最大値、最小値の記録
-    if (maxValue.x < diff_accel.x)
-    {
-        maxValue.x = diff_accel.x;
-    }
-    if (minValue.x > diff_accel.x)
-    {
-        minValue.x = diff_accel.x;
-    }
-
-#pragma region 加速度加算時
-
-    //// 直近10回分の値を平均して加算する
-    //Vector3 average;
-    //
-    //// 差分を記録
-    //arr.push_back(diff_accel);
-    //// 要素数が10個超えたら10個にする
-    //if (arr.size() > 10)
-    //{
-    //    arr.erase(arr.begin());
-    //}
-    //// 平均を取る
-    //for (auto itr = arr.begin(); itr != arr.end(); itr++)
-    //{
-    //    average += (*itr);
-    //}
-    //average /= arr.size();
-
-    //// 変化が小さかったら無視
-    //if (average.x < deadZone)
-    //{
-    //    average = Vector3().Zero;
-    //}
-    if (fabs(diff_accel.x) < deadZone)
-    {
-        diff_accel.x = 0;
-    }
-    if (fabs(diff_accel.y) < deadZone)
-    {
-        diff_accel.y = 0;
-    }
-    if (fabs(diff_accel.z) < deadZone)
-    {
-        diff_accel.z = 0;
-    }
-
-    //velocity += diff_accel / 10.0f;
-    //position.x += velocity.x;
-
-#pragma endregion
 
 #pragma region ジャイロ加算時
-    //float a = 10.0f;
-    //add_gyro.x = std::clamp(gyro.x, -a, a);
-    //add_gyro.y = std::clamp(gyro.y, -a, a);
-    //add_gyro.z = std::clamp(gyro.z, -a, a);
 
-    //if (fabs(add_gyro.x) < deadZone)
-    //{
-    //    add_gyro.x = 0;
-    //}
-    //if (fabs(add_gyro.y) < deadZone)
-    //{
-    //    add_gyro.y = 0;
-    //}
-    //if (fabs(add_gyro.z) < deadZone)
-    //{
-    //    add_gyro.z = 0;
-    //}
-
-    //add_gyro += (prev_gyro - gyro) * squeeze;
     add_gyro = gyro * squeeze;
 
     rotation.x += add_gyro.x;
+    //rotation.y += -add_gyro.z;
+    //rotation.z += add_gyro.y;
 
 #pragma endregion
 
@@ -362,7 +358,7 @@ void JimaXengine::TestScene::Initialize()
 
     object = new Object3d(position, scale, rotation, color);
     object->Initialize();
-    object->SetModelforBuff("cube");
+    object->SetModelforBuff("joycon");
 
     position = Vector3(0, 0, 0);
     scale = Vector3(10, 10, 10);
@@ -398,25 +394,24 @@ void JimaXengine::TestScene::Draw()
     ImGui::SetNextWindowSize(ImVec2(400, 300), 1 << 1);
 
     ImGui::Begin("joyconparam");
-    ImGui::Text(" row_accel : [%+010.3f], [%+010.3f], [%+010.3f]", row_accel.x, row_accel.y, row_accel.z);
-    //ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
+    //ImGui::Text(" row_accel : [%+010.3f], [%+010.3f], [%+010.3f]", row_accel.x, row_accel.y, row_accel.z);
+    ImGui::Text("  row_gyro : [%+010.3f], [%+010.3f], [%+010.3f]", row_gyro.x, row_gyro.y, row_gyro.z);
 
-    ImGui::Text("     accel : [%+010.3f], [%+010.3f], [%+010.3f]", accel.x, accel.y, accel.z);
+    //ImGui::Text("     accel : [%+010.3f], [%+010.3f], [%+010.3f]", accel.x, accel.y, accel.z);
     ImGui::Text("     gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", gyro.x, gyro.y, gyro.z);
 
-    ImGui::Text("diff_accel : [%+010.3f], [%+010.3f], [%+010.3f]", diff_accel.x, diff_accel.y, diff_accel.z);
+    //ImGui::Text("diff_accel : [%+010.3f], [%+010.3f], [%+010.3f]", diff_accel.x, diff_accel.y, diff_accel.z);
     //ImGui::Text(" add_gyro  : [%+010.3f], [%+010.3f], [%+010.3f]", add_gyro.x, add_gyro.y, add_gyro.z);
    
-    ImGui::Text(" maxValue  : [%+010.3f], [%+010.3f], [%+010.3f]", maxValue.x, maxValue.y, maxValue.z);
-    ImGui::Text(" minValue  : [%+010.3f], [%+010.3f], [%+010.3f]", minValue.x, minValue.y, minValue.z);
+    //ImGui::Text(" maxValue  : [%+010.3f], [%+010.3f], [%+010.3f]", maxValue.x, maxValue.y, maxValue.z);
+    //ImGui::Text(" minValue  : [%+010.3f], [%+010.3f], [%+010.3f]", minValue.x, minValue.y, minValue.z);
 
     //ImGui::Text(" Length  : [%+010.3f]", diff_accel.Length());
 
-    ImGui::InputFloat("squeeze", &squeeze);
-
-    static float slider1 = 0.0f;
-    ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 20.0f);
-    ImGui::SliderFloat("speed", &speed, 0.0f, 1.0f);
+    //static float slider1 = 0.0f;
+    //ImGui::SliderFloat("deadZone", &deadZone, 0.0f, 20.0f);
+    //ImGui::SliderFloat("speed", &speed, 0.0f, 1.0f);
+    ImGui::SliderFloat("squeeze", &squeeze, 0.0f, 1.0f);
 
     ImGui::End();
 

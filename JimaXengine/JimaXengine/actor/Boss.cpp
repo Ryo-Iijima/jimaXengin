@@ -70,7 +70,7 @@ void JimaXengine::Boss::Initialize()
 	offsetPosObj->SetModelforBuff("smooth_sphere");
 
 	shotPosOffset = { 0, 0, -1 };
-	offsetRad = -3.5f;
+	offsetRad = 3.5f;
 	p = pos + shotPosOffset * offsetRad;
 	s = Vector3(0.3f, 0.3f, 0.3f);
 	c = Vector4(1, 0, 0, 1);
@@ -214,28 +214,28 @@ void JimaXengine::Boss::ColPosSet()
 void JimaXengine::Boss::LegPosInitialize()
 {
 	float scl = scale.x;
-	legs[0]->SetDiffPos(Vector3(0.917f, 0, -0.87f) * scl);
+	legs[0]->SetDiffPos(Vector3(0.917f, -0.5f, -0.87f) * scl);
 	legs[0]->SetRotation(Vector3(0, -45, 0));
 
-	legs[1]->SetDiffPos(Vector3(1.07f, 0, 0) * scl);
+	legs[1]->SetDiffPos(Vector3(1.07f, -0.5f, 0) * scl);
 	legs[1]->SetRotation(Vector3(0, 270, 0));
 
-	legs[2]->SetDiffPos(Vector3(1.045f, 0, 0.819f) * scl);
+	legs[2]->SetDiffPos(Vector3(1.045f, -0.5f, 0.819f) * scl);
 	legs[2]->SetRotation(Vector3(0, 230, 0));
 
-	legs[3]->SetDiffPos(Vector3(0.358f, 0, 1.054f) * scl);
+	legs[3]->SetDiffPos(Vector3(0.358f, -0.5f, 1.054f) * scl);
 	legs[3]->SetRotation(Vector3(0, 190, 0));
 
-	legs[4]->SetDiffPos(Vector3(-0.917f, 0, -0.87f) * scl);
+	legs[4]->SetDiffPos(Vector3(-0.917f, -0.5f, -0.87f) * scl);
 	legs[4]->SetRotation(Vector3(0, 45, 0));
 
-	legs[5]->SetDiffPos(Vector3(-1.07f, 0, 0) * scl);
+	legs[5]->SetDiffPos(Vector3(-1.07f, -0.5f, 0) * scl);
 	legs[5]->SetRotation(Vector3(0, -270, 0));
 
-	legs[6]->SetDiffPos(Vector3(-1.045f, 0, 0.819f) * scl);
+	legs[6]->SetDiffPos(Vector3(-1.045f, -0.5f, 0.819f) * scl);
 	legs[6]->SetRotation(Vector3(0, -230, 0));
 
-	legs[7]->SetDiffPos(Vector3(-0.358f, 0, 1.054f) * scl);
+	legs[7]->SetDiffPos(Vector3(-0.358f, -0.5f, 1.054f) * scl);
 	legs[7]->SetRotation(Vector3(0, -190, 0));
 }
 

@@ -8,8 +8,8 @@ namespace JimaXengine
 {
 	class TestScene : public Scene
 	{
-		// joycon 周りここから
-	private:
+		///// joycon 周りここから //////
+	private: // クラス内変数
 		hid_device_info* device = nullptr;
 		hid_device* dev = nullptr;
 		uint8_t buff[0x40];
@@ -44,11 +44,14 @@ namespace JimaXengine
 
 		std::vector<Vector3> arr;
 
-	private:
+		// ジャイロの値を絞る用、感度調整
+		float squeeze = 1.0f;
+
+	private:// クラス内関数
 		void JoyConInitialize();
 		void JoyConUpdate();
 
-		// joycon 周りここまで
+		////// joycon 周りここまで //////
 
 	private:
 		std::unique_ptr<Camera> camera;
@@ -61,8 +64,6 @@ namespace JimaXengine
 		// 格納するための配列
 		std::vector<std::string> sensorData;
 
-		// ジャイロの値を絞る用
-		float squeeze = 1.0f;
 
 	public:
 		TestScene();

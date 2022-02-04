@@ -68,6 +68,9 @@ namespace JimaXengine
 		// ローカル座標
 		XMFLOAT3& position;
 
+		// オフセット回転
+		XMFLOAT3 offsetRrotation = { 0,0,0 };
+
 		// ローカルワールド変換行列
 		XMMATRIX matWorld;
 		// モデル
@@ -146,6 +149,8 @@ namespace JimaXengine
 
 		void SetAnimationLoop(bool loop) { isAnimationLoop = loop; }
 		void SetAnimationFrame(const int start, const int end, const int frametime = 1);
+
+		void SetOffsetRrotation(const Vector3& rot) { offsetRrotation = rot; };
 
 		// getter
 		bool GetIsEndAnimation() { return isEndAnimation; }

@@ -115,6 +115,7 @@ void JimaXengine::Application::Initialize()
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("octotorso");
 
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("tex_test_20x1");
+	FbxLoader::GetInstance().LoadModelFromFiletoBuff("joycon");
 
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultPlane");
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("DefaultBox");

@@ -32,7 +32,7 @@ namespace JimaXengine
 		const float hpBarMaxLength = 500;		// HPバーの最大長
 		float hpBarLength;						// 今のHPバーの長さ
 
-		int actionIntervalTimer=200;		// 次に行動するまでの時間
+		int actionIntervalTimer = 200;		// 次に行動するまでの時間
 
 		// 状態パターン
 		enum class State
