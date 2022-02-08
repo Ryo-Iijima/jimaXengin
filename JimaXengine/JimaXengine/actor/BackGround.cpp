@@ -2,7 +2,7 @@
 #include "../3d/FbxLoader.h"
 #include "../camera/Camera.h"
 
-JimaXengine::BackGround::BackGround(Camera* camera)
+JimaXengine::BackGround::BackGround(std::shared_ptr<Camera> camera)
 {
 	pCamera = camera;
 
@@ -10,7 +10,6 @@ JimaXengine::BackGround::BackGround(Camera* camera)
 
 JimaXengine::BackGround::~BackGround()
 {
-	delete model;
 }
 
 void JimaXengine::BackGround::Initialize()
@@ -30,8 +29,7 @@ void JimaXengine::BackGround::Initialize()
 	groundDart = std::make_unique<Object3d>(groundDartPos, groundDartScale, groundDartRot, groundDartColor);
 	groundDart->Initialize();
 	groundDart->SetModelforBuff("DefaultPlane");
-	//groundDart->SetPosition(Vector3(0, -0.1f, 0));
-	//groundDart->SetScale(Vector3(100, 100, 100));
+
 	groundDartPos = Vector3(0, -0.1f, 0);
 	groundDartScale = Vector3(100, 100, 100);
 	groundDartRot = Vector3(0, 0, 0);
@@ -43,12 +41,6 @@ void JimaXengine::BackGround::Initialize()
 	wallScale = Vector3(3, 1, 1);
 	wallColor = Vector4(1, 1, 1, 1);
 
-	//wall->SetPosition(wallPos);
-	//wall->SetScale(Vector3(2, 1, 1));
-	//wall->SetColor(Vector4(1, 1, 1, 1));
-	//wall->SetRotation(wallRot);
-
-
 #pragma endregion
 
 #pragma region ’n–Ê
@@ -56,11 +48,6 @@ void JimaXengine::BackGround::Initialize()
 	groundScale = Vector3(1, 1, 1);
 	groundRot = Vector3(0, 180, 0);
 	groundColor = Vector4(1, 1, 1, 1);
-
-	//ground->SetPosition(groundPos);
-	//ground->SetScale(groundScale);
-	//ground->SetColor(Vector4(1, 1, 1, 1));
-	//ground->SetRotation(groundRot);
 
 #pragma endregion
 
@@ -75,13 +62,6 @@ void JimaXengine::BackGround::Initialize()
 
 void JimaXengine::BackGround::Update()
 {
-	//float a = 0.2f;
-	//if (Input::KeyPress(DIK_UP)) seatPos.y += a;
-	//if (Input::KeyPress(DIK_DOWN)) seatPos.y -= a;
-	//if (Input::KeyPress(DIK_LEFT)) seatPos.z -= a;
-	//if (Input::KeyPress(DIK_RIGHT)) seatPos.z += a;
-
-
 #pragma region •Ç
 	wall->SetCamera(pCamera);
 	wall->Update();

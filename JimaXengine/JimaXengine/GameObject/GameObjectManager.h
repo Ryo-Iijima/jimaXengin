@@ -23,13 +23,13 @@ namespace JimaXengine
 		void ResetObject();
 		Player* GetPlayer();
 		Boss* GetBoss();
-		ParticleManager* GetParticleManager() { return pManager; }
+		ParticleManager* GetParticleManager() { return pManager.get(); }
 
 	private:
 		std::vector<GameObject*> gameObjects;
 		std::vector<GameObject*> insertObjects;
 
-		ParticleManager* pManager;
+		std::shared_ptr<ParticleManager> pManager;
 
 		void SortRenderType();
 		void Remove();

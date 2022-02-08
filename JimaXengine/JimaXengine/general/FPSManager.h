@@ -18,6 +18,7 @@ namespace JimaXengine
 		float maxFps;
 		DWORD sleepTime;
 		int debugCount;
+
 	public:
 		void Initialize(const float maxfps);
 		void Update();

@@ -11,7 +11,7 @@ namespace JimaXengine
 	class Target : public GameObject
 	{
 	private:
-		Object3d* object = nullptr;
+		std::unique_ptr<Object3d> object;
 
 		// èdóÕÇ‡Ç«Ç´
 		Vector3 gravity = { 0, -0.005f, 0 };
@@ -55,7 +55,7 @@ namespace JimaXengine
 		void InformBoss();
 
 	public:
-		Target(Camera* camera, Vector3 pos = { 0,0,0 }, Vector3 vel = { 0,0,-1 }, Vector3 gool = { 0, 0, -15 }, float speed = 0.1f, int ballnumber = 0);
+		Target(std::shared_ptr<Camera> camera, Vector3 pos = { 0,0,0 }, Vector3 vel = { 0,0,-1 }, Vector3 gool = { 0, 0, -15 }, float speed = 0.1f, int ballnumber = 0);
 		~Target();
 
 		void Initialize()override;

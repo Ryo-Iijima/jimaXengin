@@ -292,15 +292,13 @@ void JimaXengine::Player::Swing()
     }
 }
 
-JimaXengine::Player::Player(Camera* camera)
+JimaXengine::Player::Player(std::shared_ptr<Camera> camera)
 {
     pCamera = camera;
 }
 
 JimaXengine::Player::~Player()
 {
-    delete hitBollCountTex;
-    delete shotBollCountTex;
 }
 
 void JimaXengine::Player::Initialize()
@@ -368,12 +366,12 @@ void JimaXengine::Player::Initialize()
     data.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(1.0f / 20.0f, 8.0f / 10.0f);
     data.uvPos = Vector2(data.length.x, 0);
 
-    hitBollCountTex = new NumberDrawer(hitBollCount, 2, data);
+    hitBollCountTex = std::make_unique<NumberDrawer>(hitBollCount, 2, data);
     hitBollCountTex->Initialize();
 
     data.pos = Vector2(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT) * Vector2(3.5f / 20.0f, 8.0f / 10.0f);
 
-    shotBollCountTex = new NumberDrawer(shotBollCount, 2, data);
+    shotBollCountTex = std::make_unique<NumberDrawer>(shotBollCount, 2, data);
     shotBollCountTex->Initialize();
 
     hp = Maxhp;
@@ -521,7 +519,7 @@ void JimaXengine::Player::DrawImGui()
     ImGui::End();
 }
 
-JimaXengine::Camera* JimaXengine::Player::GetCamera()
+std::shared_ptr<JimaXengine::Camera> JimaXengine::Player::GetCamera()
 {
     return pCamera;
 }

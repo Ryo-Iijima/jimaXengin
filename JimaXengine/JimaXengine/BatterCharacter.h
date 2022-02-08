@@ -15,7 +15,7 @@ namespace JimaXengine
 		Vector3 batScale;
 
 	public:
-		BatterCharacter(Camera* camera);
+		BatterCharacter(std::shared_ptr<Camera> camera);
 		~BatterCharacter();
 
 		void Initialize()override;

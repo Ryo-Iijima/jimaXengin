@@ -324,9 +324,6 @@ JimaXengine::TestScene::~TestScene()
     outfile.close();
 
 	delete light;
-	delete oManager;
-    delete object;
-
     delete device;
     delete dev;
 }
@@ -345,11 +342,8 @@ void JimaXengine::TestScene::Initialize()
     camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT, viewAngle);
 
 	// オブジェクトマネージャー
-	oManager = new GameObjectManager();
+    oManager = std::make_unique<GameObjectManager>();
 	oManager->Initialize();
-    //oManager->Add(new Player(camera.get()));
-
-	//oManager->Add(new JoyconTest());
 
 	// ライト
 	light = LightGroup::Create();
@@ -360,7 +354,7 @@ void JimaXengine::TestScene::Initialize()
 	nowScene = "TestScene";
 	nextScene = "TestScene";
 
-    object = new Object3d(position, scale, rotation, color);
+    object = std::make_unique<Object3d>(position, scale, rotation, color);
     object->Initialize();
     object->SetModelforBuff("joycon");
 
@@ -382,7 +376,7 @@ void JimaXengine::TestScene::Update()
 
 	oManager->Update();
 
-    object->SetCamera(camera.get());
+    object->SetCamera(camera);
     object->Update();
 
     JoyConUpdate();

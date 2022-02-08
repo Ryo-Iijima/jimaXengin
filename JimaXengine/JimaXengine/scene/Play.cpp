@@ -9,7 +9,6 @@ JimaXengine::Play::Play()
 
 JimaXengine::Play::~Play()
 {
-	delete oManager;
 	delete lightGroup;
 }
 
@@ -28,11 +27,11 @@ void JimaXengine::Play::Initialize()
 	float viewAngle = 60.0f;	// Ž‹–ìŠp
 	camera->SetProjectionMatrix(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT,viewAngle);
 	
-	oManager = new GameObjectManager();
+	oManager = std::make_unique<GameObjectManager>();
 	oManager->Initialize();
-	oManager->Add(new Player(camera.get()));
-	oManager->Add(new Boss(camera.get(),oManager));
-	oManager->Add(new BackGround(camera.get()));
+	oManager->Add(new Player(camera));
+	oManager->Add(new Boss(camera, oManager));
+	oManager->Add(new BackGround(camera));
 
 	isEnd = false;
 	nowScene = "Play";
@@ -172,7 +171,7 @@ void JimaXengine::Play::Draw()
 	//ImGui::End();
 }
 
-void JimaXengine::Play::simpleStaging()
+void JimaXengine::Play::SimpleStaging()
 {
 
 }

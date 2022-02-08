@@ -8,24 +8,29 @@
 #include "general/Input.h"
 #include "scene/SceneManager.h"
 #include "2d/PostEffect.h"
+#include <memory>
 
 namespace JimaXengine
 {
 	class Application
 	{
 	private:
-
-		WinApp* winApp = nullptr;
-		DirectXCommon* dxCommon = nullptr;
-		FPSManager* fpsManager = nullptr;
-		Input* input = nullptr;
-		Sound* sound = nullptr;
-		SceneManager* sceneManager = nullptr;
+		std::unique_ptr<WinApp> winApp;
+		
+		std::unique_ptr<DirectXCommon> dxCommon;
+		
+		std::unique_ptr<FPSManager> fpsManager;
+		
+		std::unique_ptr<Input> input;
+		
+		std::unique_ptr<SceneManager> sceneManager;
+		
 		ImGuiDevice imguiDev;
-		PostEffect* postEffect = nullptr;
+		
+		std::unique_ptr<PostEffect> postEffect;
 
 	private:
-
+		// ƒVƒ“ƒOƒ‹ƒgƒ“
 		Application() = default;
 		~Application() = default;
 		Application(const Application&) = delete;

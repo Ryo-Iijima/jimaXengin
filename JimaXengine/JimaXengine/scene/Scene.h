@@ -3,9 +3,10 @@
 #include "../general/Input.h"
 #include <memory>
 
-class WinApp;
 namespace JimaXengine
 {
+	class WinApp;
+
 	class Scene
 	{
 	public:

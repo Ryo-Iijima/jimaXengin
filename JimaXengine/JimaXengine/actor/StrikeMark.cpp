@@ -59,7 +59,7 @@ void JimaXengine::StrikeMark::WithinRange()
 	pos.y += center.y;
 }
 
-JimaXengine::StrikeMark::StrikeMark(Camera* pcamera, Target* ptarget)
+JimaXengine::StrikeMark::StrikeMark(std::shared_ptr<Camera> pcamera, Target* ptarget)
 	:pTarget(ptarget)
 {
 	pCamera = pcamera;

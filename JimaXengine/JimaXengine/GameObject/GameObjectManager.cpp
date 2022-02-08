@@ -4,13 +4,12 @@
 
 JimaXengine::GameObjectManager::GameObjectManager()
 {
-	pManager = new ParticleManager();
+	pManager = std::unique_ptr<ParticleManager>();
 }
 
 JimaXengine::GameObjectManager::~GameObjectManager()
 {
 	RemoveAll();
-	delete pManager;
 }
 
 void JimaXengine::GameObjectManager::Initialize()
@@ -23,7 +22,7 @@ void JimaXengine::GameObjectManager::Add(GameObject* obj)
 {
 	obj->SetGameObjectManager(this);
 	obj->Initialize();
-	obj->InitializeParticleEmitter(pManager);
+	obj->InitializeParticleEmitter(pManager.get());
 	gameObjects.push_back(obj);
 	SortRenderType();
 }
@@ -32,7 +31,7 @@ void JimaXengine::GameObjectManager::Insert(GameObject * obj)
 {
 	obj->SetGameObjectManager(this);
 	obj->Initialize();
-	obj->InitializeParticleEmitter(pManager);
+	obj->InitializeParticleEmitter(pManager.get());
 	insertObjects.push_back(obj);
 }
 

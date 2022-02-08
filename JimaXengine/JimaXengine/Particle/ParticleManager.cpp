@@ -74,31 +74,31 @@ void JimaXengine::ParticleManager::Update()
 	UpdateObj();
 }
 
-void JimaXengine::ParticleManager::DrawDepth(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepth(std::shared_ptr<Camera> camera)
 {
-	c_alp_geo->Draw(camera, cube_alpha_particle, "white1x1.png", "cube_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
+	c_alp_geo->Draw(camera.get(), cube_alpha_particle, "white1x1.png", "cube_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
 
 	auto end = particleObj.end();
 	for (auto itr = particleObj.begin(); itr != end; itr++)
 	{
-		(*itr)->Draw(camera);
+		(*itr)->Draw(camera.get());
 	}
 }
 
-void JimaXengine::ParticleManager::DrawDepthAlpha(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepthAlpha(std::shared_ptr<Camera> camera)
 {
-	c_add_geo->Draw(camera, cube_add_particle, "white1x1.png", "cube_add", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
+	c_add_geo->Draw(camera.get(), cube_add_particle, "white1x1.png", "cube_add", GeometoryObject3D::BILLBOARD::BILLBOARD_NONE);
 }
 
-void JimaXengine::ParticleManager::DrawDepthNoneFront(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepthNoneFront(std::shared_ptr<Camera> camera)
 {
 
 }
 
-void JimaXengine::ParticleManager::DrawDepthNoneBack(Camera* camera)
+void JimaXengine::ParticleManager::DrawDepthNoneBack(std::shared_ptr<Camera> camera)
 {
-	q_alp_geo->Draw(camera, quad_alpha_particle, "particle.png", "quad_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_ALL);
-	q_add_geo->Draw(camera, quad_add_particle, "particle.png", "quad_add", GeometoryObject3D::BILLBOARD::BILLBOARD_ALL);
+	q_alp_geo->Draw(camera.get(), quad_alpha_particle, "particle.png", "quad_alpha", GeometoryObject3D::BILLBOARD::BILLBOARD_ALL);
+	q_add_geo->Draw(camera.get(), quad_add_particle, "particle.png", "quad_add", GeometoryObject3D::BILLBOARD::BILLBOARD_ALL);
 }
 
 void JimaXengine::ParticleManager::AddParticleObj(ParticleObj * particle)

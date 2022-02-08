@@ -76,7 +76,7 @@ namespace JimaXengine
 		// ÉÇÉfÉã
 		Model* model = nullptr;
 		// ÉJÉÅÉâ
-		Camera* camera = nullptr;
+		std::shared_ptr<Camera> camera;
 
 	private:	// staticïœêî
 
@@ -144,7 +144,7 @@ namespace JimaXengine
 
 		// setter
 		void SetModelforBuff(const std::string& modelName);
-		void SetCamera(Camera* camera) { this->camera = camera; }
+		void SetCamera(std::shared_ptr<Camera> camera) { this->camera = camera; }
 		void SetIsBillboard(bool isbillbord) { isBillboard = isbillbord; }
 
 		void SetAnimationLoop(bool loop) { isAnimationLoop = loop; }

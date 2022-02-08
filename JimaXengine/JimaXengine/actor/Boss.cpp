@@ -3,7 +3,8 @@
 #include "../general/General.h"
 #include "../GameObject/GameObjectManager.h"
 
-JimaXengine::Boss::Boss(Camera* camera, GameObjectManager* oManager)
+
+JimaXengine::Boss::Boss(std::shared_ptr<Camera> camera, std::shared_ptr<GameObjectManager> oManager)
 {
 	pCamera = camera;
 	pOManager = oManager;

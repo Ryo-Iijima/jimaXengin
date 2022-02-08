@@ -17,7 +17,7 @@ namespace JimaXengine
 		const int legNum = 8;		// 足の数
 		std::vector< std::unique_ptr<OctLeg>> legs;	// タコの足
 
-		GameObjectManager* pOManager = nullptr;
+		std::shared_ptr<GameObjectManager> pOManager;
 
 		int hp;					// ヒットポイント
 		const int Maxhp = 3;	// 最大ヒットポイント
@@ -158,7 +158,7 @@ namespace JimaXengine
 		void LegPosInitialize();
 
 	public:
-		Boss(Camera* camera, GameObjectManager* oManager);
+		Boss(std::shared_ptr<Camera> camera, std::shared_ptr<GameObjectManager> oManager);
 		~Boss();
 		void Initialize()override;
 		void Update()override;

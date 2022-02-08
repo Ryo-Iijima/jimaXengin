@@ -61,8 +61,8 @@ namespace JimaXengine
 
 		int hitBollCount;					// ボスに球を当てた数
 		int shotBollCount;					// ボスが打った数
-		NumberDrawer* hitBollCountTex;
-		NumberDrawer* shotBollCountTex;
+		std::unique_ptr<NumberDrawer> hitBollCountTex;
+		std::unique_ptr<NumberDrawer> shotBollCountTex;
 
 		/// カメラアクション関連 ///
 		// 開始位置
@@ -84,7 +84,7 @@ namespace JimaXengine
 		int holdTime;			// 振り切ってから再び構えるまでの時間
 
 	public:
-		Player(Camera* camera);
+		Player(std::shared_ptr<Camera> camera);
 		~Player();
 
 		void Initialize()override;
@@ -100,10 +100,10 @@ namespace JimaXengine
 		void AddHitBollCount() { hitBollCount++; }
 
 		// setter
-		void SetCamera(Camera* camera) { pCamera = camera; }
+		void SetCamera(std::shared_ptr<Camera> camera) { pCamera = camera; }
 
 		// getter
-		Camera* GetCamera();
+		std::shared_ptr<Camera> GetCamera();
 		bool GetIsHitZone() { return isHitZone; }
 
 	private:

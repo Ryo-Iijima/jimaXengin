@@ -29,10 +29,10 @@ namespace JimaXengine
 		void Initialize();
 		void Update();
 		// 各設定ごとの描画
-		void DrawDepth(Camera* camera);
-		void DrawDepthAlpha(Camera* camera);
-		void DrawDepthNoneFront(Camera* camera);
-		void DrawDepthNoneBack(Camera* camera);
+		void DrawDepth(std::shared_ptr<Camera> camera);
+		void DrawDepthAlpha(std::shared_ptr<Camera> camera);
+		void DrawDepthNoneFront(std::shared_ptr<Camera> camera);
+		void DrawDepthNoneBack(std::shared_ptr<Camera> camera);
 		// 各種類ごとの追加（Emitterから好きなのを選んで呼ぶ）
 		void AddParticleObj(ParticleObj* particle);
 		void AddQuadAlpha(ParticleBase* parameter);

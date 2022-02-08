@@ -19,12 +19,12 @@ JimaXengine::Application& JimaXengine::Application::GetInstance()
 void JimaXengine::Application::Initialize()
 {
 	// ゲームウィンドウの作成
-	winApp = new WinApp();
+	winApp = std::make_unique<WinApp>();
 	winApp->CreateGameWindow();
 
 	// DirectX初期化処理
-	dxCommon = new DirectXCommon();
-	dxCommon->Initialize(winApp);
+	dxCommon = std::make_unique<DirectXCommon>();
+	dxCommon->Initialize(winApp.get());
 
 	ResourceShader::CompileShader("FBX/FBXVS.hlsl", "main", "vs_5_0");
 	ResourceShader::CompileShader("FBX/FBXPS.hlsl", "main", "ps_5_0");
@@ -39,24 +39,24 @@ void JimaXengine::Application::Initialize()
 	ResourceShader::CompileShader("Geometory/QuadGS.hlsl", "main", "gs_5_0");
 
 	// FPS管理
-	fpsManager = new FPSManager();
+	fpsManager = std::make_unique<FPSManager>();
 	fpsManager->Initialize(60.0f);
 
 	// デバイス渡す
 	FbxLoader::GetInstance().Initialize(dxCommon->GetDevice());
 	// 
-	Object3d::StaticInitialize(dxCommon, winApp);
+	Object3d::StaticInitialize(dxCommon.get(), winApp.get());
 	Object3d::SetDevice(dxCommon->GetDevice());
 	Object3d::CreateGraphicsPipeline();
 	//
-	Object2d::Initialize(dxCommon);
+	Object2d::Initialize(dxCommon.get());
 
-	postEffect = new PostEffect();
-	postEffect->Initialize(dxCommon);
+	postEffect = std::make_unique<PostEffect>();
+	postEffect->Initialize(dxCommon.get());
 	//
-	GeometoryObject3D::PreInitialize(dxCommon);
+	GeometoryObject3D::PreInitialize(dxCommon.get());
 	//
-	Texture::Initialize(dxCommon);
+	Texture::Initialize(dxCommon.get());
 	//
 	Sound::Initialize();
 	//
@@ -65,9 +65,8 @@ void JimaXengine::Application::Initialize()
 	LightGroup::StaticInitialize(dxCommon->GetDevice());
 
 	// 入力
-	input = new Input();
-	input->Initialize(winApp);
-	//input->SetDeadZone(0, 0);
+	input = std::make_unique<Input>();
+	input->Initialize(winApp.get());
 
 
 	Texture::LoadTexture("white1x1.png");
@@ -133,33 +132,27 @@ void JimaXengine::Application::Initialize()
 	FbxLoader::GetInstance().LoadModelFromFiletoBuff("bat");
 
 	// シーンの設定
-	sceneManager = new SceneManager;
+	sceneManager = std::make_unique<SceneManager>();
 	sceneManager->Add("TestScene", new TestScene());
-	sceneManager->Add("Title", new Title(winApp));
+	sceneManager->Add("Title", new Title(winApp.get()));
 	sceneManager->Add("Play", new Play());
-	sceneManager->Add("End", new End(winApp));
+	sceneManager->Add("End", new End(winApp.get()));
 
 	sceneManager->Change("Play");
 
 	// imgui
-	imguiDev.Initialize(winApp, dxCommon);	
+	imguiDev.Initialize(winApp.get(), dxCommon.get());
 }
 
 void JimaXengine::Application::Finalize()
 {
-	sceneManager->~SceneManager();
-
-	delete postEffect;
 	// 各種解放処理
 	input->Finalize();
 
 	FbxLoader::GetInstance().Finalize();
 
-	delete dxCommon;
-
 	// ゲームウィンドウの破棄
 	winApp->DestroyGameWindow();
-	delete winApp;
 }
 
 void JimaXengine::Application::Run()

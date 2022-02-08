@@ -129,7 +129,7 @@ void JimaXengine::Target::InformBoss()
 	object->GetUsingLightGroup()->SetCircleShadowCasterPos(ballNumber, Vector3(-1, -1, -1));
 }
 
-JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, Vector3 gool, float speed, int ballnumber)
+JimaXengine::Target::Target(std::shared_ptr<Camera> camera, Vector3 pos, Vector3 vel, Vector3 gool, float speed, int ballnumber)
 {
 	pCamera = camera;
 	this->pos = pos;
@@ -141,13 +141,12 @@ JimaXengine::Target::Target(Camera* camera, Vector3 pos, Vector3 vel, Vector3 go
 
 JimaXengine::Target::~Target()
 {
-	delete object;
 	InformBoss();
 }
 
 void JimaXengine::Target::Initialize()
 {	
-	object = new Object3d(pos, scale, rotation, color);
+	object = std::make_unique<Object3d>(pos, scale, rotation, color);
 	object->Initialize();
 	object->SetModelforBuff("ball");
 	scale = { 0.3f,0.3f, 0.3f };

@@ -2,12 +2,11 @@
 
 JimaXengine::GameObject::GameObject()
 {
-	pEmitter = new ParticleEmitter();
+	pEmitter = std::make_unique<ParticleEmitter>();
 }
 
 JimaXengine::GameObject::~GameObject()
 {
-	delete pEmitter;
 }
 
 void JimaXengine::GameObject::Dead()

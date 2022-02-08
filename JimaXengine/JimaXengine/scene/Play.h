@@ -8,23 +8,20 @@ namespace JimaXengine
 {
 	class Object3d;
 	class Object2d;
-	class Model;
 
 	class Play : public Scene
 	{
 	private:
 		LightGroup* lightGroup = nullptr;
 
-		Model* model = nullptr;
+		std::shared_ptr<Camera> camera;
 
-		std::unique_ptr<Camera> camera;
-
-		GameObjectManager* oManager = nullptr;
+		std::shared_ptr<GameObjectManager> oManager;
 
 	private:
 		
 		// ä»à’âÊñ ì]ä∑
-		void simpleStaging();
+		void SimpleStaging();
 
 		Vector3 ambientColor = { 1,1,1 };
 
@@ -51,13 +48,11 @@ namespace JimaXengine
 		float spotLight3Dir[3] = { 0, -1, 0 };
 		float spotLight3Pos[3] = { 0, 25, 0 };
 
-
 		// ä€âeä÷òA
 		float circleShadowDir[3] = { 0, -1, 0 };
 		float circleShadowAtten[3] = { 0.5f, 0.6f, 0.0f };
 		float circleShadowFactorAngle[2] = { 0.0f, 0.5f };
-
-		float characterPos[3] = { 1, 0.0f, 0 };
+		float characterPos[3] = { 1, 0.0f, 0 };		//	âeÇÃëŒè€
 		
 	public:
 		Play();

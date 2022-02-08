@@ -208,6 +208,7 @@
     <ClCompile Include="general\Sound.cpp" />
     <ClCompile Include="general\XAudio2VoiceCallBack.cpp" />
     <ClCompile Include="general\_StringFormat.cpp" />
+    <ClCompile Include="hid.cpp" />
     <ClCompile Include="hidapi\hid.c">
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExceptionHandling>
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExceptionHandling>

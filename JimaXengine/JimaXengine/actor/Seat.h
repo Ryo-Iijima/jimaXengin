@@ -8,9 +8,7 @@ namespace JimaXengine
 	{
 	private:
 
-		Camera* pCamera;
-
-		Model* model = nullptr;
+		std::shared_ptr<Camera> pCamera;
 
 		// ãqê»
 		std::unique_ptr<Object3d> seat;
@@ -20,7 +18,7 @@ namespace JimaXengine
 		Vector4 seatColor;
 
 	public:
-		Seat(Camera* camera, Vector3 pos, Vector3 rot = { 0,180,0 });
+		Seat(std::shared_ptr<Camera> camera, Vector3 pos, Vector3 rot = { 0,180,0 });
 		~Seat();
 
 		void Draw();

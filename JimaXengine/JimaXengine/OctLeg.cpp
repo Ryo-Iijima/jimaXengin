@@ -1,11 +1,11 @@
 #include "OctLeg.h"
 
-JimaXengine::OctLeg::OctLeg(Camera* camera)
+JimaXengine::OctLeg::OctLeg(std::shared_ptr<Camera> camera)
 {
 	pCamera = camera;
 }
 
-JimaXengine::OctLeg::OctLeg(Camera* camera, Vector3 pos, Vector3 rot)
+JimaXengine::OctLeg::OctLeg(std::shared_ptr<Camera> camera, Vector3 pos, Vector3 rot)
 {
 	pCamera = camera;
 	diffPos = pos;

@@ -16,8 +16,8 @@ namespace JimaXengine
 		Vector3 rootPos;		// ‘«‚ÌªŒ³‚ÌˆÊ’u
 
 	public:
-		OctLeg(Camera* camera);
-		OctLeg(Camera* camera, Vector3 pos, Vector3 rot);
+		OctLeg(std::shared_ptr<Camera> camera);
+		OctLeg(std::shared_ptr<Camera> camera, Vector3 pos, Vector3 rot);
 		~OctLeg();
 		void Initialize()override;
 		void Update()override;

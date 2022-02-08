@@ -54,16 +54,20 @@ namespace JimaXengine
 		////// joycon 周りここまで //////
 
 	private:
-		std::unique_ptr<Camera> camera;
-		GameObjectManager* oManager = nullptr;
+		// カメラ
+		std::shared_ptr<Camera> camera;
+
+		// goマネージャー
+		std::unique_ptr<GameObjectManager> oManager;
+		
+		// ライトグループ
 		LightGroup* light = nullptr;
 
-		Model* model = nullptr;
-		Object3d* object = nullptr;
+		// 箱のモデル
+		std::unique_ptr<Object3d> object;
 
 		// 格納するための配列
 		std::vector<std::string> sensorData;
-
 
 	public:
 		TestScene();

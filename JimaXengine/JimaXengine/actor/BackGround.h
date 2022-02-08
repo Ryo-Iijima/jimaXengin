@@ -11,9 +11,6 @@ namespace JimaXengine
 	class BackGround : public GameObject
 	{
 	private:
-
-		Model* model = nullptr;
-
 		// •Ç
 		std::unique_ptr<Object3d> wall;
 		Vector3 wallPos;
@@ -38,7 +35,7 @@ namespace JimaXengine
 		std::unique_ptr<Seat> seat[15];
 
 	public:
-		BackGround(Camera* camera);
+		BackGround(std::shared_ptr<Camera> camera);
 		~BackGround();
 
 		void Initialize()override;

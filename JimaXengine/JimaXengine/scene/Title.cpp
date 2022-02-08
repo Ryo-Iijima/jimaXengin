@@ -21,7 +21,7 @@ void JimaXengine::Title::BgScroll()
 	}
 }
 
-void JimaXengine::Title::simpleStaging()
+void JimaXengine::Title::SimpleStaging()
 {
 	fadeTexColor.w += 0.05f;
 	if (fadeTexColor.w >= 1)
@@ -110,7 +110,7 @@ void JimaXengine::Title::Update()
 
 	if (stagingStart)
 	{
-		simpleStaging();
+		SimpleStaging();
 	}
 
 	// ‘JˆÚ‰‰o‚ªI—¹‚µ‚½‚ç

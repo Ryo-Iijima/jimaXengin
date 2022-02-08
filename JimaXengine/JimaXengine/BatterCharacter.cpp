@@ -1,6 +1,6 @@
 #include "BatterCharacter.h"
 
-JimaXengine::BatterCharacter::BatterCharacter(Camera* camera)
+JimaXengine::BatterCharacter::BatterCharacter(std::shared_ptr<Camera> camera)
 {
 	pCamera = camera;
 }

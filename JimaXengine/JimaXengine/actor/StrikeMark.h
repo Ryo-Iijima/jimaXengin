@@ -12,7 +12,7 @@ namespace JimaXengine
 		std::unique_ptr<Object3d> object;
 
 		// —\‘ª‚ğ•\¦‚·‚é‹…
-		Target* pTarget;
+		std::unique_ptr<Target> pTarget;
 
 		// •\¦”ÍˆÍ‚Ì’†S
 		Vector3 center;
@@ -42,7 +42,7 @@ namespace JimaXengine
 		void WithinRange();
 
 	public:
-		StrikeMark(Camera* pcamera, Target* ptarget);
+		StrikeMark(std::shared_ptr<Camera> pcamera, Target* ptarget);
 		~StrikeMark();
 
 		void Initialize() override;

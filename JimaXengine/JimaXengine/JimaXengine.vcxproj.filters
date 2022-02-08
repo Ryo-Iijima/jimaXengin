@@ -299,6 +299,9 @@
     <ClCompile Include="LightGroup.cpp">
       <Filter>ソース ファイル\engin\3DObject\Light</Filter>
     </ClCompile>
+    <ClCompile Include="hid.cpp">
+      <Filter>ヘッダー ファイル\engin\general\hidapi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">

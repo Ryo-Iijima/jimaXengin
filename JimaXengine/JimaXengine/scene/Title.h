@@ -43,17 +43,19 @@ namespace JimaXengine
 		Vector2 texPos = { 0,0 };
 
 	private:
+		// 背景スクロール
 		void BgScroll();
+
+		// 画面遷移関連
 
 		std::unique_ptr<Object2d> fadeTex;
 		Vector4 fadeTexColor;
-
 		// 遷移開始用
 		bool stagingStart = false;
 		// 遷移演出終了したか
 		bool stagingEnd = false;
 		// 簡易画面転換
-		void simpleStaging();
+		void SimpleStaging();
 
 	public:
 		Title(WinApp* winapp);

@@ -71,9 +71,9 @@ namespace JimaXengine
 		// ”»’è‚ÌˆÊ’u‡‚í‚¹
 		virtual void ColPosSet();
 
-		Camera* pCamera;
+		std::shared_ptr<Camera> pCamera;
 		GameObjectManager* oManager;
-		ParticleEmitter* pEmitter;
+		std::unique_ptr<ParticleEmitter> pEmitter;
 
 		// ˆÊ’uEˆÚ“®
 		Vector3 pos = { 0,0,0 };
