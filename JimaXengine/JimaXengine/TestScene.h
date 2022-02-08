@@ -12,8 +12,8 @@ namespace JimaXengine
 	private: // ƒNƒ‰ƒX“à•Ï”
 		hid_device_info* device = nullptr;
 		hid_device* dev = nullptr;
-		uint8_t buff[0x40];
-		size_t size;
+		uint8_t buff[0x40] = {};
+		size_t size = 0;
 
 		struct Int3
 		{

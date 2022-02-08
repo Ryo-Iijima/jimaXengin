@@ -1,4 +1,29 @@
-﻿  TestScene.cpp
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(334,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
-C:\Users\Ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
-  JimaXengine.vcxproj -> C:\Users\Ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe
+﻿  Texture.cpp
+  FbxLoader.cpp
+  Model.cpp
+  Object3d.cpp
+  Application.cpp
+  BatterCharacter.cpp
+  GameObject.cpp
+  GameObjectManager.cpp
+  OctLeg.cpp
+  HomingGeometryParticle.cpp
+  ParticleEmitter.cpp
+  ParticleManager.cpp
+  ParticleObj.cpp
+  TestScene.cpp
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\TestScene.cpp(331,15): warning C4150: 'hid_device_' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
+C:\Users\ryo\Documents\jimaXengin\JimaXengine\JimaXengine\hidapi\hidapi.h(46): message : 'hid_device_' の宣言を確認してください
+  BackGround.cpp
+  Boss.cpp
+  Player.cpp
+  Seat.cpp
+  StrikeMark.cpp
+  Target.cpp
+  コードを生成中...
+  コンパイル中...
+  main.cpp
+  Play.cpp
+  Title.cpp
+  コードを生成中...
+  JimaXengine.vcxproj -> C:\Users\ryo\Documents\jimaXengin\JimaXengine\x64\Debug\JimaXengine.exe

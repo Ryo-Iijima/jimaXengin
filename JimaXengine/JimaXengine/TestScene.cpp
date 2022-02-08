@@ -17,7 +17,7 @@ void SendSubcommand(hid_device* dev, uint8_t command, uint8_t subcommand[], int 
         *globalCount = 0x00;
     }
     else {
-        *globalCount++;
+        (*globalCount)++;
     }
 
     buf[10] = command;
@@ -306,6 +306,7 @@ void JimaXengine::TestScene::JoyConUpdate()
 
 JimaXengine::TestScene::TestScene()
 {
+    size = 0;
 }
 
 JimaXengine::TestScene::~TestScene()

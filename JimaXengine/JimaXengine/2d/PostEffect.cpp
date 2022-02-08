@@ -465,7 +465,7 @@ void JimaXengine::PostEffect::PreDrawScene()
 	for (int i = 0; i < 2; i++)
 	{
 		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
-		scissorRects[i] = CD3DX12_RECT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+		scissorRects[i] = CD3DX12_RECT((LONG)0.0f, (LONG)0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 	}
 	// ビューポートの設定
 	dxCommon->GetCommandList()->RSSetViewports(2, viewports);

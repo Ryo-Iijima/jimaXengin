@@ -4,7 +4,6 @@
 #include "../actor/Target.h"
 #include "../actor/Boss.h"
 #include "../actor/BackGround.h"
-#include "../actor/JoyconTest.h"
 
 #include "../Particle/ParticleManager.h"
 

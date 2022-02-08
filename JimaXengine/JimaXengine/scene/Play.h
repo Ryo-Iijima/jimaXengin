@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene.h"
 #include "../GameObject/GameObjectManager.h"
-#include "../actor/JoyconTest.h"
 #include "../DebugCamera.h"
 #include "../DirectionalLight.h"
 

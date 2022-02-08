@@ -1,5 +1,7 @@
 #include "Particle.hlsli"
 
+#pragma warning(disable : 3557)
+
 static const uint vnum = 4;
 static const float size = 0.5f;
 static const uint surfaceCount = 1;

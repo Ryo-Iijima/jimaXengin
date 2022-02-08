@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "fbxsdk.h"
 
+#pragma warning(disable:26451 26495 26812 )
+
 #include <d3d12.h>
 #include <d3dx12.h>
 

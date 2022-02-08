@@ -12,6 +12,7 @@
 #include <d3dx12.h>
 
 #include <fbxsdk.h>
+#pragma warning(disable:26451 26495 26812 )
 
 namespace JimaXengine
 {

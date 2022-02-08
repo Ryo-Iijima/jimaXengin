@@ -1,5 +1,7 @@
 #include "FBXShader.hlsli"
 
+//#pragma warning(disable : 3078)
+
 Texture2D<float4> tex :register(t0);
 SamplerState smp : register(s0);
 
@@ -9,9 +11,11 @@ struct PSOutput
 	float4 target1 : SV_TARGET1;
 };
 
-PSOutput main(VSOutput input) : SV_TARGET
+PSOutput main(VSOutput input)
 {
 	PSOutput output;
+
+	int i;
 
 	//return float4(1,0,0,1);
 
@@ -32,7 +36,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	float4 shadecolor = { 0,0,0,0 };
 
 	// 平行光源
-	for (int i = 0; i < DIRLIGHT_NUM; i++) {
+	for (i = 0; i < DIRLIGHT_NUM; i++) {
 		if (dirLights[i].active) {
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(dirLights[i].lightv, input.normal);
@@ -49,7 +53,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	}
 
 	// 点光源
-	for (int i = 0; i < POINTLIGHT_NUM; i++) {
+	for (i = 0; i < POINTLIGHT_NUM; i++) {
 		if (pointLights[i].activ) {
 			// ライトのベクトル
 			float3 lightv = pointLights[i].lightpos - input.worldpos.xyz;
@@ -64,7 +68,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 			// 反射光ベクトル
 			float3 reflect = normalize(-lightv + 2 * dotlightnormal * input.normal);
 			// 拡散反射光
-			float diffuse = dotlightnormal * m_diffuse;
+			float3 diffuse = dotlightnormal * m_diffuse;
 			// 鏡面反射光
 			float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
 			// すべて加算
@@ -74,7 +78,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	}
 
 	// スポットライト
-	for (int i = 0; i < SPOTLIGHT_NUM; i++) {
+	for (i = 0; i < SPOTLIGHT_NUM; i++) {
 		if (spotLights[i].activ) {
 			// ライトの方向ベクトル
 			float3 lightv = spotLights[i].lightpos - input.worldpos.xyz;
@@ -105,7 +109,7 @@ PSOutput main(VSOutput input) : SV_TARGET
 	}
 
 	// 丸影
-	for (int i = 0; i < CIRCLESHADOW_NUM; i++) {
+	for (i = 0; i < CIRCLESHADOW_NUM; i++) {
 		if (circleShadows[i].activ) {
 			// オブジェクトの表面からキャスターへのベクトル
 			float3 casterv = circleShadows[i].casterpos - input.worldpos.xyz;

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../general/Input.h"
+#include <memory>
 
 class WinApp;
 namespace JimaXengine
@@ -24,7 +25,7 @@ namespace JimaXengine
 		virtual void ShutDown() { isEnd = true; }
 		virtual void ShutDownAll() { isAllEnd = true; }
 
-		WinApp* winApp;
+		std::unique_ptr<WinApp> winApp;
 		bool isEnd;
 		bool isAllEnd;
 		std::string nowScene;
